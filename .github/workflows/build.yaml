@@ -22,6 +22,6 @@ jobs:
       - name: make symlinks 1
         run: ln -s lib15442c/src/lib15442c src/lib15442c
       - name: make symlinks 2
-        run: ln -s include/src/lib15442c include/lib15442c
+        run: ln -s lib15442c/include/lib15442c include/lib15442c
       - name: build application
         run: make -Wall -j
