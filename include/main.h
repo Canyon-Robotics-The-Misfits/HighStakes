@@ -35,6 +35,7 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
+#include "gui/gui.h"
 #include "lib15442c/api.hpp"
 
 /**
