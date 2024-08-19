@@ -19,5 +19,9 @@ jobs:
           release: '10-2020-q4'
       - name: checkout repo
         uses: actions/checkout@v2
+      - name: make symlinks 1
+        run: ln -s lib15442c/src/lib15442c src/lib15442c
+      - name: make symlinks 2
+        run: ln -s include/src/lib15442c include/lib15442c
       - name: build application
         run: make -Wall -j
