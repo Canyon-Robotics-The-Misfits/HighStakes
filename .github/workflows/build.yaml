@@ -1,0 +1,23 @@
+name: Build PROS Project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Install ARM Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '10-2020-q4'
+      - name: checkout repo
+        uses: actions/checkout@v2
+      - name: build application
+        run: make -Wall -j
