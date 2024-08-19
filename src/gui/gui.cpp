@@ -1,5 +1,11 @@
 #include "gui/gui.h"
 
+gui::ScreenGUI& gui::ScreenGUI::access() {
+    static ScreenGUI self;
+    
+    return self;
+}
+
 void gui::ScreenGUI::setup_ui() {
     
 }

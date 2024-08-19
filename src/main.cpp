@@ -5,9 +5,9 @@
 #include "auto.h"
 
 void initialize() {
-	std::shared_ptr<gui::GUI> gui = gui::GUI::access();
+	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 
-	gui->register_autonomous(Auto::POSITIVE, {
+	gui.register_autonomous(Auto::POSITIVE, {
 		display_name: "Positive",
 		display_description: ""
 	});

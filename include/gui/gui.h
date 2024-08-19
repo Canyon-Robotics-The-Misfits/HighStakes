@@ -17,15 +17,18 @@ namespace gui
     class ScreenGUI
     {
     private:
-        static std::shared_ptr<ScreenGUI> self;
-        ScreenGUI();
-        ~ScreenGUI();
+        static ScreenGUI self;
+        ScreenGUI() {};
 
         std::unordered_map<Auto, AutonomousConfig> auto_map;
         Auto selected_auto = Auto::NONE;
 
     public:
-        static std::shared_ptr<ScreenGUI> &access() { return self; };
+        ScreenGUI(ScreenGUI const&) = delete;
+        void operator=(ScreenGUI const&) = delete;
+
+
+        static ScreenGUI& access();
 
         void setup_ui();
 
