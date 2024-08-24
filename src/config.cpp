@@ -21,3 +21,13 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 
 	return drivetrain;
 }
+
+lib15442c::Motor config::make_arm()
+{
+	return lib15442c::Motor(config::PARAMS_ARM);
+}
+
+lib15442c::Motor config::make_intake()
+{
+	return lib15442c::Motor(config::PARAMS_INTAKE);
+}

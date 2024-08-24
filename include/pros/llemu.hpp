@@ -1,7 +1,7 @@
 /**
  * \file pros/llemu.hpp
  * \ingroup cpp-llemu
- * 
+ *
  * Legacy LCD Emulator
  *
  * \details This file defines a high-level API for emulating the three-button, UART-based
@@ -43,30 +43,32 @@
 /******************************************************************************/
 
 namespace pros {
-    
+
 /**
- * \ingroup cpp-llemu 
+ * \ingroup cpp-llemu
  */
 namespace lcd {
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
     namespace {
-    template <typename T>
-    T convert_args(T arg) {
-        return arg;
-    }
-    const char* convert_args(const std::string& arg) {
-        return arg.c_str();
-    }
-    }  // namespace
-    #pragma GCC diagnostic pop
+        template <typename T>
+        T convert_args(T arg)
+        {
+            return arg;
+        }
+        const char* convert_args(const std::string& arg)
+        {
+            return arg.c_str();
+        }
+    } // namespace
+#pragma GCC diagnostic pop
 
     using lcd_btn_cb_fn_t = void (*)(void);
 
-    /* 
-     * These weak symbols allow the example main.cpp in to compile even when 
-     * the liblvgl template is missing from the project. 
-     * 
+    /*
+     * These weak symbols allow the example main.cpp in to compile even when
+     * the liblvgl template is missing from the project.
+     *
      * For documentation on these functions, please see the doxygen comments for
      * these functions in the libvgl llemu headers.
      */
@@ -80,11 +82,11 @@ namespace lcd {
 
     /**
      * \addtogroup cpp-llemu
-     * @{ 
+     * @{
      */
-    
+
     /*
-     * Note: This template resides in this file since the 
+     * Note: This template resides in this file since the
      */
 
     /**
@@ -104,11 +106,11 @@ namespace lcd {
      *
      * \return True if the operation was successful, or false otherwise, setting
      * errno values as specified above.
-     * 
+     *
      * \b Example
      * \code
      * #include "pros/llemu.hpp"
-     * 
+     *
      * void initialize() {
      *   pros::lcd::initialize();
      *   pros::lcd::print(0, "My formatted text: %d!", 2);
@@ -116,21 +118,22 @@ namespace lcd {
      * \endcode
      */
     template <typename... Params>
-    bool print(std::int16_t line, const char* fmt, Params... args) {
-	    return pros::c::lcd_print(line, fmt, convert_args(args)...);
+    bool print(std::int16_t line, const char* fmt, Params... args)
+    {
+        return pros::c::lcd_print(line, fmt, convert_args(args)...);
     }
 
-    #ifndef LCD_BTN_LEFT
-        #define LCD_BTN_LEFT 4
-    #endif
+#ifndef LCD_BTN_LEFT
+#define LCD_BTN_LEFT 4
+#endif
 
-    #ifndef LCD_BTN_CENTER
-        #define LCD_BTN_CENTER 2
-    #endif
+#ifndef LCD_BTN_CENTER
+#define LCD_BTN_CENTER 2
+#endif
 
-    #ifndef LCD_BTN_RIGHT
-        #define LCD_BTN_RIGHT 1
-    #endif
+#ifndef LCD_BTN_RIGHT
+#define LCD_BTN_RIGHT 1
+#endif
     /// @}
 } // namespace lcd
 } // namespace pros

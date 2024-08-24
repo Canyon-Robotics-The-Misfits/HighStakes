@@ -88,6 +88,9 @@
 			"string_view": "cpp",
 			"ranges": "cpp",
 			"cinttypes": "cpp"
-		}
+		},
+		"cSpell.words": [
+			"opcontrol"
+		]
 	}
 }

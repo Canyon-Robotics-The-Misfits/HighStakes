@@ -3,8 +3,6 @@
 #include <initializer_list>
 #include <cstdint>
 
-#include "lib15442c/device/motor.hpp"
-
 namespace config
 {
     constexpr std::initializer_list<std::int8_t> PORT_LEFT_DRIVE = {-16, -18, -17};
@@ -28,5 +26,30 @@ namespace config
         ratio : lib15442c::MOTOR_BLUE *config::DRIVE_GEAR_RATIO
     };
 
+
+    constexpr double ARM_GEAR_RATIO = 36.0 / 84.0;
+    constexpr lib15442c::MotorParameters PARAMS_ARM = {
+        port : 6,
+        reversed: true,
+        brake_mode : lib15442c::MotorBrakeMode::BRAKE,
+        ratio : lib15442c::MOTOR_RED * config::ARM_GEAR_RATIO
+    };
+
+
+    constexpr double INTAKE_GEAR_RATIO = 24.0 / 16.0;
+    constexpr lib15442c::MotorParameters PARAMS_INTAKE = {
+        port : 8,
+        reversed: false,
+        brake_mode : lib15442c::MotorBrakeMode::COAST,
+        ratio : lib15442c::MOTOR_RED * config::INTAKE_GEAR_RATIO
+    };
+
+
+    constexpr char PORT_CLAMP = 'H';
+    constexpr char PORT_REDIRECT = 'G';
+
+
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
+    lib15442c::Motor make_arm();
+    lib15442c::Motor make_intake();
 }

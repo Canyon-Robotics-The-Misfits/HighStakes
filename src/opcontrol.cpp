@@ -1,7 +1,10 @@
 #include "main.h"
 #include "config.h"
 
-double curve_joystick(double in) {
+#define LOGGER "opcontrol.cpp"
+
+double curve_joystick(double in)
+{
     constexpr double a = 70;
     constexpr double b = 147;
 
@@ -34,15 +37,73 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
     drivetrain->move(linear_speed, rotational_speed);
 }
 
+void control_arm(pros::Controller controller, lib15442c::Motor arm)
+{
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X))
+    {
+        arm.move(127);
+    }
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B))
+    {
+        arm.move(-127);
+    }
+    else
+    {
+        arm.move(0);
+    }
+}
+
+void control_intake(pros::Controller controller, lib15442c::Motor intake)
+{
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    {
+        intake.move(127);
+    }
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
+        intake.move(-127);
+    }
+    else
+    {
+        intake.move(0);
+    }
+}
+
+void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
+    {
+        clamp.toggle();
+    }
+}
+
+void control_redirect(pros::Controller controller, lib15442c::Pneumatic redirect)
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+    {
+        redirect.toggle();
+    }
+}
+
 void opcontrol()
 {
+	INFO_TEXT("OPControl Start");
+
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
+    lib15442c::Motor arm = config::make_arm();
+    lib15442c::Motor intake = config::make_intake();
+    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    lib15442c::Pneumatic redirect = lib15442c::Pneumatic(config::PORT_REDIRECT);
 
     while (true)
     {
         control_drivetrain(controller, drivetrain);
+        control_arm(controller, arm);
+        control_intake(controller, intake);
+        control_clamp(controller, clamp);
+        control_redirect(controller, redirect);
 
         pros::delay(20);
     }
