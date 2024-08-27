@@ -89,8 +89,9 @@
 			"ranges": "cpp",
 			"cinttypes": "cpp"
 		},
-		"cSpell.words": [
-			"opcontrol"
-		]
+		"search.exclude": {
+			"**/liblvgl": true,
+			"**/pros": true
+		}
 	}
 }

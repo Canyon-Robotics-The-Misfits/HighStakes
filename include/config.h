@@ -11,7 +11,6 @@ namespace config
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
     constexpr double DRIVE_TRACK_WIDTH = 14; // TODO: get real number
-
     constexpr lib15442c::MotorBrakeMode DRIVE_BRAKE_MODE = lib15442c::MotorBrakeMode::COAST;
 
     constexpr lib15442c::MotorGroupParameters PARAMS_LEFT_DRIVE = {
@@ -41,7 +40,7 @@ namespace config
         port : 8,
         reversed: false,
         brake_mode : lib15442c::MotorBrakeMode::COAST,
-        ratio : lib15442c::MOTOR_RED * config::INTAKE_GEAR_RATIO
+        ratio : lib15442c::MOTOR_BLUE * config::INTAKE_GEAR_RATIO
     };
 
 
