@@ -77,11 +77,26 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
     }
 }
 
-void control_redirect(pros::Controller controller, lib15442c::Pneumatic redirect)
+void control_redirect(pros::Controller controller, lib15442c::Pneumatic redirect, pros::Optical color_sensor)
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
     {
         redirect.toggle();
+    }
+
+    double hue = color_sensor.get_hue();
+
+    if (hue > 170 && hue < 230)
+    {
+        std::cout << "blue: " << hue << std::endl;
+
+        redirect.retract();
+    }
+    else if (hue > 0 && hue < 20)
+    {
+        std::cout << "red: " << hue << std::endl;
+
+        redirect.extend();
     }
 }
 
@@ -96,6 +111,7 @@ void opcontrol()
     lib15442c::Motor intake = config::make_intake();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic redirect = lib15442c::Pneumatic(config::PORT_REDIRECT);
+    pros::Optical color_sensor = pros::Optical(config::PORT_OPTICAL);
 
     while (true)
     {
@@ -103,7 +119,7 @@ void opcontrol()
         control_arm(controller, arm);
         control_intake(controller, intake);
         control_clamp(controller, clamp);
-        control_redirect(controller, redirect);
+        control_redirect(controller, redirect, color_sensor);
 
         pros::delay(20);
     }

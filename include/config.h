@@ -5,8 +5,8 @@
 
 namespace config
 {
-    constexpr std::initializer_list<std::int8_t> PORT_LEFT_DRIVE = {-16, -18, -17};
-    constexpr std::initializer_list<std::int8_t> PORT_RIGHT_DRIVE = {12, 13, 14};
+    constexpr std::initializer_list<std::int8_t> PORT_LEFT_DRIVE = {-15, -14, -13};
+    constexpr std::initializer_list<std::int8_t> PORT_RIGHT_DRIVE = {5, 4, 3};
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
@@ -44,6 +44,7 @@ namespace config
     };
 
 
+    constexpr int PORT_OPTICAL = 12;
     constexpr char PORT_CLAMP = 'H';
     constexpr char PORT_REDIRECT = 'G';
 
