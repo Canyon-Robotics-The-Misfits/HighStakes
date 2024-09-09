@@ -26,12 +26,12 @@ namespace config
     };
 
 
-    constexpr double ARM_GEAR_RATIO = 36.0 / 84.0;
+    constexpr double ARM_GEAR_RATIO = 12.0 / 84.0;
     constexpr lib15442c::MotorParameters PARAMS_ARM = {
         port : 6,
         reversed: true,
-        brake_mode : lib15442c::MotorBrakeMode::BRAKE,
-        ratio : lib15442c::MOTOR_RED * config::ARM_GEAR_RATIO
+        brake_mode : lib15442c::MotorBrakeMode::HOLD,
+        ratio : lib15442c::MOTOR_GREEN * config::ARM_GEAR_RATIO
     };
 
 

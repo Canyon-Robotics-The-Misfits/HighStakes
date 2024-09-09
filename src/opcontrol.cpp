@@ -5,14 +5,19 @@
 
 double curve_joystick(double in)
 {
-    constexpr double a = 70;
-    constexpr double b = 147;
+    constexpr double a = 0.346767;
+    constexpr double b = 0.137;
+    constexpr double c = 0;
+    constexpr double d = 0.102864;
+    constexpr double e = 0.413369;
 
     if (in != 0)
     {
-        float toT = fabs(in) / 127.0;
-        float output = a * pow(1 - toT, 2) * toT + b * (1 - toT) * pow(toT, 2) + 127 * pow(toT, 3);
-        return output * lib15442c::sgn(in);
+        double t = in / 127.0;
+
+        double out_normalized = a * pow(t, 5) + b * pow(t, 4) + c * pow(t, 3) + d * pow(t, 2) + e * t;
+        
+        return out_normalized * 127.0;
     }
     else
     {
@@ -31,26 +36,15 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
         rotational_raw = 0;
     }
 
-    double linear_speed = curve_joystick(linear_raw);
-    double rotational_speed = rotational_raw;
+    double linear_speed = linear_raw;
+    double rotational_speed = curve_joystick(rotational_raw);
 
     drivetrain->move(linear_speed, rotational_speed);
 }
 
 void control_arm(pros::Controller controller, lib15442c::Motor arm)
 {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X))
-    {
-        arm.move(127);
-    }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B))
-    {
-        arm.move(-127);
-    }
-    else
-    {
-        arm.move(0);
-    }
+    arm.move(controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
 }
 
 void control_intake(pros::Controller controller, lib15442c::Motor intake)
@@ -71,7 +65,7 @@ void control_intake(pros::Controller controller, lib15442c::Motor intake)
 
 void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
 {
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
     {
         clamp.toggle();
     }
@@ -79,7 +73,7 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
 
 void control_redirect(pros::Controller controller, lib15442c::Pneumatic redirect, pros::Optical color_sensor)
 {
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
     {
         redirect.toggle();
     }
