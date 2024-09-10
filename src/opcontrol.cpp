@@ -44,7 +44,15 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
 
 void control_arm(pros::Controller controller, lib15442c::Motor arm)
 {
-    arm.move(controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
+    double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+
+    if (raw_joystick > 12)
+    {
+        arm.move(raw_joystick);
+    }
+    else{
+        arm.move(0);
+    }
 }
 
 void control_intake(pros::Controller controller, lib15442c::Motor intake)
