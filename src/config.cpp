@@ -42,7 +42,7 @@ lib15442c::Motor config::make_arm()
 
 	if (!arm.is_installed())
 	{
-		ERROR("Arm motor is not detected on port %d!", config::PARAMS_ARM);
+		ERROR("Arm motor is not detected on port %d!", arm.get_port());
 	}
 
 	return arm;
@@ -54,7 +54,7 @@ lib15442c::Motor config::make_intake()
 
 	if (!intake.is_installed())
 	{
-		ERROR("Intake motor is not detected on port %d!", config::PARAMS_INTAKE);
+		ERROR("Intake motor is not detected on port %d!", intake.get_port());
 	}
 
 	return intake;

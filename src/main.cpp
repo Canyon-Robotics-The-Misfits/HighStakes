@@ -2,7 +2,7 @@
 
 #include "main.h"
 #include "config.h"
-#include "auto.h"
+#include "autonomous.h"
 
 #define LOGGER "main.cpp"
 
@@ -11,27 +11,27 @@ void initialize() {
 
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 
-	gui.register_autonomous(Auto::NONE, {
+	gui.register_autonomous(auto_routes::Route::NONE, {
 		display_name: "NONE",
 		display_description: ""
 	});
-	gui.register_autonomous(Auto::POSITIVE, {
+	gui.register_autonomous(auto_routes::Route::POSITIVE, {
 		display_name: "Positive",
 		display_description: ""
 	});
-	gui.register_autonomous(Auto::NEGATIVE, {
+	gui.register_autonomous(auto_routes::Route::NEGATIVE, {
 		display_name: "Negative",
 		display_description: ""
 	});
-	gui.register_autonomous(Auto::POSITIVE_ELIMS, {
+	gui.register_autonomous(auto_routes::Route::POSITIVE_ELIMS, {
 		display_name: "Positive Elims",
 		display_description: ""
 	});
-	gui.register_autonomous(Auto::NEGATIVE_ELIMS, {
+	gui.register_autonomous(auto_routes::Route::NEGATIVE_ELIMS, {
 		display_name: "Negative Elims",
 		display_description: ""
 	});
-	gui.register_autonomous(Auto::SOLO, {
+	gui.register_autonomous(auto_routes::Route::SOLO, {
 		display_name: "Solo",
 		display_description: ""
 	});

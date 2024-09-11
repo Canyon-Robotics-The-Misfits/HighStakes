@@ -1,6 +1,7 @@
 #include "main.h"
 #include "gui/gui.h"
 #include "config.h"
+#include "autonomous.h"
 
 #define LOGGER "autonomous.cpp"
 
@@ -13,19 +14,19 @@ void autonomous() {
 
 	switch (gui.get_selected_auto())
 	{
-		case Auto::POSITIVE: {
+		case auto_routes::Route::POSITIVE: {
 
 		} break;
-		case Auto::NEGATIVE: {
+		case auto_routes::Route::NEGATIVE: {
 
 		} break;
-		case Auto::POSITIVE_ELIMS: {
+		case auto_routes::Route::POSITIVE_ELIMS: {
 
 		} break;
-		case Auto::NEGATIVE_ELIMS: {
+		case auto_routes::Route::NEGATIVE_ELIMS: {
 
 		} break;
-		case Auto::SOLO: {
+		case auto_routes::Route::SOLO: {
 
 		} break;
 		default: break;

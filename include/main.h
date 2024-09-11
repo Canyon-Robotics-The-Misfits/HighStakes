@@ -38,6 +38,8 @@
 #include "gui/gui.h"
 #include "lib15442c/api.hpp"
 
+using namespace lib15442c::literals;
+
 /**
  * You should add more #includes here
  */

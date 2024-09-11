@@ -3,7 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include "auto.h"
+#include "autonomous.h"
 
 namespace gui
 {
@@ -20,8 +20,8 @@ namespace gui
         static ScreenGUI self;
         ScreenGUI() {};
 
-        std::unordered_map<Auto, AutonomousConfig> auto_map;
-        Auto selected_auto = Auto::NONE;
+        std::unordered_map<auto_routes::Route, AutonomousConfig> auto_map;
+        auto_routes::Route selected_auto = auto_routes::Route::NONE;
 
     public:
         ScreenGUI(ScreenGUI const&) = delete;
@@ -32,9 +32,9 @@ namespace gui
 
         void setup_ui();
 
-        void register_autonomous(Auto id, AutonomousConfig config);
+        void register_autonomous(auto_routes::Route id, AutonomousConfig config);
 
-        Auto get_selected_auto();
+        auto_routes::Route get_selected_auto();
     };
 
 }
