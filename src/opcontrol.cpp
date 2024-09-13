@@ -5,11 +5,11 @@
 
 double curve_joystick(double in)
 {
-    constexpr double a = 0.346767;
-    constexpr double b = 0.137;
-    constexpr double c = 0;
-    constexpr double d = 0.102864;
-    constexpr double e = 0.413369;
+    constexpr double a = -1.02448;
+    constexpr double b = 0;
+    constexpr double c = 3.15039;
+    constexpr double d = -2.2373;
+    constexpr double e = 1.11139;
 
     if (in != 0)
     {
@@ -46,7 +46,9 @@ void control_arm(pros::Controller controller, lib15442c::Motor arm)
 {
     double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-    if (raw_joystick > 12)
+    printf("brake mode %d, %d", arm.get_brake_mode(), pros::c::motor_get_brake_mode(arm.get_port()));
+
+    if (fabs(raw_joystick) > 12)
     {
         arm.move(raw_joystick);
     }
