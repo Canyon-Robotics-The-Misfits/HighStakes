@@ -49,7 +49,30 @@ namespace config
     constexpr char PORT_REDIRECT = 'G';
 
 
+    constexpr int PORT_IMU = 19;
+    constexpr double IMU_SCALE = 1.0;
+
+    constexpr int PORT_PARALLEL_TRACKER = 21;
+    constexpr int PORT_PERPENDICULAR_TRACKER = 20;
+    constexpr double PARALLEL_TRACKER_OFFSET = 0.0;
+    constexpr double PERPENDICULAR_TRACKER_OFFSET = 0.0;
+    constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
+    constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.0;
+
+
+    constexpr double DRIVE_SLEW_RATE = 127.0 / 0.25;
+    constexpr double DRIVE_KP = 1.0;
+    constexpr double DRIVE_KI = 0.0;
+    constexpr double DRIVE_KD = 0.0;
+    constexpr double TURN_KP = 1.0;
+    constexpr double TURN_KI = 0.0;
+    constexpr double TURN_KD = 0.0;
+
+
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     lib15442c::Motor make_arm();
     lib15442c::Motor make_intake();
+
+    std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
+    std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);
 }

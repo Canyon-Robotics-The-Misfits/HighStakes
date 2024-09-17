@@ -1,7 +1,7 @@
 #include "main.h"
 #include "autonomous.h"
 
-void auto_routes::skills()
+AUTO_ROUTE(auto_routes::skills)
 {
 
 }

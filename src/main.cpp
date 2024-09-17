@@ -1,6 +1,7 @@
 #include <memory>
 
 #include "main.h"
+#include "gui/gui.h"
 #include "config.h"
 #include "autonomous.h"
 

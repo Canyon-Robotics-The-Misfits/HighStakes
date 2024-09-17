@@ -1,7 +1,7 @@
 #include "main.h"
 #include "autonomous.h"
 
-void auto_routes::negative()
+AUTO_ROUTE(auto_routes::negative)
 {
     
 }

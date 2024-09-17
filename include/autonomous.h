@@ -1,5 +1,9 @@
 #pragma once
 
+#include "main.h"
+
+#define AUTO_ROUTE(name) void name(std::shared_ptr<lib15442c::DriveController> drive_controller, std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry)
+
 namespace auto_routes
 {
     enum class Route
@@ -10,12 +14,13 @@ namespace auto_routes
         POSITIVE_ELIMS,
         NEGATIVE_ELIMS,
         SOLO,
+        SKILLS,
     };
 
-    void positive();
-    void negative();
-    void positive_elims();
-    void negative_elims();
-    void solo();
-    void skills();
+    AUTO_ROUTE(positive);
+    AUTO_ROUTE(negative);
+    AUTO_ROUTE(positive_elims);
+    AUTO_ROUTE(negative_elims);
+    AUTO_ROUTE(solo);
+    AUTO_ROUTE(skills);
 };
