@@ -2,6 +2,7 @@
 
 #include <initializer_list>
 #include <cstdint>
+#include "mechanism/intake.h"
 
 namespace config
 {
@@ -71,7 +72,7 @@ namespace config
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     lib15442c::Motor make_arm();
-    lib15442c::Motor make_intake();
+    std::shared_ptr<mechanism::Intake> make_intake();
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
     std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);

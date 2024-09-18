@@ -45,16 +45,15 @@ lib15442c::Motor config::make_arm()
 	return arm;
 }
 
-lib15442c::Motor config::make_intake()
+std::shared_ptr<mechanism::Intake> config::make_intake()
 {
-	auto intake = lib15442c::Motor(config::PARAMS_INTAKE);
+	auto intake = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
+    auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT);
+    auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
 
-	if (!intake.is_installed())
-	{
-		ERROR("Intake motor is not detected on port %d!", intake.get_port());
-	}
-
-	return intake;
+	return std::make_shared<mechanism::Intake>(
+		intake, redirect, color_sensor
+	);
 }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()

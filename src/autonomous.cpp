@@ -16,32 +16,29 @@ void autonomous() {
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
+    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     lib15442c::Motor arm = config::make_arm();
-    lib15442c::Motor intake = config::make_intake();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    lib15442c::Pneumatic redirect = lib15442c::Pneumatic(config::PORT_REDIRECT);
-    pros::Optical color_sensor = pros::Optical(config::PORT_OPTICAL);
-
 
 	switch (gui.get_selected_auto())
 	{
 		case auto_routes::Route::POSITIVE: {
-			auto_routes::positive(drive_controller, drivetrain, odometry);
+			auto_routes::positive(drive_controller, drivetrain, odometry, intake, arm, clamp);
 		} break;
 		case auto_routes::Route::NEGATIVE: {
-			auto_routes::negative(drive_controller, drivetrain, odometry);
+			auto_routes::negative(drive_controller, drivetrain, odometry, intake, arm, clamp);
 		} break;
 		case auto_routes::Route::POSITIVE_ELIMS: {
-			auto_routes::positive_elims(drive_controller, drivetrain, odometry);
+			auto_routes::positive_elims(drive_controller, drivetrain, odometry, intake, arm, clamp);
 		} break;
 		case auto_routes::Route::NEGATIVE_ELIMS: {
-			auto_routes::negative_elims(drive_controller, drivetrain, odometry);
+			auto_routes::negative_elims(drive_controller, drivetrain, odometry, intake, arm, clamp);
 		} break;
 		case auto_routes::Route::SOLO: {
-			auto_routes::solo(drive_controller, drivetrain, odometry);
+			auto_routes::solo(drive_controller, drivetrain, odometry, intake, arm, clamp);
 		} break;
 		case auto_routes::Route::SKILLS: {
-			auto_routes::skills(drive_controller, drivetrain, odometry);
+			auto_routes::skills(drive_controller, drivetrain, odometry, intake, arm, clamp);
 		} break;
 		default: break;
 	}

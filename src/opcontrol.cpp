@@ -57,19 +57,34 @@ void control_arm(pros::Controller controller, lib15442c::Motor arm)
     }
 }
 
-void control_intake(pros::Controller controller, lib15442c::Motor intake)
+void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake)
 {
+    // Intake and Outtake
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     {
-        intake.move(127);
+        intake->move(127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
-        intake.move(-127);
+        intake->move(-127);
     }
     else
     {
-        intake.move(0);
+        intake->move(0);
+    }
+
+    // Redirect
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
+    {
+        intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
+    }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
+    {
+        intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
+    }
+    else
+    {
+        intake->set_redirect_mode(mechanism::IntakeRedirectMode::RED);
     }
 }
 
@@ -81,29 +96,6 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
     }
 }
 
-void control_redirect(pros::Controller controller, lib15442c::Pneumatic redirect, pros::Optical color_sensor)
-{
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
-    {
-        redirect.toggle();
-    }
-
-    double hue = color_sensor.get_hue();
-
-    if (hue > 170 && hue < 230)
-    {
-        std::cout << "blue: " << hue << std::endl;
-
-        redirect.retract();
-    }
-    else if (hue > 0 && hue < 20)
-    {
-        std::cout << "red: " << hue << std::endl;
-
-        redirect.extend();
-    }
-}
-
 void opcontrol()
 {
 	INFO_TEXT("OPControl Start");
@@ -111,11 +103,9 @@ void opcontrol()
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
+    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     lib15442c::Motor arm = config::make_arm();
-    lib15442c::Motor intake = config::make_intake();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    lib15442c::Pneumatic redirect = lib15442c::Pneumatic(config::PORT_REDIRECT);
-    pros::Optical color_sensor = pros::Optical(config::PORT_OPTICAL);
 
     while (true)
     {
@@ -123,7 +113,6 @@ void opcontrol()
         control_arm(controller, arm);
         control_intake(controller, intake);
         control_clamp(controller, clamp);
-        control_redirect(controller, redirect, color_sensor);
 
         pros::delay(20);
     }

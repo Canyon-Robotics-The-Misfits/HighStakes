@@ -1,8 +1,16 @@
 #pragma once
 
 #include "main.h"
+#include "mechanism/intake.h"
 
-#define AUTO_ROUTE(name) void name(std::shared_ptr<lib15442c::DriveController> drive_controller, std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry)
+#define AUTO_ROUTE(name) void name(                                 \
+    std::shared_ptr<lib15442c::DriveController> drive_controller,   \
+    std::shared_ptr<lib15442c::IDrivetrain> drivetrain,             \
+    std::shared_ptr<lib15442c::IOdometry> odometry,                 \
+    std::shared_ptr<mechanism::Intake> intake,                      \
+    lib15442c::Motor arm,                                           \
+    lib15442c::Pneumatic clamp                                      \
+)
 
 namespace auto_routes
 {
