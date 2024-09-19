@@ -33,16 +33,16 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 	return drivetrain;
 }
 
-lib15442c::Motor config::make_arm()
+std::shared_ptr<mechanism::Arm> config::make_arm()
 {
-	auto arm = lib15442c::Motor(config::PARAMS_ARM);
+	auto motor = std::make_shared<lib15442c::Motor>(config::PARAMS_ARM);
+	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
+	auto limit_switch = std::make_shared<pros::adi::DigitalIn>(config::PORT_ARM_LIMIT);
+	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
 
-	if (!arm.is_installed())
-	{
-		ERROR("Arm motor is not detected on port %d!", arm.get_port());
-	}
-
-	return arm;
+	return std::make_shared<mechanism::Arm>(
+		motor, rotation_sensor, limit_switch, pid, config::ARM_TARGET_CONFIG
+	);
 }
 
 std::shared_ptr<mechanism::Intake> config::make_intake()

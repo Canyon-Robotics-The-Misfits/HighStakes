@@ -3,6 +3,7 @@
 #include <initializer_list>
 #include <cstdint>
 #include "mechanism/intake.h"
+#include "mechanism/arm.h"
 
 namespace config
 {
@@ -26,29 +27,40 @@ namespace config
         ratio : lib15442c::MOTOR_BLUE *config::DRIVE_GEAR_RATIO
     };
 
-
     constexpr double ARM_GEAR_RATIO = 12.0 / 84.0;
     constexpr lib15442c::MotorParameters PARAMS_ARM = {
         port : 6,
-        reversed: true,
+        reversed : true,
         brake_mode : lib15442c::MotorBrakeMode::HOLD,
-        ratio : lib15442c::MOTOR_GREEN * config::ARM_GEAR_RATIO
+        ratio : lib15442c::MOTOR_GREEN *config::ARM_GEAR_RATIO
+    };
+    constexpr int PORT_ARM_ROTATION = 10;
+    constexpr char PORT_ARM_LIMIT = 'F';
+    constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
+        kP : 1.0,
+        kI : 0.0,
+        kD : 0.0
+    };
+    constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
+        load : 0.0,
+        color_sort : 0.0,
+        alliance_stake : 0.0,
+        neutral_stake : 0.0
     };
 
 
     constexpr double INTAKE_GEAR_RATIO = 24.0 / 16.0;
     constexpr lib15442c::MotorParameters PARAMS_INTAKE = {
         port : 8,
-        reversed: false,
+        reversed : false,
         brake_mode : lib15442c::MotorBrakeMode::COAST,
-        ratio : lib15442c::MOTOR_BLUE * config::INTAKE_GEAR_RATIO
+        ratio : lib15442c::MOTOR_BLUE *config::INTAKE_GEAR_RATIO
     };
-
-
     constexpr int PORT_OPTICAL = 12;
-    constexpr char PORT_CLAMP = 'H';
     constexpr char PORT_REDIRECT = 'G';
 
+
+    constexpr char PORT_CLAMP = 'H';
 
     constexpr int PORT_IMU = 19;
     constexpr double IMU_SCALE = 1.0;
@@ -60,7 +72,6 @@ namespace config
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.0;
 
-
     constexpr double DRIVE_SLEW_RATE = 127.0 / 0.25;
     constexpr double DRIVE_KP = 1.0;
     constexpr double DRIVE_KI = 0.0;
@@ -69,9 +80,8 @@ namespace config
     constexpr double TURN_KI = 0.0;
     constexpr double TURN_KD = 0.0;
 
-
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
-    lib15442c::Motor make_arm();
+    std::shared_ptr<mechanism::Arm> make_arm();
     std::shared_ptr<mechanism::Intake> make_intake();
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();

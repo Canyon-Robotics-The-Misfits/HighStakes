@@ -42,18 +42,16 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
     drivetrain->move(linear_speed, rotational_speed);
 }
 
-void control_arm(pros::Controller controller, lib15442c::Motor arm)
+void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> arm)
 {
     double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-    // printf("brake mode %d, %d\n", arm.get_brake_mode(), pros::c::motor_get_brake_mode(arm.get_port()));
-
     if (fabs(raw_joystick) > 12)
     {
-        arm.move(raw_joystick);
+        arm->move(raw_joystick);
     }
     else{
-        arm.move(0);
+        arm->move(0);
     }
 }
 
@@ -104,7 +102,7 @@ void opcontrol()
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    lib15442c::Motor arm = config::make_arm();
+    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
 
     while (true)

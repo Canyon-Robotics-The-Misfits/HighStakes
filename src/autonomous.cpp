@@ -17,7 +17,7 @@ void autonomous() {
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    lib15442c::Motor arm = config::make_arm();
+    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
 
 	switch (gui.get_selected_auto())
