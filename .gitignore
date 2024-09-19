@@ -16,6 +16,4 @@ temp.errors
 *.ini
 .d/
 
-# Other
-src/lib15442c
-include/lib15442c
+lib15442c

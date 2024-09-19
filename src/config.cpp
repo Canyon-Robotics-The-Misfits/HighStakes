@@ -48,7 +48,7 @@ std::shared_ptr<mechanism::Arm> config::make_arm()
 std::shared_ptr<mechanism::Intake> config::make_intake()
 {
 	auto intake = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
-    auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT);
+    auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT, true, false);
     auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
 
 	return std::make_shared<mechanism::Intake>(

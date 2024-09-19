@@ -16,7 +16,7 @@ double curve_joystick(double in)
         double t = fabs(in) / 127.0;
 
         double out_normalized = a * pow(t, 5) + b * pow(t, 4) + c * pow(t, 3) + d * pow(t, 2) + e * t;
-        
+
         return out_normalized * 127.0 * lib15442c::sgn(in);
     }
     else
@@ -44,45 +44,77 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
 
 void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> arm)
 {
+    if (controller.get_digital_new_press(DIGITAL_R1))
+    {
+        if (arm->get_target() == mechanism::ArmTarget::LOAD)
+        {
+            arm->set_target(mechanism::ArmTarget::NEUTRAL_STAKE);
+        }
+        else
+        {
+            arm->set_target(mechanism::ArmTarget::LOAD);
+        }
+    }
+
     double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
     if (fabs(raw_joystick) > 12)
     {
         arm->move(raw_joystick);
     }
-    else{
+    else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
+    {
         arm->move(0);
     }
 }
 
-void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake)
+bool intake_on = true;
+bool color_sort = true;
+void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<mechanism::Arm> arm)
 {
-    // Intake and Outtake
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    // intake toggle
+    if (controller.get_digital_new_press(DIGITAL_Y))
     {
-        intake->move(127);
+        intake_on = !intake_on;
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+
+    // reverse if r2 pressed
+    if (controller.get_digital(DIGITAL_R2))
     {
         intake->move(-127);
+    }
+    else if (intake_on)
+    {
+        intake->move(127);
     }
     else
     {
         intake->move(0);
     }
 
-    // Redirect
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
+    if (controller.get_digital(DIGITAL_L2))
     {
         intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
     }
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
-    {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
-    }
     else
     {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::RED);
+        bool x_new_press = controller.get_digital_new_press(DIGITAL_X);
+        if (x_new_press)
+        {
+            color_sort = !color_sort;
+        }
+
+        if (color_sort && x_new_press)
+        {
+            intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
+            arm->set_target(mechanism::ArmTarget::COLOR_SORT);
+            controller.rumble(".");
+        }
+        else if (x_new_press)
+        {
+            intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
+            controller.rumble("..");
+        }
     }
 }
 
@@ -96,7 +128,7 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
 
 void opcontrol()
 {
-	INFO_TEXT("OPControl Start");
+    INFO_TEXT("OPControl Start");
 
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -104,12 +136,14 @@ void opcontrol()
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    
+    arm->set_target(mechanism::ArmTarget::COLOR_SORT);
 
     while (true)
     {
         control_drivetrain(controller, drivetrain);
         control_arm(controller, arm);
-        control_intake(controller, intake);
+        control_intake(controller, intake, arm);
         control_clamp(controller, clamp);
 
         pros::delay(20);

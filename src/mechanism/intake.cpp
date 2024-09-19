@@ -16,6 +16,8 @@ mechanism::Intake::Intake(std::shared_ptr<lib15442c::Motor> motor, std::shared_p
     }
 
     color_sensor->set_led_pwm(100);
+
+    start_task();
 }
 
 void mechanism::Intake::start_task()
@@ -43,8 +45,11 @@ void mechanism::Intake::start_task()
 
             double hue = color_sensor->get_hue();
 
-            bool red = hue > 0 && hue < 20;
-            bool blue = hue > 170 && hue < 230;
+            bool red = (hue > 0 && hue < 30) || (hue > 350 && hue < 360);
+            bool blue = hue > 170 && hue < 250;
+
+            // if (red) printf("red\n");
+            // if (blue) printf("blue\n");
 
             switch (redirect_mode)
             {

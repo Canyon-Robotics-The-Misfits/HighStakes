@@ -34,18 +34,18 @@ namespace config
         brake_mode : lib15442c::MotorBrakeMode::HOLD,
         ratio : lib15442c::MOTOR_GREEN *config::ARM_GEAR_RATIO
     };
-    constexpr int PORT_ARM_ROTATION = 10;
+    constexpr int PORT_ARM_ROTATION = -10;
     constexpr char PORT_ARM_LIMIT = 'F';
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
-        kP : 1.0,
+        kP : 20.0,
         kI : 0.0,
         kD : 0.0
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : 0.0,
-        color_sort : 0.0,
-        alliance_stake : 0.0,
-        neutral_stake : 0.0
+        color_sort : 35.0,
+        alliance_stake : 50.0,
+        neutral_stake : 93.0
     };
 
 

@@ -44,6 +44,12 @@ void mechanism::Arm::start_task()
 
             double current_angle = rotation_sensor->get_angle() / 100.0; // divide by 100 to convert centidegrees to degrees
 
+            // make 359 equal to 0
+            if (current_angle > 180)
+            {
+                current_angle = 0;
+            }
+
             double target_angle;
 
             switch (target)
@@ -92,7 +98,10 @@ void mechanism::Arm::stop_task()
 
 void mechanism::Arm::move(double voltage)
 {
-    set_target(ArmTarget::MANUAL);
+    if (voltage != 0.0)
+    {
+        set_target(ArmTarget::MANUAL);
+    }
 
     mutex.lock();
     if (limit_switch->get_value() == true)
