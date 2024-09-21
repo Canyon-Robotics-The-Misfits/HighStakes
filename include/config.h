@@ -62,8 +62,8 @@ namespace config
 
     constexpr char PORT_CLAMP = 'H';
 
-    constexpr int PORT_IMU = 19;
-    constexpr double IMU_SCALE = 1.0;
+    constexpr int PORT_IMU = 7;
+    constexpr double IMU_SCALE = 1.00287313022;
 
     constexpr int PORT_PARALLEL_TRACKER = 21;
     constexpr int PORT_PERPENDICULAR_TRACKER = 20;
@@ -76,9 +76,9 @@ namespace config
     constexpr double DRIVE_KP = 1.0;
     constexpr double DRIVE_KI = 0.0;
     constexpr double DRIVE_KD = 0.0;
-    constexpr double TURN_KP = 20.0;
-    constexpr double TURN_KI = 0.0;
-    constexpr double TURN_KD = 0.0;
+    constexpr double TURN_KP = 5.5;
+    constexpr double TURN_KI = 0;
+    constexpr double TURN_KD = 35.0;
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::Arm> make_arm();

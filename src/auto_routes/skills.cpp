@@ -3,5 +3,9 @@
 
 AUTO_ROUTE(auto_routes::skills)
 {
-    drive_controller->faceAngle(90_deg);
+    
+    drive_controller->faceAngle(90_deg, { timeout: INFINITY });
+    drive_controller->faceAngle(180_deg, { timeout: INFINITY });
+    drive_controller->faceAngle(0_deg, { timeout: INFINITY });
+    drive_controller->faceAngle(10_deg, { timeout: INFINITY });
 }

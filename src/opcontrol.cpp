@@ -136,9 +136,11 @@ void opcontrol()
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
     
     arm->set_target(mechanism::ArmTarget::COLOR_SORT);
 
+    int tick = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
@@ -146,6 +148,7 @@ void opcontrol()
         control_intake(controller, intake, arm);
         control_clamp(controller, clamp);
 
+        tick+=1;
         pros::delay(20);
     }
 }
