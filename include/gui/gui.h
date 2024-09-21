@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include "autonomous.h"
+#include "liblvgl/lvgl.h"
 
 namespace gui
 {
@@ -20,15 +21,24 @@ namespace gui
         static ScreenGUI self;
         ScreenGUI() {};
 
+        std::vector<auto_routes::Route> registered_routes;
+        int selected_auto = 0;
         std::unordered_map<auto_routes::Route, AutonomousConfig> auto_map;
-        auto_routes::Route selected_auto = auto_routes::Route::NONE;
+
+        lv_obj_t * title_label;
+        lv_obj_t * description_label;
+
+        static void left_button_callback(lv_event_t * e);
+        static void right_button_callback(lv_event_t * e);
+
+        void update_content();
 
     public:
         ScreenGUI(ScreenGUI const&) = delete;
         void operator=(ScreenGUI const&) = delete;
 
 
-        static ScreenGUI& access();
+        static gui::ScreenGUI &access();
 
         void setup_ui();
 

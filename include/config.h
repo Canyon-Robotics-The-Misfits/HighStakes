@@ -76,7 +76,7 @@ namespace config
     constexpr double DRIVE_KP = 1.0;
     constexpr double DRIVE_KI = 0.0;
     constexpr double DRIVE_KD = 0.0;
-    constexpr double TURN_KP = 1.0;
+    constexpr double TURN_KP = 20.0;
     constexpr double TURN_KI = 0.0;
     constexpr double TURN_KD = 0.0;
 

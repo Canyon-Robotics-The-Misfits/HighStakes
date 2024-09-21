@@ -5,6 +5,8 @@
 
 #define LOGGER "autonomous.cpp"
 
+#define AUTO_SELECT auto_routes::Route::SKILLS
+
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
 
@@ -20,7 +22,11 @@ void autonomous() {
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
 
+	#ifndef AUTO_SELECT
 	switch (gui.get_selected_auto())
+	#else
+	switch (AUTO_SELECT)
+	#endif
 	{
 		case auto_routes::Route::POSITIVE: {
 			auto_routes::positive(drive_controller, drivetrain, odometry, intake, arm, clamp);

@@ -36,6 +36,12 @@ void initialize() {
 		display_name: "Solo",
 		display_description: ""
 	});
+	gui.register_autonomous(auto_routes::Route::SKILLS, {
+		display_name: "Skills",
+		display_description: ""
+	});
+
+	gui.setup_ui();
 }
 
 void disabled() {
