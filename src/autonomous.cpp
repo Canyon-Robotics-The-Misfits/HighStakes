@@ -22,8 +22,10 @@ void autonomous() {
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
 
-	arm->set_target(mechanism::ArmTarget::LOAD);
+    odometry->startTask();
 	odometry->setRotation(0_deg);
+	intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
+	arm->set_target(mechanism::ArmTarget::MANUAL);
 
 	#ifndef AUTO_SELECT
 	switch (gui.get_selected_auto())
@@ -56,6 +58,7 @@ void autonomous() {
 
 	intake->stop_task();
 	arm->stop_task();
+	odometry->stopTask();
 	
 	INFO("Autonomous End. Took %.2fs", end_time - start_time);
 }

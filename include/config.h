@@ -65,15 +65,15 @@ namespace config
     constexpr int PORT_IMU = 7;
     constexpr double IMU_SCALE = 1.00287313022;
 
-    constexpr int PORT_PARALLEL_TRACKER = 21;
-    constexpr int PORT_PERPENDICULAR_TRACKER = 20;
-    constexpr double PARALLEL_TRACKER_OFFSET = 0.0;
-    constexpr double PERPENDICULAR_TRACKER_OFFSET = 0.0;
+    constexpr int PORT_PARALLEL_TRACKER = -2;
+    constexpr int PORT_PERPENDICULAR_TRACKER = -11;
+    constexpr double PARALLEL_TRACKER_OFFSET = -0.274026;
+    constexpr double PERPENDICULAR_TRACKER_OFFSET = 1.73918;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.0;
 
     constexpr double DRIVE_SLEW_RATE = 127.0 / 0.25;
-    constexpr double DRIVE_KP = 1.0;
+    constexpr double DRIVE_KP = 2;
     constexpr double DRIVE_KI = 0.0;
     constexpr double DRIVE_KD = 0.0;
     constexpr double TURN_KP = 5.5;

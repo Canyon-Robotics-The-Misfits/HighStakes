@@ -8,7 +8,7 @@
 #define LOGGER "main.cpp"
 
 void initialize() {
-	INFO_TEXT("Initialize");
+	INFO_TEXT("Initializing...");
 
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 
@@ -42,6 +42,14 @@ void initialize() {
 	});
 
 	gui.setup_ui();
+
+	pros::c::imu_reset(config::PORT_IMU);
+	while (isnan(pros::c::imu_get_heading(config::PORT_IMU)))
+	{
+		pros::delay(10);
+	}
+	
+	INFO_TEXT("Initialized!");
 }
 
 void disabled() {

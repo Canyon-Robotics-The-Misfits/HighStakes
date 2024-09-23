@@ -8,7 +8,7 @@ mechanism::Arm::Arm(std::shared_ptr<lib15442c::Motor> motor, std::shared_ptr<pro
 {
     if (!motor->is_installed())
     {
-		ERROR("Intake motor is not detected on port %d!", motor->get_port());
+		ERROR("Arm motor is not detected on port %d!", motor->get_port());
     }
     if (!rotation_sensor->is_installed())
     {
