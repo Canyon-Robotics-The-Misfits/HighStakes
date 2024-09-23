@@ -12,8 +12,6 @@ void autonomous() {
 
 	double start_time = pros::millis() / 1000.0;
 
-	gui::ScreenGUI &gui = gui::ScreenGUI::access();
-
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
@@ -28,6 +26,7 @@ void autonomous() {
 	arm->set_target(mechanism::ArmTarget::MANUAL);
 
 	#ifndef AUTO_SELECT
+	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 	switch (gui.get_selected_auto())
 	#else
 	switch (AUTO_SELECT)
