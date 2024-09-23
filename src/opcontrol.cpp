@@ -91,30 +91,36 @@ void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Inta
     {
         intake->move(0);
     }
+    
+    // toggle color sort with x
+    bool x_new_press = controller.get_digital_new_press(DIGITAL_X);
+    if (x_new_press)
+    {
+        color_sort = !color_sort;
+    
+        if (color_sort)
+        {
+            arm->set_target(mechanism::ArmTarget::COLOR_SORT);
+            controller.rumble(".");
+        }
+        else
+        {
+            controller.rumble("..");
+        }
+    }
 
+    // control redirect with l2 and color sort
     if (controller.get_digital(DIGITAL_L2))
     {
         intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
     }
+    else if (color_sort)
+    {
+        intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
+    }
     else
     {
-        bool x_new_press = controller.get_digital_new_press(DIGITAL_X);
-        if (x_new_press)
-        {
-            color_sort = !color_sort;
-        }
-
-        if (color_sort && x_new_press)
-        {
-            intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
-            arm->set_target(mechanism::ArmTarget::COLOR_SORT);
-            controller.rumble(".");
-        }
-        else if (x_new_press)
-        {
-            intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
-            controller.rumble("..");
-        }
+        intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
     }
 }
 
@@ -135,6 +141,7 @@ void opcontrol()
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
+    
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 

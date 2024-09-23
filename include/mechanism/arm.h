@@ -77,5 +77,10 @@ namespace mechanism
          */
         ArmTarget get_target();
 
+        /**
+         * @brief Block until the arm is at the target height
+         */
+        void await_target(double threshold = 3, double timeout = 1500);
+
     };
 } // namespace mechanism

@@ -8,11 +8,11 @@ mechanism::Arm::Arm(std::shared_ptr<lib15442c::Motor> motor, std::shared_ptr<pro
 {
     if (!motor->is_installed())
     {
-		ERROR("Arm motor is not detected on port %d!", motor->get_port());
+        ERROR("Arm motor is not detected on port %d!", motor->get_port());
     }
     if (!rotation_sensor->is_installed())
     {
-		ERROR("Rotation sensor is not detected on port %d!", rotation_sensor->get_port());
+        ERROR("Rotation sensor is not detected on port %d!", rotation_sensor->get_port());
     }
 
     start_task();
@@ -127,4 +127,59 @@ mechanism::ArmTarget mechanism::Arm::get_target()
     mutex.unlock();
 
     return temp;
+}
+
+void mechanism::Arm::await_target(double threshold, double timeout)
+{
+    if (target != ArmTarget::MANUAL)
+    {
+        double start_time = pros::millis();
+        auto inital_status = pros::competition::get_status();
+
+        while (inital_status == pros::competition::get_status() && pros::millis() < start_time + timeout)
+        {
+            double current_angle = rotation_sensor->get_angle() / 100.0; // divide by 100 to convert centidegrees to degrees
+
+            // make 359 equal to 0
+            if (current_angle > 180)
+            {
+                current_angle = 0;
+            }
+
+            double target_angle;
+
+            switch (target)
+            {
+            case ArmTarget::LOAD:
+            {
+                target_angle = target_config.load;
+            }
+            break;
+            case ArmTarget::COLOR_SORT:
+            {
+                target_angle = target_config.color_sort;
+            }
+            break;
+            case ArmTarget::ALLIANCE_STAKE:
+            {
+                target_angle = target_config.alliance_stake;
+            }
+            break;
+            case ArmTarget::NEUTRAL_STAKE:
+            {
+                target_angle = target_config.neutral_stake;
+            }
+            break;
+            default:
+            {
+                target_angle = INFINITY;
+            };
+            }
+
+            if (fabs(current_angle - target_angle) < threshold)
+            {
+                break;
+            }
+        }
+    }
 }
