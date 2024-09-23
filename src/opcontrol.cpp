@@ -13,7 +13,7 @@ double curve_joystick(double in)
 
     if (in != 0)
     {
-        double t = fabs(in) / 127.0;
+        double t = abs(in) / 127.0;
 
         double out_normalized = a * pow(t, 5) + b * pow(t, 4) + c * pow(t, 3) + d * pow(t, 2) + e * t;
 
@@ -58,7 +58,7 @@ void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> ar
 
     double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-    if (fabs(raw_joystick) > 12)
+    if (abs(raw_joystick) > 12)
     {
         arm->move(raw_joystick);
     }

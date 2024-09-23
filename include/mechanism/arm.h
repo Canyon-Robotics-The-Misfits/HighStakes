@@ -39,6 +39,7 @@ namespace mechanism
         ArmTarget target = ArmTarget::LOAD;
 
         ArmTargetConfig target_config;
+        double brake_target = -1;
 
         pros::Mutex mutex;
         bool task_on_flag = false;

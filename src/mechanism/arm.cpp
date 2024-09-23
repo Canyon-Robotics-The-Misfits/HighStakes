@@ -67,7 +67,14 @@ void mechanism::Arm::start_task()
                 target_angle = target_config.neutral_stake;
             } break;
             default: {
-                target_angle = INFINITY;
+                if (brake_target != -1)
+                {
+                    target_angle = brake_target;
+                }
+                else
+                {
+                    target_angle = INFINITY;
+                }
             };
             }
 
@@ -109,6 +116,15 @@ void mechanism::Arm::move(double voltage)
         voltage = std::max(voltage, 0.0);
     }
 
+    if (voltage == 0.0)
+    {
+        brake_target = rotation_sensor->get_position();
+    }
+    else
+    {
+        brake_target = -1;
+    }
+
     motor->move(voltage);
     mutex.unlock();
 }
@@ -117,6 +133,12 @@ void mechanism::Arm::set_target(ArmTarget target)
 {
     mutex.lock();
     this->target = target;
+
+    if (target != ArmTarget::MANUAL)
+    {
+        brake_target = -1;
+    }
+
     mutex.unlock();
 }
 
@@ -176,7 +198,7 @@ void mechanism::Arm::await_target(double threshold, double timeout)
             };
             }
 
-            if (fabs(current_angle - target_angle) < threshold)
+            if (abs(current_angle - target_angle) < threshold)
             {
                 break;
             }
