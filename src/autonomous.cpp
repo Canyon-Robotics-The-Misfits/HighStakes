@@ -24,6 +24,7 @@ void autonomous() {
 	odometry->setRotation(0_deg);
 	intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
 	arm->set_target(mechanism::ArmTarget::MANUAL);
+	arm->move(0);
 
 	#ifndef AUTO_SELECT
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();

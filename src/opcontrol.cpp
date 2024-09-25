@@ -69,7 +69,7 @@ void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> ar
 }
 
 bool intake_on = true;
-bool color_sort = true;
+bool color_sort = false;
 void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<mechanism::Arm> arm)
 {
     // intake toggle
@@ -116,7 +116,14 @@ void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Inta
     }
     else if (color_sort)
     {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
+        if (x_new_press)
+        {
+            intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
+        }
+        else 
+        {
+            intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
+        }
     }
     else
     {
@@ -146,9 +153,9 @@ void opcontrol()
     std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 
     odometry->startTask();    
-    arm->set_target(mechanism::ArmTarget::COLOR_SORT);
+    // arm->set_target(mechanism::ArmTarget::COLOR_SORT);
 
-    int tick = 0;
+    // int tick = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
@@ -156,7 +163,7 @@ void opcontrol()
         control_intake(controller, intake, arm);
         control_clamp(controller, clamp);
 
-        tick+=1;
+        // tick+=1;
         pros::delay(20);
     }
 }

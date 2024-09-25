@@ -118,7 +118,7 @@ void mechanism::Arm::move(double voltage)
 
     if (voltage == 0.0)
     {
-        brake_target = rotation_sensor->get_position();
+        brake_target = rotation_sensor->get_position() / 100.0;
     }
     else
     {
