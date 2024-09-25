@@ -7,10 +7,10 @@ AUTO_ROUTE(auto_routes::positive)
     odometry->setPosition(lib15442c::Vec(72 + 24 + 12, 24)); // TODO: update start position
 
     // Rush neutral mobile goal
-    drive_controller->drive(-24, { min_speed: 110, chained: true });
-    drive_controller->drive_to(pose(144 - 24, 72, 180_deg + 45_deg), { backwards: true, threshold: 10 });
+    drive_controller->drive(-5, { min_speed: 110, chained: true });
+    drive_controller->boomerang(pos(144 - 24, 72), { backwards: true, lead: 0.7, threshold: 10 });
     clamp.extend();
-    pros::delay(100);
+    return;
 
     // Intake ring
     intake->move(127);

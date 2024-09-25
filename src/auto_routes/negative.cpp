@@ -7,7 +7,7 @@ AUTO_ROUTE(auto_routes::negative)
     odometry->setPosition(lib15442c::Vec(48, 24)); // TODO: update start position
 
     // Grab mogo
-    drive_controller->drive(20);
+    drive_controller->drive(10);
     clamp.extend();
     pros::delay(100);
 

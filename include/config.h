@@ -72,10 +72,10 @@ namespace config
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.0;
 
-    constexpr double DRIVE_SLEW_RATE = (127.0 / 0.35) * (20.0/1000.0);
-    constexpr double DRIVE_KP = 9.0;
+    constexpr double DRIVE_SLEW_RATE = (127.0 / 0.35) / (20.0/1000.0);
+    constexpr double DRIVE_KP = 13.0;
     constexpr double DRIVE_KI = 0.0;
-    constexpr double DRIVE_KD = 45.0;
+    constexpr double DRIVE_KD = 50.0;
     constexpr double TURN_KP = 5.5;
     constexpr double TURN_KI = 0.0;
     constexpr double TURN_KD = 35.0;

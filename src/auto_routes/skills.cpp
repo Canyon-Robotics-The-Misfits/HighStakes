@@ -10,6 +10,8 @@ AUTO_ROUTE(auto_routes::skills)
     // drive_controller->faceAngle(10_deg, { timeout: INFINITY });
 
     drive_controller->drive(24, { timeout: INFINITY });
+    pros::delay(1000);
     drive_controller->drive(12, { timeout: INFINITY });
+    pros::delay(1000);
     drive_controller->drive(-12, { timeout: INFINITY });
 }

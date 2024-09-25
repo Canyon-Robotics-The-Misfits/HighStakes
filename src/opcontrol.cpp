@@ -155,7 +155,7 @@ void opcontrol()
     odometry->startTask();    
     // arm->set_target(mechanism::ArmTarget::COLOR_SORT);
 
-    // int tick = 0;
+    int tick = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
@@ -163,7 +163,12 @@ void opcontrol()
         control_intake(controller, intake, arm);
         control_clamp(controller, clamp);
 
-        // tick+=1;
+        if (tick % 5 == 0)
+        {
+            std::cout << odometry->getX() << ", " << odometry->getY() << std::endl;
+        }
+
+        tick+=1;
         pros::delay(20);
     }
 }

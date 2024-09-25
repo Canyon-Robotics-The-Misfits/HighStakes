@@ -5,7 +5,7 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define AUTO_SELECT auto_routes::Route::SKILLS
+#define AUTO_SELECT auto_routes::Route::POSITIVE
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -20,6 +20,7 @@ void autonomous() {
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
 
+	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
     odometry->startTask();
 	odometry->setRotation(0_deg);
 	intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
