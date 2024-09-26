@@ -60,6 +60,7 @@ void autonomous() {
 	intake->stop_task();
 	arm->stop_task();
 	odometry->stopTask();
+	drivetrain->move(0, 0);
 	
 	INFO("Autonomous End. Took %.2fs", end_time - start_time);
 }

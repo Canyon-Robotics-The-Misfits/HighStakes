@@ -112,7 +112,7 @@ void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Inta
     // control redirect with l2 and color sort
     if (controller.get_digital(DIGITAL_L2))
     {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
+        intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL); 
     }
     else if (color_sort)
     {
