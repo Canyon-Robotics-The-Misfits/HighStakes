@@ -1,7 +1,7 @@
 #include "main.h"
 #include "autonomous.h"
 
-AUTO_ROUTE(auto_routes::positive_elims)
+AUTO_ROUTE(auto_routes::negative_blue)
 {
     
 }

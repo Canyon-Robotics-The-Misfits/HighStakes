@@ -1,7 +1,7 @@
 #include "main.h"
 #include "autonomous.h"
 
-AUTO_ROUTE(auto_routes::negative)
+AUTO_ROUTE(auto_routes::negative_red)
 {
     odometry->setRotation(180_deg);
     odometry->setPosition(lib15442c::Vec(48, 24)); // TODO: update start position
@@ -13,16 +13,18 @@ AUTO_ROUTE(auto_routes::negative)
 
     // intake rings
     intake->move(127);
-    drive_controller->drive_to(pose(24, 48, 350_deg), { threshold: 10, min_speed: 60 });
-    drive_controller->drive_to(pose(24 - 4, 72 - 4, 10_deg), { threshold: 10 });
+    drive_controller->drive_to(pose(24, 48, 340_deg), { threshold: 5, max_speed: 110, min_speed: 60 });
+    drive_controller->drive_to(pose(24 - 4, 72 - 4, 10_deg), { threshold: 5, max_speed: 110 });
     drive_controller->drive_time(-127, 250);
-    drive_controller->drive_to(pose(24 + 4, 72 - 4, 15_deg), { threshold: 10 });
+    drive_controller->drive_to(pose(24 + 4, 72 - 4, 15_deg), { threshold: 5, max_speed: 110 });
 
     // pickup ring for wall stake
     auto drive_to_pickup = drive_controller->drive_to(pose(72, 24, 110_deg), { threshold: 4, async: true });
     pros::delay(500);
-    intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
+    intake->set_redirect_mode(mechanism::IntakeRedirectMode::RED);
     drive_to_pickup->await();
+    drive_controller->drive_time(25, 200);
+    drive_controller->drive_to(pose(72, 24, 110_deg), { backwards: true, threshold: 3 });
 
     // score on wall stake
     arm->set_target(mechanism::ArmTarget::ALLIANCE_STAKE);

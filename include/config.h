@@ -37,14 +37,15 @@ namespace config
     constexpr int PORT_ARM_ROTATION = -10;
     constexpr char PORT_ARM_LIMIT = 'F';
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
-        kP : 20.0,
+        kP : 15.0,
         kI : 0.0,
         kD : 0.0
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : 0.0,
         color_sort : 35.0,
-        alliance_stake : 50.0,
+        alliance_stake : 60.0,
+        ladder_touch : 80,
         neutral_stake : 93.0
     };
 
@@ -61,6 +62,7 @@ namespace config
 
 
     constexpr char PORT_CLAMP = 'H';
+    constexpr char PORT_OINKER = 'E';
 
     constexpr int PORT_IMU = 7;
     constexpr double IMU_SCALE = 1.00287313022;

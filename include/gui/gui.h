@@ -3,11 +3,25 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include "autonomous.h"
+#include <vector>
 #include "liblvgl/lvgl.h"
 
 namespace gui
 {
+    enum class AllianceColor
+    {
+        RED,
+        BLUE
+    };
+
+    enum class Route
+    {
+        NONE,
+        POSITIVE,
+        NEGATIVE,
+        SOLO,
+        SKILLS,
+    };
 
     struct AutonomousConfig
     {
@@ -21,15 +35,20 @@ namespace gui
         static ScreenGUI self;
         ScreenGUI() {};
 
-        std::vector<auto_routes::Route> registered_routes;
+        std::vector<Route> registered_routes;
         int selected_auto = 0;
-        std::unordered_map<auto_routes::Route, AutonomousConfig> auto_map;
+        std::unordered_map<Route, AutonomousConfig> auto_map;
+
+        AllianceColor alliance = AllianceColor::RED;
 
         lv_obj_t * title_label;
         lv_obj_t * description_label;
 
+        lv_obj_t * alliance_button_label;
+
         static void left_button_callback(lv_event_t * e);
         static void right_button_callback(lv_event_t * e);
+        static void alliance_button_callback(lv_event_t * e);
 
         void update_content();
 
@@ -42,9 +61,10 @@ namespace gui
 
         void setup_ui();
 
-        void register_autonomous(auto_routes::Route id, AutonomousConfig config);
+        void register_autonomous(gui::Route id, AutonomousConfig config);
 
-        auto_routes::Route get_selected_auto();
+        gui::Route get_selected_auto();
+        AllianceColor get_alliance();
     };
 
 }

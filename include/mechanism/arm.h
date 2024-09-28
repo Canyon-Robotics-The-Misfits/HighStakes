@@ -16,6 +16,7 @@ namespace mechanism
         double load;
         double color_sort;
         double alliance_stake;
+        double ladder_touch;
         double neutral_stake;
     };
 
@@ -25,6 +26,7 @@ namespace mechanism
         LOAD,
         COLOR_SORT,
         ALLIANCE_STAKE,
+        LADDER_TOUCH,
         NEUTRAL_STAKE
     };
 
@@ -81,7 +83,7 @@ namespace mechanism
         /**
          * @brief Block until the arm is at the target height
          */
-        void await_target(double threshold = 3, double timeout = 1500);
+        void await_target(double threshold = 5, double timeout = 1500);
 
     };
 } // namespace mechanism

@@ -63,6 +63,9 @@ void mechanism::Arm::start_task()
             case ArmTarget::ALLIANCE_STAKE: {
                 target_angle = target_config.alliance_stake;
             } break;
+            case ArmTarget::LADDER_TOUCH: {
+                target_angle = target_config.ladder_touch;
+            } break;
             case ArmTarget::NEUTRAL_STAKE: {
                 target_angle = target_config.neutral_stake;
             } break;

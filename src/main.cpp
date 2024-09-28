@@ -12,31 +12,23 @@ void initialize() {
 
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 
-	gui.register_autonomous(auto_routes::Route::NONE, {
+	gui.register_autonomous(gui::Route::NONE, {
 		display_name: "NONE",
 		display_description: ""
 	});
-	gui.register_autonomous(auto_routes::Route::POSITIVE, {
+	gui.register_autonomous(gui::Route::POSITIVE, {
 		display_name: "Positive",
 		display_description: ""
 	});
-	gui.register_autonomous(auto_routes::Route::NEGATIVE, {
+	gui.register_autonomous(gui::Route::NEGATIVE, {
 		display_name: "Negative",
 		display_description: ""
 	});
-	gui.register_autonomous(auto_routes::Route::POSITIVE_ELIMS, {
-		display_name: "Positive Elims",
-		display_description: ""
-	});
-	gui.register_autonomous(auto_routes::Route::NEGATIVE_ELIMS, {
-		display_name: "Negative Elims",
-		display_description: ""
-	});
-	gui.register_autonomous(auto_routes::Route::SOLO, {
+	gui.register_autonomous(gui::Route::SOLO, {
 		display_name: "Solo",
 		display_description: ""
 	});
-	gui.register_autonomous(auto_routes::Route::SKILLS, {
+	gui.register_autonomous(gui::Route::SKILLS, {
 		display_name: "Skills",
 		display_description: ""
 	});

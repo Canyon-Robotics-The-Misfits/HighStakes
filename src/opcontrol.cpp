@@ -139,6 +139,14 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
     }
 }
 
+void control_oinker(pros::Controller controller, lib15442c::Pneumatic oinker)
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+    {
+        oinker.toggle();
+    }
+}
+
 void opcontrol()
 {
     INFO_TEXT("OPControl Start");
@@ -149,11 +157,13 @@ void opcontrol()
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     
-    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
+    
+    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
 
-    odometry->startTask();    
-    // arm->set_target(mechanism::ArmTarget::COLOR_SORT);
+    odometry->startTask();
+    arm->set_target(mechanism::ArmTarget::MANUAL);
 
     int tick = 0;
     while (true)
@@ -162,6 +172,7 @@ void opcontrol()
         control_arm(controller, arm);
         control_intake(controller, intake, arm);
         control_clamp(controller, clamp);
+        control_oinker(controller, oinker);
 
         if (tick % 5 == 0)
         {

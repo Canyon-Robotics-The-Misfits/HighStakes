@@ -107,14 +107,14 @@ void mechanism::Intake::set_redirect_mode(IntakeRedirectMode mode)
     mutex.lock();
     redirect_mode = mode;
 
-    if (redirect_mode == IntakeRedirectMode::NONE)
-    {
-        redirect->extend();
-    }
-    else if (redirect_mode == IntakeRedirectMode::ALL)
-    {
-        redirect->retract();
-    }
+    // if (redirect_mode == IntakeRedirectMode::NONE)
+    // {
+    //     redirect->extend();
+    // }
+    // else if (redirect_mode == IntakeRedirectMode::ALL)
+    // {
+    //     redirect->retract();
+    // }
 
     mutex.unlock();
 }
