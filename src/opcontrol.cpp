@@ -165,7 +165,7 @@ void opcontrol()
     odometry->startTask();
     arm->set_target(mechanism::ArmTarget::MANUAL);
 
-    int tick = 0;
+    // int tick = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
@@ -174,12 +174,12 @@ void opcontrol()
         control_clamp(controller, clamp);
         control_oinker(controller, oinker);
 
-        if (tick % 5 == 0)
-        {
-            std::cout << odometry->getX() << ", " << odometry->getY() << std::endl;
-        }
+        // if (tick % 5 == 0)
+        // {
+        //     std::cout << odometry->getX() << ", " << odometry->getY() << std::endl;
+        // }
 
-        tick+=1;
+        // tick+=1;
         pros::delay(20);
     }
 }

@@ -4,8 +4,8 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define AUTO_SELECT gui::Route::POSITIVE
-#define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
+// #define AUTO_SELECT gui::Route::POSITIVE
+// #define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -55,11 +55,13 @@ void autonomous() {
 		case gui::Route::NEGATIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				auto_routes::negative_red(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				// auto_routes::negative_red(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				auto_routes::positive_blue(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
 			}
 			else
 			{
-				auto_routes::negative_blue(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				// auto_routes::negative_blue(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				auto_routes::positive_red(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
 			}
 		} break;
 		case gui::Route::SOLO: {

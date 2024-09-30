@@ -11,8 +11,8 @@ void drive_to(lib15442c::Vec point, double offset, std::shared_ptr<lib15442c::Dr
 
 AUTO_ROUTE(auto_routes::skills)
 {
-    odometry->setRotation(180_deg);
-    odometry->setPosition(lib15442c::Vec(35, 15.5));
+    odometry->setRotation(330_deg);
+    odometry->setPosition(lib15442c::Vec(53.5, 13));
 
     
     // Rush neutral mobile goal

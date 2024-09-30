@@ -49,31 +49,16 @@ AUTO_ROUTE(auto_routes::positive_red)
 
     // get to corner
     arm->set_target(mechanism::ArmTarget::NEUTRAL_STAKE);
-    if (alliance == gui::AllianceColor::RED)
-    {
-        drivetrain->move(-127, 10);
-        pros::delay(400);
-        drivetrain->move(0, 0);
-        pros::delay(150);
-        drive_controller->faceAngle(170_deg, { threshold: 5_deg_raw });
-        drive_controller->boomerang(pose(120, 16, 120_deg), { threshold: 3 });
-    }
-    else
-    {
-        drive_controller->faceAngle(170_deg, { threshold: 5_deg_raw });
-        drive_controller->boomerang(pose(144-16, 24, 120_deg), { threshold: 3 });
-    }
+    drivetrain->move(-127, 10);
+    pros::delay(400);
+    drivetrain->move(0, 0);
+    pros::delay(150);
+    drive_controller->faceAngle(170_deg, { threshold: 5_deg_raw });
+    drive_controller->boomerang(pose(120, 16, 120_deg), { threshold: 3 });
 
     // Clear corner
     intake->move(0);
-    if (alliance == gui::AllianceColor::RED)
-    {
-        drive_controller->faceAngle(100_deg, { threshold: 5_deg_raw });
-    }
-    else
-    {
-        drive_controller->faceAngle(170_deg, { threshold: 5_deg_raw });
-    }
+    drive_controller->faceAngle(100_deg, { threshold: 5_deg_raw });
     oinker.extend();
     pros::delay(200);
     drivetrain->move(80, 0);
@@ -86,16 +71,8 @@ AUTO_ROUTE(auto_routes::positive_red)
     oinker.retract();
 
     intake->move(127);
-    if (alliance == gui::AllianceColor::RED)
-    {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
-        drive_controller->faceAngle(120_deg, { threshold: 5_deg_raw });
-    }
-    else
-    {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::RED);
-        drive_controller->faceAngle(150_deg, { threshold: 5_deg_raw });
-    }
+    intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
+    drive_controller->faceAngle(120_deg, { threshold: 5_deg_raw });
     drivetrain->move(100, 0);
     pros::delay(350);
     drivetrain->move(-127, 0);
@@ -104,12 +81,12 @@ AUTO_ROUTE(auto_routes::positive_red)
     drive_controller->faceAngle(170_deg, { threshold: 5_deg_raw });
 
     // Touch ladder
-    arm->set_target(mechanism::ArmTarget::LADDER_TOUCH);
-    drive_controller->boomerang(pos(72 + 36 + 12, 36 - 12), { backwards: true, threshold: 5 });
-    drive_controller->faceAngle(325_deg, { threshold: 7_deg_raw });
-    intake->move(0);
-    drive_controller->drive_time(127, 450);
-    clamp.retract();
-    drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
-    arm->move(0);
+    // arm->set_target(mechanism::ArmTarget::LADDER_TOUCH);
+    // drive_controller->boomerang(pos(72 + 36 + 12, 36 - 12), { backwards: true, threshold: 5 });
+    // drive_controller->faceAngle(325_deg, { threshold: 7_deg_raw });
+    // intake->move(0);
+    // drive_controller->drive_time(127, 450);
+    // clamp.retract();
+    // drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+    // arm->move(0);
 }
