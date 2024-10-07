@@ -67,8 +67,8 @@ namespace config
     constexpr int PORT_IMU = 7;
     constexpr double IMU_SCALE = 1.00287313022;
 
-    constexpr int PORT_PARALLEL_TRACKER = -2;
-    constexpr int PORT_PERPENDICULAR_TRACKER = -11;
+    constexpr int PORT_PARALLEL_TRACKER = 2;
+    constexpr int PORT_PERPENDICULAR_TRACKER = 11;
     constexpr double PARALLEL_TRACKER_OFFSET = -0.274026;
     constexpr double PERPENDICULAR_TRACKER_OFFSET = 1.73918;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;

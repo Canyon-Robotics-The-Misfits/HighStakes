@@ -14,20 +14,20 @@ AUTO_ROUTE(auto_routes::positive_blue)
     intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
     arm->move(80);
 
-    drive_controller->boomerang(pose(48, 48, 210_deg), {backwards : true, lead : 0.4, threshold : 7, max_speed : 100, weird_offset: 270_deg_raw });
+    drive_controller->boomerang(pose(48, 48, 210_deg), {backwards : true, lead : 0.4, threshold : 7, max_speed : 100 });
     arm->move(-80);
     drive_controller->drive_time(-25, 70);
     clamp.extend();
     pros::delay(250);
     drive_controller->drive_time(100, 150);
     arm->set_target(mechanism::ArmTarget::ALLIANCE_STAKE);
-    drive_controller->facePoint(lib15442c::Vec(64, 16), 0_deg_raw, {threshold : 5_deg_raw});
+    drive_controller->facePoint(lib15442c::Vec(64, 16), 0_deg, {threshold : 5_deg});
     pros::delay(300);
     pros::delay(2000); // TODO: remove
 
     // Score on alliance stake
     drive_controller->boomerang(pos(68, 16), { max_speed : 100 });
-    drive_controller->facePoint(lib15442c::Vec(72, 0), 15_deg_raw);
+    drive_controller->facePoint(lib15442c::Vec(72, 0), 15_deg);
     drivetrain->move(-50, 0);
     pros::delay(50);
     drivetrain->move(0, 0);
@@ -45,7 +45,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     drive_controller->drive_time(-127, 400);
     pros::delay(100);
     intake->move(127);
-    drive_controller->facePoint(lib15442c::Vec(24, 54), 0_deg_raw, {threshold : 3_deg_raw});
+    drive_controller->facePoint(lib15442c::Vec(24, 54), 0_deg, {threshold : 3_deg});
     // drive_controller->boomerang(pose(24, 40, 290_deg), {threshold : 5, min_speed : 60});
     drive_controller->drive(odometry->getPose().vec().distance_to(lib15442c::Vec(24, 48)) - 13);
     drive_controller->drive_time(50, 75);
@@ -54,7 +54,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
 
     // get another ring
     // drive_controller->drive_time(-100, 200);
-    // drive_controller->facePoint(lib15442c::Vec(72, 24), 0_deg_raw, {threshold: 5_deg_raw});
+    // drive_controller->facePoint(lib15442c::Vec(72, 24), 0_deg, {threshold: 5_deg});
     // drive_controller->boomerang(pos(72, 24), { min_speed: 60 });
     // drive_controller->drive_time(50, 400);
 
@@ -63,7 +63,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     // // drive_controller->boomerang(pos(144 - (72 + 36 + 12), 36 - 12), {backwards : true, threshold : 5});
     // drive_controller->facePoint(lib15442c::Vec(144 - (72 + 36 - 12), 36 + 12));
     // drive_controller->drive(odometry->getPose().vec().distance_to(lib15442c::Vec(144 - (72 + 36 + 12), 36 - 12)));
-    // drive_controller->faceAngle(35_deg, {threshold : 7_deg_raw});
+    // drive_controller->faceAngle(35_deg, {threshold : 7_deg});
     // intake->move(0);
     // drive_controller->drive_time(127, 300);
     // clamp.retract();
