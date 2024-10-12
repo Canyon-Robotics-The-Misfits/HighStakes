@@ -2,13 +2,12 @@
 
 #include <initializer_list>
 #include <cstdint>
-#include "mechanism/intake.h"
-#include "mechanism/arm.h"
+#include "mechanism/ring_mech.h"
 
 namespace config
 {
-    constexpr std::initializer_list<std::int8_t> PORT_LEFT_DRIVE = {-15, -14, -13};
-    constexpr std::initializer_list<std::int8_t> PORT_RIGHT_DRIVE = {5, 4, 3};
+    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {-15, -14, -13};
+    constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {5, 4, 3};
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
@@ -27,15 +26,12 @@ namespace config
         ratio : lib15442c::MOTOR_BLUE *config::DRIVE_GEAR_RATIO
     };
 
-    constexpr double ARM_GEAR_RATIO = 12.0 / 84.0;
-    constexpr lib15442c::MotorParameters PARAMS_ARM = {
-        port : 6,
-        reversed : true,
-        brake_mode : lib15442c::MotorBrakeMode::HOLD,
-        ratio : lib15442c::MOTOR_GREEN *config::ARM_GEAR_RATIO
+    constexpr lib15442c::MotorGroupParameters PARAMS_RING_MECH = {
+        reversed : false,
+        brake_mode : lib15442c::MotorBrakeMode::COAST,
+        ratio : lib15442c::MOTOR_BLUE,
     };
-    constexpr int PORT_ARM_ROTATION = -10;
-    constexpr char PORT_ARM_LIMIT = 'F';
+    constexpr std::initializer_list<int> PORT_RING_MECH = {-6, 8};
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
         kP : 15.0,
         kI : 0.0,
@@ -43,20 +39,12 @@ namespace config
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : 0.0,
-        color_sort : 35.0,
         alliance_stake : 60.0,
         ladder_touch : 80,
         neutral_stake : 93.0
     };
-
-
-    constexpr double INTAKE_GEAR_RATIO = 24.0 / 16.0;
-    constexpr lib15442c::MotorParameters PARAMS_INTAKE = {
-        port : 8,
-        reversed : false,
-        brake_mode : lib15442c::MotorBrakeMode::COAST,
-        ratio : lib15442c::MOTOR_BLUE *config::INTAKE_GEAR_RATIO
-    };
+    constexpr int PORT_ARM_ROTATION = -10;
+    constexpr char PORT_ARM_LIMIT = 'F';
     constexpr int PORT_OPTICAL = 12;
     constexpr char PORT_REDIRECT = 'G';
 
@@ -83,8 +71,7 @@ namespace config
     constexpr double TURN_KD = 35.0;
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
-    std::shared_ptr<mechanism::Arm> make_arm();
-    std::shared_ptr<mechanism::Intake> make_intake();
+    std::shared_ptr<mechanism::RingMech> make_ring_mech();
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
     std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);

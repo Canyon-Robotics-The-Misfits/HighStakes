@@ -1,6 +1,8 @@
 #include "main.h"
 #include "config.h"
 
+#include "mechanism/ring_mech.h"
+
 #define LOGGER "opcontrol.cpp"
 
 double curve_joystick(double in)
@@ -42,35 +44,34 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
     drivetrain->move(linear_speed, rotational_speed);
 }
 
-void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> arm)
-{
-    if (controller.get_digital_new_press(DIGITAL_R1))
-    {
-        if (arm->get_target() == mechanism::ArmTarget::LOAD)
-        {
-            arm->set_target(mechanism::ArmTarget::NEUTRAL_STAKE);
-        }
-        else
-        {
-            arm->set_target(mechanism::ArmTarget::LOAD);
-        }
-    }
+// void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> arm)
+// {
+//     if (controller.get_digital_new_press(DIGITAL_R1))
+//     {
+//         if (arm->get_target() == mechanism::ArmTarget::LOAD)
+//         {
+//             arm->set_target(mechanism::ArmTarget::NEUTRAL_STAKE);
+//         }
+//         else
+//         {
+//             arm->set_target(mechanism::ArmTarget::LOAD);
+//         }
+//     }
 
-    double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+//     double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-    if (abs(raw_joystick) > 12)
-    {
-        arm->move(raw_joystick);
-    }
-    else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
-    {
-        arm->move(0);
-    }
-}
+//     if (abs(raw_joystick) > 12)
+//     {
+//         arm->move(raw_joystick);
+//     }
+//     else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
+//     {
+//         arm->move(0);
+//     }
+// }
 
 bool intake_on = true;
-bool color_sort = false;
-void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<mechanism::Arm> arm)
+void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech)
 {
     // intake toggle
     if (controller.get_digital_new_press(DIGITAL_Y))
@@ -81,54 +82,45 @@ void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Inta
     // reverse if r2 pressed
     if (controller.get_digital(DIGITAL_R2))
     {
-        intake->move(-127);
+        ring_mech->set_state(mechanism::INTAKE_OUTTAKE);
     }
     else if (intake_on)
     {
-        intake->move(127);
+        ring_mech->set_state(mechanism::INTAKE_HOOD);
     }
     else
     {
-        intake->move(0);
+        ring_mech->set_state(mechanism::DISABLED);
+    }
+
+    // control redirect with l2
+    if (controller.get_digital(DIGITAL_L2))
+    {
+        ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
     }
     
-    // toggle color sort with x
-    bool x_new_press = controller.get_digital_new_press(DIGITAL_X);
-    if (x_new_press)
+    if (controller.get_digital_new_press(DIGITAL_R1))
     {
-        color_sort = !color_sort;
-    
-        if (color_sort)
+        if (ring_mech->is_arm_loading())
         {
-            arm->set_target(mechanism::ArmTarget::COLOR_SORT);
-            controller.rumble(".");
+            ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
         }
         else
         {
-            controller.rumble("..");
+            ring_mech->set_state(mechanism::ARM_LOAD);
         }
     }
 
-    // control redirect with l2 and color sort
-    if (controller.get_digital(DIGITAL_L2))
-    {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL); 
-    }
-    else if (color_sort)
-    {
-        if (x_new_press)
-        {
-            intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
-        }
-        else 
-        {
-            intake->set_redirect_mode(mechanism::IntakeRedirectMode::BLUE);
-        }
-    }
-    else
-    {
-        intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
-    }
+    // double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+
+    // if (abs(raw_joystick) > 12)
+    // {
+    //     arm->move(raw_joystick);
+    // }
+    // else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
+    // {
+    //     arm->move(0);
+    // }
 }
 
 void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
@@ -154,8 +146,7 @@ void opcontrol()
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
-    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
+    std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
     
     std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
     
@@ -163,14 +154,12 @@ void opcontrol()
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
 
     odometry->startTask();
-    arm->set_target(mechanism::ArmTarget::MANUAL);
 
     // int tick = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
-        control_arm(controller, arm);
-        control_intake(controller, intake, arm);
+        control_ring_mech(controller, ring_mech);
         control_clamp(controller, clamp);
         control_oinker(controller, oinker);
 

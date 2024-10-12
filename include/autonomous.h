@@ -1,16 +1,14 @@
 #pragma once
 
 #include "main.h"
-#include "mechanism/intake.h"
-#include "mechanism/arm.h"
+#include "mechanism/ring_mech.h"
 #include "gui/gui.h"
 
 #define AUTO_ROUTE(name) void name(                                 \
     std::shared_ptr<lib15442c::DriveController> drive_controller,   \
     std::shared_ptr<lib15442c::IDrivetrain> drivetrain,             \
     std::shared_ptr<lib15442c::IOdometry> odometry,                 \
-    std::shared_ptr<mechanism::Intake> intake,                      \
-    std::shared_ptr<mechanism::Arm> arm,                            \
+    std::shared_ptr<mechanism::RingMech> ring_mech,                 \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic oinker,                                    \
     gui::AllianceColor alliance                                     \

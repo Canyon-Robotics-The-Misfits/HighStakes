@@ -33,27 +33,25 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 	return drivetrain;
 }
 
-std::shared_ptr<mechanism::Arm> config::make_arm()
+std::shared_ptr<mechanism::RingMech> config::make_ring_mech()
 {
-	auto motor = std::make_shared<lib15442c::Motor>(config::PARAMS_ARM);
+	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_RING_MECH, config::PORT_RING_MECH);
+
+    auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT, true, false);
+    auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
+
 	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
 	auto limit_switch = std::make_shared<pros::adi::DigitalIn>(config::PORT_ARM_LIMIT);
 	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
 
-	return std::make_shared<mechanism::Arm>(
-		motor, rotation_sensor, limit_switch, pid, config::ARM_TARGET_CONFIG
-	);
-}
-
-std::shared_ptr<mechanism::Intake> config::make_intake()
-{
-	auto intake = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
-    auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT, true, false);
-    auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
-
-	return std::make_shared<mechanism::Intake>(
-		intake, redirect, color_sensor
-	);
+	return std::make_shared<mechanism::RingMech>(mechanism::RingMechParams {
+		motors: motors,
+		intake_redirect: redirect,
+		intake_optical: color_sensor,
+		arm_rotation_sensor: rotation_sensor,
+		arm_limit: limit_switch,
+		arm_pid: pid,
+	});
 }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()

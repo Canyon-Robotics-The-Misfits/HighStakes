@@ -16,8 +16,7 @@ void autonomous() {
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
-    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
+    std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
 
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
@@ -25,9 +24,6 @@ void autonomous() {
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
     odometry->startTask();
 	odometry->setRotation(0_deg);
-	intake->set_redirect_mode(mechanism::IntakeRedirectMode::NONE);
-	arm->set_target(mechanism::ArmTarget::MANUAL);
-	arm->move(0);
 	
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 	#ifndef AUTO_SELECT_COLOR
@@ -45,38 +41,37 @@ void autonomous() {
 		case gui::Route::POSITIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				auto_routes::positive_red(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				auto_routes::positive_red(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
 			}
 			else
 			{
-				auto_routes::positive_blue(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				auto_routes::positive_blue(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
 			}
 		} break;
 		case gui::Route::NEGATIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				// auto_routes::negative_red(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
-				auto_routes::positive_blue(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				// auto_routes::negative_red(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+				auto_routes::positive_blue(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
 			}
 			else
 			{
-				// auto_routes::negative_blue(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
-				auto_routes::positive_red(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+				// auto_routes::negative_blue(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+				auto_routes::positive_red(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
 			}
 		} break;
 		case gui::Route::SOLO: {
-			auto_routes::solo(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+			auto_routes::solo(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
 		} break;
 		case gui::Route::SKILLS: {
-			auto_routes::skills(drive_controller, drivetrain, odometry, intake, arm, clamp, oinker, alliance);
+			auto_routes::skills(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
 		} break;
 		default: break;
 	}
 
 	double end_time = pros::millis() / 1000.0;
 
-	intake->stop_task();
-	arm->stop_task();
+	ring_mech->stop_task();
 	odometry->stopTask();
 	drivetrain->move(0, 0);
 	
