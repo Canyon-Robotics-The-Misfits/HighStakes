@@ -58,6 +58,8 @@ void mechanism::RingMech::start_task()
             
             if (is_arm())
             {
+                motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
+
                 double current_angle = arm_rotation_sensor->get_angle() / 100.0; // divide by 100 to convert centidegrees to degrees
 
                 // make 359 equal to 0
@@ -66,7 +68,7 @@ void mechanism::RingMech::start_task()
                     current_angle = 0;
                 }
 
-                double target_angle;
+                double target_angle = INFINITY;
                 
                 switch (state)
                 {
@@ -89,36 +91,44 @@ void mechanism::RingMech::start_task()
                     target_angle = arm_target_config.ladder_touch;
                 }
                 break;
+                default: break;
                 }
-
-                double output = arm_pid->calculate(current_angle, target_angle);
-
-                if (arm_limit->get_value() == true)
+                
+                if (target_angle != INFINITY)
                 {
-                    output = std::max(output, 0.0);
-                }
+                    double output = arm_pid->calculate(current_angle, target_angle);
 
-                motors->move(output);
+                    if (arm_limit->get_value() == true)
+                    {
+                        output = std::max(output, 0.0);
+                    }
+
+                    motors->move(output);
+                }
             }
             else if (is_intake())
             {
+                motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
                 if (state == INTAKE_SORT_BLUE || state == INTAKE_SORT_RED)
                 {
                     intake_optical->set_led_pwm(100);
+                    motors->move(127.0 / 2.0); 
                 }
                 else
                 {
                     intake_optical->set_led_pwm(0);
+
+                    if (state == INTAKE_OUTTAKE)
+                    {
+                        motors->move(-127); 
+                    }
+                    else
+                    {
+                        motors->move(127); 
+                    }
                 }
 
-                if (state == INTAKE_OUTTAKE)
-                {
-                    motors->move(127); 
-                }
-                else
-                {
-                    motors->move(-127); 
-                }
 
                 double hue = intake_optical->get_hue();
 
@@ -163,10 +173,12 @@ void mechanism::RingMech::start_task()
                     }
                     break;
                 }
+                default: break;
                 }
             }
             else
             {
+                motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
                 motors->move(0);
             }
 

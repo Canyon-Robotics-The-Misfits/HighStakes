@@ -44,32 +44,6 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
     drivetrain->move(linear_speed, rotational_speed);
 }
 
-// void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> arm)
-// {
-//     if (controller.get_digital_new_press(DIGITAL_R1))
-//     {
-//         if (arm->get_target() == mechanism::ArmTarget::LOAD)
-//         {
-//             arm->set_target(mechanism::ArmTarget::NEUTRAL_STAKE);
-//         }
-//         else
-//         {
-//             arm->set_target(mechanism::ArmTarget::LOAD);
-//         }
-//     }
-
-//     double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-
-//     if (abs(raw_joystick) > 12)
-//     {
-//         arm->move(raw_joystick);
-//     }
-//     else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
-//     {
-//         arm->move(0);
-//     }
-// }
-
 bool intake_on = true;
 void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech)
 {
