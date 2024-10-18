@@ -11,5 +11,17 @@
 
 AUTO_ROUTE(auto_routes::skills)
 {
-    // drive_controller->boomerang(pos(24, 48));
+    // drive_controller->boomerang(pose(-24, -24, 90_deg), { backwards: true, lead: 0.5, max_speed: 50 });
+
+    // drive_controller->facePoint(lib15442c::Vec(24, 24));
+    // drive_controller->facePoint(lib15442c::Vec(24, -24));
+    // drive_controller->facePoint(lib15442c::Vec(-24, -24));
+    // drive_controller->facePoint(lib15442c::Vec(-24, 24));
+
+    drive_controller->drive_to(pose(0, 24, 0_deg));
+    // drive_controller->faceAngle(180_deg);
+    // drive_controller->faceAngle(270_deg);
+    // drive_controller->faceAngle(0_deg);
+
+    pros::delay(15000);
 }

@@ -31,7 +31,7 @@ namespace config
         brake_mode : lib15442c::MotorBrakeMode::COAST,
         ratio : lib15442c::MOTOR_BLUE,
     };
-    constexpr std::initializer_list<int> PORT_RING_MECH = {-6, 8};
+    constexpr std::initializer_list<int> PORT_RING_MECH = {6, -8};
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
         kP : 15.0,
         kI : 0.0,
@@ -68,7 +68,7 @@ namespace config
     constexpr double DRIVE_KD = 50.0;
     constexpr double TURN_KP = 5.5;
     constexpr double TURN_KI = 0.0;
-    constexpr double TURN_KD = 35.0;
+    constexpr double TURN_KD = 30.0;
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::RingMech> make_ring_mech();

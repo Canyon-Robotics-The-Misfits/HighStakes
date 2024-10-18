@@ -55,6 +55,12 @@ void mechanism::RingMech::start_task()
         
         while (true)
         {
+            mutex.lock();
+            if (task_on_flag == false || ((pros::c::competition_get_status() & COMPETITION_DISABLED) != 0))
+            {
+                break;
+            }
+            mutex.unlock();
             
             if (is_arm())
             {
