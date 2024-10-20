@@ -45,6 +45,7 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
 }
 
 bool intake_on = true;
+bool arm_on = false;
 void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech)
 {
     // intake toggle
@@ -53,28 +54,15 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         intake_on = !intake_on;
     }
 
-    // reverse if r2 pressed
-    if (controller.get_digital(DIGITAL_R2))
+    if (controller.get_digital_new_press(DIGITAL_R2) || controller.get_digital_new_press(DIGITAL_L2))
     {
-        ring_mech->set_state(mechanism::INTAKE_OUTTAKE);
-    }
-    else if (intake_on)
-    {
-        ring_mech->set_state(mechanism::INTAKE_HOOD);
-    }
-    else
-    {
-        ring_mech->set_state(mechanism::DISABLED);
+        arm_on = false;
     }
 
-    // control redirect with l2
-    if (controller.get_digital(DIGITAL_L2))
-    {
-        ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
-    }
-    
     if (controller.get_digital_new_press(DIGITAL_R1))
     {
+        intake_on = false;
+        arm_on = true;
         if (ring_mech->is_arm_loading())
         {
             ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
@@ -83,6 +71,22 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         {
             ring_mech->set_state(mechanism::ARM_LOAD);
         }
+    }
+    else if (controller.get_digital(DIGITAL_R2) && !arm_on) // reverse if r2 pressed
+    {
+        ring_mech->set_state(mechanism::INTAKE_OUTTAKE);
+    }
+    else if (controller.get_digital(DIGITAL_L2) && !arm_on) // control redirect with l2
+    {
+        ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+    }
+    else if (intake_on && !arm_on)
+    {
+        ring_mech->set_state(mechanism::INTAKE_HOOD);
+    }
+    else if (!arm_on)
+    {
+        ring_mech->set_state(mechanism::DISABLED);
     }
 
     // double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
@@ -126,8 +130,10 @@ void opcontrol()
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
+    lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
     odometry->startTask();
+    clamp.extend();
 
     // int tick = 0;
     while (true)
@@ -136,6 +142,11 @@ void opcontrol()
         control_ring_mech(controller, ring_mech);
         control_clamp(controller, clamp);
         control_oinker(controller, oinker);
+
+        if (controller.get_digital_new_press(DIGITAL_A))
+        {
+            alliance_stake_adjust.toggle();
+        }
 
         // if (tick % 5 == 0)
         // {

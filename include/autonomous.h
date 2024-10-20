@@ -16,10 +16,15 @@
 
 namespace auto_routes
 {
+    AUTO_ROUTE(right_safe);
+    AUTO_ROUTE(left_safe);
+
     AUTO_ROUTE(positive_red);
     AUTO_ROUTE(positive_blue);
     AUTO_ROUTE(negative_red);
     AUTO_ROUTE(negative_blue);
+
     AUTO_ROUTE(solo);
+
     AUTO_ROUTE(skills);
 };

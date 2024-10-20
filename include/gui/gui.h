@@ -17,8 +17,13 @@ namespace gui
     enum class Route
     {
         NONE,
+
+        RIGHT_SAFE,
+        LEFT_SAFE,
+
         POSITIVE,
         NEGATIVE,
+
         SOLO,
         SKILLS,
     };

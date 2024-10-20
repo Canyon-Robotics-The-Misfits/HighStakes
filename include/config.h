@@ -33,17 +33,17 @@ namespace config
     };
     constexpr std::initializer_list<int> PORT_RING_MECH = {6, -8};
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
-        kP : 15.0,
+        kP : 5.0,
         kI : 0.0,
         kD : 0.0
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : 0.0,
-        alliance_stake : 60.0,
-        ladder_touch : 80,
-        neutral_stake : 93.0
+        alliance_stake : 40.0,
+        ladder_touch : 60,
+        neutral_stake : 65.0
     };
-    constexpr int PORT_ARM_ROTATION = -10;
+    constexpr int PORT_ARM_ROTATION = 10;
     constexpr char PORT_ARM_LIMIT = 'F';
     constexpr int PORT_OPTICAL = 12;
     constexpr char PORT_REDIRECT = 'G';
@@ -51,6 +51,7 @@ namespace config
 
     constexpr char PORT_CLAMP = 'H';
     constexpr char PORT_OINKER = 'E';
+    constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
 
     constexpr int PORT_IMU = 7;
     constexpr double IMU_SCALE = 1.00287313022;

@@ -104,10 +104,10 @@ void mechanism::RingMech::start_task()
                 {
                     double output = arm_pid->calculate(current_angle, target_angle);
 
-                    if (arm_limit->get_value() == true)
-                    {
-                        output = std::max(output, 0.0);
-                    }
+                    // if (arm_limit->arm_limit->get_value() == true)
+                    // {
+                    //     output = std::max(output, 0.0);
+                    // }
 
                     motors->move(output);
                 }

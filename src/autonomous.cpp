@@ -4,7 +4,9 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define AUTO_SELECT gui::Route::POSITIVE
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance)
+
+#define AUTO_SELECT gui::Route::LEFT_SAFE
 #define AUTO_SELECT_COLOR gui::AllianceColor::RED
 
 void autonomous() {
@@ -38,6 +40,12 @@ void autonomous() {
 	switch (AUTO_SELECT)
 	#endif
 	{
+		case gui::Route::RIGHT_SAFE: {
+			RUN_AUTO(auto_routes::right_safe);
+		} break;
+		case gui::Route::LEFT_SAFE: {
+			RUN_AUTO(auto_routes::left_safe);
+		} break;
 		case gui::Route::POSITIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{

@@ -16,6 +16,16 @@ void initialize() {
 		display_name: "NONE",
 		display_description: ""
 	});
+	
+	gui.register_autonomous(gui::Route::RIGHT_SAFE, {
+		display_name: "Right Safe",
+		display_description: ""
+	});
+	gui.register_autonomous(gui::Route::LEFT_SAFE, {
+		display_name: "Left Safe",
+		display_description: ""
+	});
+
 	gui.register_autonomous(gui::Route::POSITIVE, {
 		display_name: "Positive",
 		display_description: ""
