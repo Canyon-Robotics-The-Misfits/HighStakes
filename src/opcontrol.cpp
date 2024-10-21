@@ -8,7 +8,7 @@
 double curve_joystick(double in)
 {
     constexpr double a = 0.423851;
-    constexpr double b = 0;
+    constexpr double b = 0.0;
     constexpr double c = -1.71879;
     constexpr double d = 2.06431;
     constexpr double e = 0.230621;

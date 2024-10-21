@@ -46,7 +46,7 @@ void initialize() {
 	gui.setup_ui();
 
 	pros::c::imu_reset(config::PORT_IMU);
-	while (pros::c::imu_get_rotation(config::PORT_IMU) == PROS_ERR_F)
+	while (pros::c::imu_get_rotation(config::PORT_IMU) == PROS_ERR_F && errno == EAGAIN)
 	{
 		pros::delay(10);
 	}
