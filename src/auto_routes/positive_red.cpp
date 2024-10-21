@@ -4,7 +4,7 @@
 AUTO_ROUTE(auto_routes::positive_red)
 {
     odometry->setRotation(180_deg);
-    odometry->setPosition(lib15442c::Vec(144-35, 18.5 + 10)); // TODO: update start position
+    odometry->setPosition(lib15442c::Vec(144-35, 18.5 + 10));
     
     // rush goal
     clamp.retract();

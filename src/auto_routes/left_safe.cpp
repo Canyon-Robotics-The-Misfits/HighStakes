@@ -4,7 +4,7 @@
 AUTO_ROUTE(auto_routes::left_safe)
 {
     odometry->setRotation(180_deg);
-    odometry->setPosition(lib15442c::Vec(35, 10.5 + 10)); // TODO: update start position
+    odometry->setPosition(lib15442c::Vec(35, 10.5 + 10));
     
     // pickup goal
     clamp.retract();

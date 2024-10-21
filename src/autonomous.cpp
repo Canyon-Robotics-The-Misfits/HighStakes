@@ -4,10 +4,10 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance)
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance_stake_adjust, alliance)
 
-#define AUTO_SELECT gui::Route::LEFT_SAFE
-#define AUTO_SELECT_COLOR gui::AllianceColor::RED
+#define AUTO_SELECT gui::Route::NEGATIVE
+#define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -22,12 +22,20 @@ void autonomous() {
 
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
+    lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
     odometry->startTask();
 	odometry->setRotation(0_deg);
 	
+	#ifndef AUTO_SELECT
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
+	#else
+	#ifndef AUTO_SELECT_COLOR
+	gui::ScreenGUI &gui = gui::ScreenGUI::access();
+	#endif
+	#endif
+
 	#ifndef AUTO_SELECT_COLOR
 	gui::AllianceColor alliance = gui.get_alliance();
 	#else
@@ -49,30 +57,28 @@ void autonomous() {
 		case gui::Route::POSITIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				auto_routes::positive_red(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+				RUN_AUTO(auto_routes::positive_red);
 			}
 			else
 			{
-				auto_routes::positive_blue(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+				RUN_AUTO(auto_routes::positive_blue);
 			}
 		} break;
 		case gui::Route::NEGATIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				// auto_routes::negative_red(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
-				auto_routes::positive_blue(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+				RUN_AUTO(auto_routes::negative_red);
 			}
 			else
 			{
-				// auto_routes::negative_blue(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
-				auto_routes::positive_red(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+				RUN_AUTO(auto_routes::negative_blue);
 			}
 		} break;
 		case gui::Route::SOLO: {
-			auto_routes::solo(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+			RUN_AUTO(auto_routes::solo);
 		} break;
 		case gui::Route::SKILLS: {
-			auto_routes::skills(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance);
+			RUN_AUTO(auto_routes::skills);
 		} break;
 		default: break;
 	}

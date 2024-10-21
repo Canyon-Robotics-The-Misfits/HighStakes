@@ -4,7 +4,7 @@
 AUTO_ROUTE(auto_routes::negative_red)
 {
     // odometry->setRotation(180_deg);
-    // odometry->setPosition(lib15442c::Vec(48, 24)); // TODO: update start position
+    // odometry->setPosition(lib15442c::Vec(48, 24));
 
     // // Grab mogo
     // drive_controller->drive(10);

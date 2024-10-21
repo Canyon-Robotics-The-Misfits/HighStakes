@@ -4,7 +4,7 @@
 AUTO_ROUTE(auto_routes::positive_blue)
 {
     // odometry->setRotation(180_deg);
-    // odometry->setPosition(lib15442c::Vec(35, 15.5)); // TODO: update start position
+    // odometry->setPosition(lib15442c::Vec(35, 15.5));
 
     // // std::cout << "POSITIVE BLUE" << std::endl;
 

@@ -11,6 +11,7 @@
     std::shared_ptr<mechanism::RingMech> ring_mech,                 \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic oinker,                                    \
+    lib15442c::Pneumatic alliance_stake_adjust,                     \
     gui::AllianceColor alliance                                     \
 )
 
