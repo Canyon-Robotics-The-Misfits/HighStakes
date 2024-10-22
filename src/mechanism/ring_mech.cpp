@@ -9,7 +9,8 @@ mechanism::RingMech::RingMech(RingMechParams params)
       intake_optical(params.intake_optical),
       arm_rotation_sensor(params.arm_rotation_sensor),
       arm_limit(params.arm_limit),
-      arm_pid(params.arm_pid)
+      arm_pid(params.arm_pid),
+      arm_target_config(params.arm_target_config)
 {
     if (!motors->is_installed())
     {
@@ -66,7 +67,7 @@ void mechanism::RingMech::start_task()
             {
                 motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
 
-                double current_angle = arm_rotation_sensor->get_angle() / 100.0; // divide by 100 to convert centidegrees to degrees
+                double current_angle = 360.0 - (arm_rotation_sensor->get_angle() / 100.0); // divide by 100 to convert centidegrees to degrees
 
                 // make 359 equal to 0
                 if (current_angle > 180)
@@ -75,6 +76,8 @@ void mechanism::RingMech::start_task()
                 }
 
                 double target_angle = INFINITY;
+                
+                std::cout << state << std::endl;
                 
                 switch (state)
                 {
@@ -92,6 +95,7 @@ void mechanism::RingMech::start_task()
                 {
                     target_angle = arm_target_config.neutral_stake;
                 }
+                break;
                 case RingMechState::ARM_LADDER_TOUCH:
                 {
                     target_angle = arm_target_config.ladder_touch;
@@ -99,10 +103,12 @@ void mechanism::RingMech::start_task()
                 break;
                 default: break;
                 }
+
                 
                 if (target_angle != INFINITY)
                 {
-                    double output = arm_pid->calculate(current_angle, target_angle);
+                    double output = -arm_pid->calculate(current_angle, target_angle);
+                    std::cout << current_angle << ", " << target_angle << ", " << output << std::endl;
 
                     // if (arm_limit->arm_limit->get_value() == true)
                     // {
@@ -217,12 +223,12 @@ mechanism::RingMechState mechanism::RingMech::get_state()
 
 bool mechanism::RingMech::is_arm_loading()
 {
-    double current = arm_rotation_sensor->get_angle() / 100.0;
+    double current = 360.0 - (arm_rotation_sensor->get_angle() / 100.0);
 
     if (current > 180.0)
     {
         current = 0.0;
     }
 
-    return abs(current - arm_target_config.load) < 10;
+    return abs(current - arm_target_config.load) < 10.0;
 }

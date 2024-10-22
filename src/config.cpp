@@ -51,6 +51,7 @@ std::shared_ptr<mechanism::RingMech> config::make_ring_mech()
 		arm_rotation_sensor: rotation_sensor,
 		arm_limit: limit_switch,
 		arm_pid: pid,
+		arm_target_config: config::ARM_TARGET_CONFIG
 	});
 }
 

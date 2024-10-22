@@ -49,6 +49,8 @@ namespace mechanism
         std::shared_ptr<pros::Rotation> arm_rotation_sensor;
         std::shared_ptr<pros::adi::DigitalIn> arm_limit;
         std::shared_ptr<lib15442c::PID> arm_pid; 
+
+        ArmTargetConfig arm_target_config;
     };
 
     class RingMech

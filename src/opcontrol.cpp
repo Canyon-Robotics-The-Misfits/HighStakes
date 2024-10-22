@@ -46,12 +46,13 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
 
 bool intake_on = true;
 bool arm_on = false;
-void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech)
+void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech, lib15442c::Pneumatic alliance_stake_adjust)
 {
     // intake toggle
     if (controller.get_digital_new_press(DIGITAL_Y))
     {
         intake_on = !intake_on;
+        arm_on = false;
     }
 
     if (controller.get_digital_new_press(DIGITAL_R2) || controller.get_digital_new_press(DIGITAL_L2))
@@ -71,22 +72,34 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         {
             ring_mech->set_state(mechanism::ARM_LOAD);
         }
+        alliance_stake_adjust.retract();
+    }
+    else if (controller.get_digital_new_press(DIGITAL_X))
+    {
+        intake_on = false;
+        arm_on = true;
+        ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
+        alliance_stake_adjust.extend();
     }
     else if (controller.get_digital(DIGITAL_R2) && !arm_on) // reverse if r2 pressed
     {
         ring_mech->set_state(mechanism::INTAKE_OUTTAKE);
+        alliance_stake_adjust.retract();
     }
     else if (controller.get_digital(DIGITAL_L2) && !arm_on) // control redirect with l2
     {
         ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+        alliance_stake_adjust.retract();
     }
     else if (intake_on && !arm_on)
     {
         ring_mech->set_state(mechanism::INTAKE_HOOD);
+        alliance_stake_adjust.retract();
     }
     else if (!arm_on)
     {
         ring_mech->set_state(mechanism::DISABLED);
+        alliance_stake_adjust.retract();
     }
 
     // double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
@@ -139,14 +152,14 @@ void opcontrol()
     while (true)
     {
         control_drivetrain(controller, drivetrain);
-        control_ring_mech(controller, ring_mech);
+        control_ring_mech(controller, ring_mech, alliance_stake_adjust);
         control_clamp(controller, clamp);
         control_oinker(controller, oinker);
 
-        if (controller.get_digital_new_press(DIGITAL_A))
-        {
-            alliance_stake_adjust.toggle();
-        }
+        // if (controller.get_digital_new_press(DIGITAL_A))
+        // {
+        //     alliance_stake_adjust.toggle();
+        // }
 
         // if (tick % 5 == 0)
         // {
