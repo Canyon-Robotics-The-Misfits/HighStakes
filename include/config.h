@@ -33,15 +33,15 @@ namespace config
     };
     constexpr std::initializer_list<int> PORT_RING_MECH = {6, -8};
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
-        kP : 10.0,
+        kP : 5.0,
         kI : 0.0,
         kD : 0.0
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : 0.0,
-        alliance_stake : 30.0,
+        alliance_stake : 37.0,
         ladder_touch : 60.0,
-        neutral_stake : 65.0
+        neutral_stake : 75.0
     };
     constexpr int PORT_ARM_ROTATION = 10;
     constexpr char PORT_ARM_LIMIT = 'F';
