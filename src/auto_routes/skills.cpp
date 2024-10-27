@@ -76,7 +76,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pose(144 - 48 - 4, 144 - 24, 20_deg), { lead: 0.4 });
     drive_controller->boomerang(pose(144 - 24, 144 - 14, 90_deg), { lead: 0.8, min_speed: 90 });
     drive_controller->drive_time(127, 600);
-    drive_controller->drive_time(-127, 400);
+    drive_controller->drive_time(-127, 700);
     drive_controller->faceAngle(-90_deg, { threshold: 7_deg });
 
     // push other goal in corner
@@ -101,5 +101,48 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pose(48, 144 - 48, -45_deg), { lead: 0.4 });
     drive_controller->boomerang(pos(24, 144 - 48 - 4));
     drive_controller->boomerang(pos(15, 72 - 6));
+    pros::delay(400);
 
+    // pickup rings for wall stake
+    drive_controller->faceAngle(0_deg);
+    ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+    drive_controller->boomerang(pos(15, 144 - 24));
+    drive_controller->drive_time(-100, 400);
+    drive_controller->boomerang(pos(24, 144 - 24));
+    drive_controller->drive_time(-100, 400);
+    
+    // score wall stake
+    drive_controller->boomerang(pos(24, 72));
+    drive_controller->faceAngle(-90_deg, { min_speed: 23 });
+    ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
+    pros::delay(500);
+    drive_controller->drive_time(100, 500);
+    ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+    pros::delay(300);
+    drive_controller->drive_time(-100, 300);
+
+    // get more rings for wall stake
+    drive_controller->boomerang(pose(72, 144 - 24, 90_deg), { lead: 0.4, threshold: 10, min_speed: 100 });
+    drive_controller->boomerang(pos(144 - 24, 144 - 24));
+    drive_controller->boomerang(pos(144 - 48, 144 - 48), { backwards: true, threshold: 5 });
+    drive_controller->boomerang(pos(144 - 12, 144 - 24));
+    
+    // score wall stake
+    drive_controller->boomerang(pos(144 - 24, 72));
+    drive_controller->faceAngle(90_deg, { min_speed: 23 });
+    ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
+    pros::delay(500);
+    drive_controller->drive_time(100, 500);
+    ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+    pros::delay(300);
+    drive_controller->drive_time(-100, 300);
+
+    // climb
+    drive_controller->boomerang(pos(144 - 48, 144 - 48), { backwards: true });
+    drive_controller->faceAngle(-135_deg);
+    ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
+    pros::delay(600);
+    drive_controller->drive_time(80, 500);
+    ring_mech->set_state(mechanism::DISABLED);
+    drive_controller->drive_time(-127, 1000);
 }

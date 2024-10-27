@@ -191,7 +191,7 @@ void mechanism::RingMech::start_task()
             else
             {
                 motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
-                motors->move(0);
+                // motors->move(0);
             }
 
             pros::delay(20);
@@ -208,6 +208,11 @@ void mechanism::RingMech::stop_task()
 void mechanism::RingMech::set_state(mechanism::RingMechState state)
 {
     mutex.lock();
+    if (state == mechanism::DISABLED)
+    {
+        motors->move(0);
+    }
+
     this->state = state;
     mutex.unlock();
 }
