@@ -103,5 +103,12 @@ namespace mechanism
         RingMechState get_state();
 
         bool is_arm_loading();
+
+        /**
+         * @brief Manually move the arm. Automatically sets state to DISABLED
+         * 
+         * @param voltage the voltage to move at
+         */
+        void move_manual(double voltage);
     };
 } // namespace mechanism

@@ -12,16 +12,19 @@ AUTO_ROUTE(auto_routes::positive_red)
     drive_controller->drive_to(pose(144 - 24 - 10, 48 + 9, 0_deg), { r: 10, threshold: 3, timeout: 4000 });
     drive_controller->faceAngle(10_deg, { threshold: 5_deg, min_speed: 30, chained: true });
     oinker.extend();
-    pros::delay(100);
+    pros::delay(75);
     drive_controller->faceAngle(90_deg, { threshold: 10_deg, min_speed: 30, chained: true });
     oinker.retract();
     // pros::delay(100);
-    drive_controller->drive_time(12, 100);
+    drive_controller->drive_time(100, 100);
+    drivetrain->move(0, -100);
+    pros::delay(100);
+    drivetrain->move(0, 0);
 
     // pickup next goal
     drive_controller->boomerang(pose(144 - 48, 48, 30_deg + 180_deg), { backwards: true, lead: 0.4, threshold: 6 });
     clamp.extend();
-    drive_controller->drive_time(-100, 100);
+    drive_controller->drive_time(-100, 75);
     pros::delay(50);
     ring_mech->set_state(mechanism::INTAKE_HOOD);
     pros::delay(100);
@@ -34,47 +37,50 @@ AUTO_ROUTE(auto_routes::positive_red)
     drive_controller->facePoint(pos(144 - 72, 24).vec(), 0_deg, { threshold: 10_deg });
     drive_controller->drive_to(pose(144 - 48 - 12 + 3, 24 + 12 - 9, -130_deg));
     oinker.extend();
-    pros::delay(300);
+    pros::delay(150);
     drive_controller->drive_time(-100, 300);
     pros::delay(50);
     oinker.retract();
-    pros::delay(50);
-    ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
-    drive_controller->turn(25_deg);
-    drive_controller->drive_time(127, 450);
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
+    pros::delay(150);
+    drive_controller->turn(30_deg, { threshold: 10_deg });
+    drive_controller->drive_time(127, 300);
     drive_controller->drive_time(-60, 300);
-    pros::delay(600);
+    pros::delay(300);
 
     // score on alliance stake
     ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
-    drive_controller->facePoint(pos(72, 0).vec(), -3_deg, { threshold: 5_deg });
+    drive_controller->facePoint(pos(72, 0).vec(), -5_deg, { threshold: 5_deg, min_speed: 22 });
     alliance_stake_adjust.extend();
 
     double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
-    drive_controller->drive(distance - 14);
+    drive_controller->drive(distance - 14, { min_speed: 120, chained: true });
 
-    pros::delay(100);
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
+    drive_controller->drive_time(127, 200);
+    ring_mech->set_state(mechanism::DISABLED);
+    drive_controller->drive_time(127, 100);
     drive_controller->drive_time(-127, 200);
     alliance_stake_adjust.retract();
 
     // clear corner
-    drive_controller->boomerang(pose(144 - 24, 12, 95_deg), { lead: 0.75 });
+    drive_controller->boomerang(pose(144 - 28, 11, 95_deg), { lead: 0.75 });
     ring_mech->set_state(mechanism::INTAKE_HOOD);
-    drive_controller->faceAngle(98_deg, { threshold: 5_deg });
+    drive_controller->faceAngle(99_deg, { threshold: 5_deg });
     oinker.extend();
     pros::delay(200);
-    drive_controller->drive_time(60, 300);
+    drive_controller->drive_time(80, 400);
     pros::delay(100);
-    drivetrain->move(0, -100);
+    drivetrain->move(0, -127);
     pros::delay(300);
-    drivetrain->move(0, 100);
+    drivetrain->move(0, 127);
     oinker.retract();
     pros::delay(200);
     drive_controller->drive_time(100, 400);
     drive_controller->drive_time(-100, 250);
 
     // touch ladder
-    // drive_controller->facePoint(pos(144 - 36, 36).vec(), 180_deg, { chained: true });
-    drive_controller->boomerang(pos(144 - 48, 48), { backwards: true, threshold: 15, max_speed: 127 });
-    drive_controller->boomerang(pose(144 - (48 + 12 - 4), 48 + 12 - 4, -45_deg), { backwards: true, lead: 0.8, threshold: 0.5, angle_priority_threshold: 5, max_speed: 50 });
+    drive_controller->boomerang(pos(144 - 36, 36), { backwards: true, threshold: 10, min_speed: 80 });
+    drive_controller->boomerang(pose(144 - (48 + 12 - 4.5), 48 + 12 - 4.5, -45_deg), { backwards: true, lead: 0.7, threshold: 2.0, max_speed: 50 });
+    drive_controller->faceAngle(-45_deg + 180_deg);
 }

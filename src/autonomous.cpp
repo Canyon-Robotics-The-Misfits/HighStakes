@@ -6,8 +6,8 @@
 
 #define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance_stake_adjust, alliance)
 
-#define AUTO_SELECT gui::Route::NEGATIVE
-#define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
+// #define AUTO_SELECT gui::Route::NEGATIVE
+// #define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");

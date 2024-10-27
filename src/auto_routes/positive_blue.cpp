@@ -3,70 +3,73 @@
 
 AUTO_ROUTE(auto_routes::positive_blue)
 {
-    // odometry->setRotation(180_deg);
-    // odometry->setPosition(lib15442c::Vec(35, 15.5));
+    odometry->setRotation(0_deg);
+    odometry->setPosition(lib15442c::Vec(35, 18.5 + 10 - 5));
 
-    // // std::cout << "POSITIVE BLUE" << std::endl;
-
-    // // Rush neutral mobile goal
-    // clamp.retract();
-    // oinker.retract();
-    // intake->set_redirect_mode(mechanism::IntakeRedirectMode::ALL);
-    // arm->move(80);
-
-    // drive_controller->boomerang(pose(48, 48, 210_deg), {backwards : true, lead : 0.4, threshold : 7, max_speed : 100 });
-    // arm->move(-80);
-    // drive_controller->drive_time(-25, 70);
-    // clamp.extend();
-    // pros::delay(250);
-    // drive_controller->drive_time(100, 150);
-    // arm->set_target(mechanism::ArmTarget::ALLIANCE_STAKE);
-    // drive_controller->facePoint(lib15442c::Vec(64, 16), 0_deg, {threshold : 5_deg});
-    // pros::delay(300);
-    // pros::delay(2000); // TODO: remove
-
-    // // Score on alliance stake
-    // drive_controller->boomerang(pos(68, 16), { max_speed : 100 });
-    // drive_controller->facePoint(lib15442c::Vec(72, 0), 15_deg);
-    // drivetrain->move(-50, 0);
-    // pros::delay(50);
-    // drivetrain->move(0, 0);
-    // arm->move(-127);
-    // pros::delay(250);
-    // arm->move(-127);
+    // rush goal
+    drive_controller->drive_time(127, 300);
+    drive_controller->drive_to(pose(24 + 10, 48 + 9, 0_deg), { r: 10, threshold: 3, timeout: 4000 });
+    drive_controller->faceAngle(-55_deg, { threshold: 10_deg, min_speed: 30, chained: true });
+    oinker.extend();
+    pros::delay(75);
+    drive_controller->faceAngle(-90_deg, { threshold: 10_deg, min_speed: 30, chained: true });
+    oinker.retract();
     // pros::delay(100);
-    // arm->move(127);
-    // pros::delay(200);
-    // arm->move(0);
+    drive_controller->drive_time(100, 100);
+    drivetrain->move(0, -100);
+    pros::delay(100);
+    drivetrain->move(0, 0);
 
-    // // Intake ring
-    // arm->set_target(mechanism::ArmTarget::NEUTRAL_STAKE);
-    // intake->set_redirect_mode(mechanism::IntakeRedirectMode::RED);
-    // drive_controller->drive_time(-127, 400);
-    // pros::delay(100);
-    // intake->move(127);
-    // drive_controller->facePoint(lib15442c::Vec(24, 54), 0_deg, {threshold : 3_deg});
-    // // drive_controller->boomerang(pose(24, 40, 290_deg), {threshold : 5, min_speed : 60});
-    // drive_controller->drive(odometry->getPose().vec().distance_to(lib15442c::Vec(24, 48)) - 13);
-    // drive_controller->drive_time(50, 75);
-    // drivetrain->move(0, 0);
-    // pros::delay(200);
+    // pickup next goal
+    drive_controller->boomerang(pose(48, 48, -30_deg + 180_deg), { backwards: true, lead: 0.4, threshold: 6 });
+    clamp.extend();
+    drive_controller->drive_time(-100, 75);
+    pros::delay(50);
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
+    pros::delay(100);
 
-    // // get another ring
-    // // drive_controller->drive_time(-100, 200);
-    // // drive_controller->facePoint(lib15442c::Vec(72, 24), 0_deg, {threshold: 5_deg});
-    // // drive_controller->boomerang(pos(72, 24), { min_speed: 60 });
-    // // drive_controller->drive_time(50, 400);
+    // intake
+    drive_controller->boomerang(pos(24, 48));
+    drive_controller->drive_time(-100, 250);
+    
+    // (dont) get the center ring
+    drive_controller->facePoint(pos(48 + 12 - 6, 24 + 12 - 9).vec(), 25_deg, { threshold: 10_deg });
+    drive_controller->boomerang(pos(48 + 12 - 6, 24 + 12 - 9));
 
-    // // Touch ladder
-    // // arm->set_target(mechanism::ArmTarget::LADDER_TOUCH);
-    // // // drive_controller->boomerang(pos(144 - (72 + 36 + 12), 36 - 12), {backwards : true, threshold : 5});
-    // // drive_controller->facePoint(lib15442c::Vec(144 - (72 + 36 - 12), 36 + 12));
-    // // drive_controller->drive(odometry->getPose().vec().distance_to(lib15442c::Vec(144 - (72 + 36 + 12), 36 - 12)));
-    // // drive_controller->faceAngle(35_deg, {threshold : 7_deg});
-    // // intake->move(0);
-    // // drive_controller->drive_time(127, 300);
-    // // clamp.retract();
-    // // drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
-    // // arm->move(0);
+    // score on alliance stake
+    ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
+    drive_controller->facePoint(pos(72, 3).vec(), 2_deg, { threshold: 1_deg, min_speed: 23 });
+    alliance_stake_adjust.extend();
+    pros::delay(100);
+
+    double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
+    drive_controller->drive(distance - 14, { min_speed: 120, chained: true });
+
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
+    drive_controller->drive_time(127, 200);
+    ring_mech->set_state(mechanism::DISABLED);
+    drive_controller->drive_time(127, 100);
+    drive_controller->drive_time(-127, 300);
+    alliance_stake_adjust.retract();
+
+    // clear corner
+    drive_controller->boomerang(pose(14, 26, 192_deg), { lead: 0.45, threshold: 3, timeout: 3500 });
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
+    drive_controller->faceAngle(192_deg, { threshold: 5_deg });
+    oinker.extend();
+    pros::delay(200);
+    drive_controller->drive_time(100, 400);
+    pros::delay(100);
+    drivetrain->move(0, -127);
+    pros::delay(300);
+    drivetrain->move(0, 127);
+    oinker.retract();
+    pros::delay(200);
+    drive_controller->drive_time(100, 400);
+    drive_controller->drive_time(-100, 250);
+
+    // touch ladder
+    drive_controller->boomerang(pos(40, 35), { backwards: true, threshold: 10, min_speed: 80 });
+    drive_controller->boomerang(pos(48 + 12 - 4.5 + 3, 48 + 12 - 4.5 - 3), { backwards: true, lead: 0.4, threshold: 1.5, angle_priority_threshold: 0, max_speed: 50 });
+    drive_controller->faceAngle(45_deg + 180_deg);
 }

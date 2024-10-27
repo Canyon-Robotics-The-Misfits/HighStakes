@@ -9,7 +9,7 @@ AUTO_ROUTE(auto_routes::negative_blue)
     // pickup goal
     clamp.retract();
     // drive_controller->boomerang(pose(144 - 48, 48, -30_deg), { backwards: true, lead: 0.5, threshold: 6, angle_priority_threshold: 10, max_speed: 110 });
-    drive_controller->drive_to(pose(144 - 48, 48, -30_deg), { backwards: true, threshold: 6, max_speed: 110 });
+    drive_controller->drive_to(pose(144 - 48, 48, -33_deg), { backwards: true, threshold: 6, max_speed: 110 });
     clamp.extend();
     drive_controller->drive_time(-100, 100);
     pros::delay(50);
@@ -33,7 +33,7 @@ AUTO_ROUTE(auto_routes::negative_blue)
     // get stack
     ring_mech->set_state(mechanism::DISABLED);
     drive_controller->boomerang(pos(144 - 24, 48), { threshold: 5, min_speed: 100 });
-    ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
     drive_controller->drive_time(100, 100);
     drive_controller->drive_time(-100, 250);
 
@@ -51,18 +51,20 @@ AUTO_ROUTE(auto_routes::negative_blue)
     drive_controller->turn(30_deg, { threshold: 10_deg });
     drive_controller->drive_time(127, 300);
     drive_controller->drive_time(-60, 300);
-    pros::delay(600);
+    pros::delay(300);
 
     // score on alliance stake
     ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
-    drive_controller->facePoint(pos(72, 0).vec(), -2_deg, { threshold: 5_deg, min_speed: 22 });
+    drive_controller->facePoint(pos(72, 0).vec(), -5_deg, { threshold: 5_deg, min_speed: 22 });
     alliance_stake_adjust.extend();
 
     double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
-    drive_controller->drive(distance - 11);
+    drive_controller->drive(distance - 14, { min_speed: 120, chained: true });
 
     ring_mech->set_state(mechanism::INTAKE_HOOD);
-    pros::delay(100);
+    drive_controller->drive_time(127, 200);
+    ring_mech->set_state(mechanism::DISABLED);
+    drive_controller->drive_time(127, 100);
     drive_controller->drive_time(-127, 200);
     alliance_stake_adjust.retract();
 
@@ -83,8 +85,8 @@ AUTO_ROUTE(auto_routes::negative_blue)
     // drive_controller->drive_time(-100, 250);
 
     // touch ladder
-    drive_controller->boomerang(pos(144 - 45, 45), { backwards: true, threshold: 15, max_speed: 100 });
+    drive_controller->boomerang(pos(144 - 40, 40), { backwards: true, threshold: 15, max_speed: 100 });
     pros::delay(100);
-    drive_controller->boomerang(pose(144 - (48 + 12 - 4), 48 + 12 - 4, -45_deg), { backwards: true, lead: 0.8, threshold: 0.5, max_speed: 50 });
+    drive_controller->boomerang(pose(144 - (48 + 12 - 4), 48 + 12 - 4, -45_deg), { backwards: true, lead: 0.8, threshold: 2, max_speed: 50 });
     drive_controller->faceAngle(-45_deg + 180_deg);
 }

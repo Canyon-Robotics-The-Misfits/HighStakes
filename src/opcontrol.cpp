@@ -48,70 +48,76 @@ bool intake_on = true;
 bool arm_on = false;
 void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech, lib15442c::Pneumatic alliance_stake_adjust)
 {
-    // intake toggle
-    if (controller.get_digital_new_press(DIGITAL_Y))
+    if (abs(controller.get_analog(ANALOG_RIGHT_Y)) < 10)
     {
-        intake_on = !intake_on;
-        arm_on = false;
-    }
-
-    if (controller.get_digital_new_press(DIGITAL_R2) || controller.get_digital_new_press(DIGITAL_L2))
-    {
-        arm_on = false;
-    }
-
-    if (controller.get_digital_new_press(DIGITAL_R1))
-    {
-        intake_on = false;
-        arm_on = true;
-        if (ring_mech->is_arm_loading())
+        // intake toggle
+        if (controller.get_digital_new_press(DIGITAL_Y))
         {
-            ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
+            intake_on = !intake_on;
+            arm_on = false;
         }
-        else
+
+        if (controller.get_digital_new_press(DIGITAL_R2) || controller.get_digital_new_press(DIGITAL_L2))
         {
-            ring_mech->set_state(mechanism::ARM_LOAD);
+            arm_on = false;
         }
-        alliance_stake_adjust.retract();
-    }
-    else if (controller.get_digital_new_press(DIGITAL_X))
-    {
-        intake_on = false;
-        arm_on = true;
-        ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
-        alliance_stake_adjust.extend();
-    }
-    else if (controller.get_digital(DIGITAL_R2) && !arm_on) // reverse if r2 pressed
-    {
-        ring_mech->set_state(mechanism::INTAKE_OUTTAKE);
-        alliance_stake_adjust.retract();
-    }
-    else if (controller.get_digital(DIGITAL_L2) && !arm_on) // control redirect with l2
-    {
-        ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
-        alliance_stake_adjust.retract();
-    }
-    else if (intake_on && !arm_on)
-    {
-        ring_mech->set_state(mechanism::INTAKE_HOOD);
-        alliance_stake_adjust.retract();
-    }
-    else if (!arm_on)
-    {
-        ring_mech->set_state(mechanism::DISABLED);
-        alliance_stake_adjust.retract();
-    }
 
-    // double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        if (controller.get_digital_new_press(DIGITAL_R1))
+        {
+            intake_on = false;
+            arm_on = true;
+            if (ring_mech->is_arm_loading())
+            {
+                ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
+            }
+            else
+            {
+                ring_mech->set_state(mechanism::ARM_LOAD);
+            }
+            alliance_stake_adjust.retract();
+        }
+        else if (controller.get_digital_new_press(DIGITAL_X))
+        {
+            intake_on = false;
+            arm_on = true;
+            ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
+            alliance_stake_adjust.extend();
+        }
+        else if (controller.get_digital(DIGITAL_R2) && !arm_on) // reverse if r2 pressed
+        {
+            ring_mech->set_state(mechanism::INTAKE_OUTTAKE);
+            alliance_stake_adjust.retract();
+        }
+        else if (controller.get_digital(DIGITAL_L2) && !arm_on) // control redirect with l2
+        {
+            ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
+            alliance_stake_adjust.retract();
+        }
+        else if (intake_on && !arm_on)
+        {
+            ring_mech->set_state(mechanism::INTAKE_HOOD);
+            alliance_stake_adjust.retract();
+        }
+        else if (!arm_on)
+        {
+            ring_mech->move_manual(0);
+            ring_mech->set_state(mechanism::DISABLED);
+            alliance_stake_adjust.retract();
+        }
 
-    // if (abs(raw_joystick) > 12)
-    // {
-    //     arm->move(raw_joystick);
-    // }
-    // else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
-    // {
-    //     arm->move(0);
-    // }
+        // double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+
+        // if (abs(raw_joystick) > 12)
+        // {
+        //     arm->move(raw_joystick);
+        // }
+        // else if (arm->get_target() == mechanism::ArmTarget::MANUAL)
+        // {
+        //     arm->move(0);
+        // }
+    } else {
+        ring_mech->move_manual(controller.get_analog(ANALOG_RIGHT_Y));
+    }
 }
 
 void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)

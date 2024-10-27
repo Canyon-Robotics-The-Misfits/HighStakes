@@ -77,7 +77,7 @@ void mechanism::RingMech::start_task()
 
                 double target_angle = INFINITY;
                 
-                std::cout << state << std::endl;
+                // std::cout << state << std::endl;
                 
                 switch (state)
                 {
@@ -108,7 +108,7 @@ void mechanism::RingMech::start_task()
                 if (target_angle != INFINITY)
                 {
                     double output = -arm_pid->calculate(current_angle, target_angle);
-                    std::cout << current_angle << ", " << target_angle << ", " << output << std::endl;
+                    // std::cout << current_angle << ", " << target_angle << ", " << output << std::endl;
 
                     // if (arm_limit->arm_limit->get_value() == true)
                     // {
@@ -231,4 +231,13 @@ bool mechanism::RingMech::is_arm_loading()
     }
 
     return abs(current - arm_target_config.load) < 10.0;
+}
+
+void mechanism::RingMech::move_manual(double voltage)
+{
+    set_state(mechanism::DISABLED);
+
+    mutex.lock();
+    motors->move(voltage);
+    mutex.unlock();
 }

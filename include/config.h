@@ -39,7 +39,7 @@ namespace config
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : 0.0,
-        alliance_stake : 37.0,
+        alliance_stake : 38.0,
         ladder_touch : 60.0,
         neutral_stake : 75.0
     };
