@@ -11,16 +11,19 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->drive_time(-60, 50);
     clamp.extend();
     drive_controller->drive_time(-80, 100);
-    pros::delay(100);
+    ring_mech->set_state(mechanism::INTAKE_HOOD);
+    pros::delay(700);
 
     // intake rings
-    ring_mech->set_state(mechanism::INTAKE_HOOD);
     drive_controller->boomerang(pos(48, 48));
+    pros::delay(200);
     drive_controller->boomerang(pos(24, 48));
+    pros::delay(200);
     drive_controller->facePoint(pos(27, 24).vec(), 0_deg, { threshold: 5_deg });
     drive_controller->boomerang(pose(27, 24, 180_deg), { lead: 0.8, min_speed: 60 });
     pros::delay(200);
     drive_controller->drive_time(80, 450);
+    pros::delay(200);
     drivetrain->move(-100, 60);
     pros::delay(700);
     drivetrain->move(0, 0);
@@ -32,7 +35,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->facePoint(pos(0, 0).vec(), 180_deg - 10_deg, { threshold: 10_deg });
     pros::delay(400);
     clamp.retract();
-    drive_controller->drive_time(-127, 700);
+    drive_controller->drive_time(-127, 600);
     pros::delay(200);
     drive_controller->drive_time(127, 300);
 
@@ -46,13 +49,17 @@ AUTO_ROUTE(auto_routes::skills)
 
     // intake rings
     drive_controller->boomerang(pos(144-48, 48));
+    pros::delay(200);
     drive_controller->boomerang(pos(144-24, 48));
+    pros::delay(200);
     drive_controller->boomerang(pos(144-10, 72), { threshold: 2 });
+    pros::delay(200);
     drive_controller->drive_time(-100, 250);
     drive_controller->facePoint(pos(144-24, 24).vec(), 0_deg, { threshold: 5_deg });
     drive_controller->boomerang(pose(144-20, 24, 180_deg), { lead: 0.8 });
     pros::delay(200);
     drive_controller->drive_time(80, 450);
+    pros::delay(200);
     drivetrain->move(-100, -40);
     pros::delay(500);
     drivetrain->move(0, 0);
@@ -64,7 +71,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->facePoint(pos(144, 0).vec(), 180_deg, { threshold: 10_deg });
     pros::delay(400);
     clamp.retract();
-    drive_controller->drive_time(-127, 700);
+    drive_controller->drive_time(-127, 600);
     pros::delay(200);
     drive_controller->drive_time(127, 300);
 
@@ -74,23 +81,27 @@ AUTO_ROUTE(auto_routes::skills)
 
     // push mogo
     drive_controller->boomerang(pose(144 - 48 - 4, 144 - 24, 20_deg), { lead: 0.4 });
-    drive_controller->boomerang(pose(144 - 24, 144 - 14, 90_deg), { lead: 0.8, min_speed: 90 });
-    drive_controller->drive_time(127, 600);
+    drive_controller->boomerang(pose(144 - 30, 144 - 16, 90_deg), { lead: 0.8, min_speed: 90 });
+    drivetrain->move(-100, -40);
+    pros::delay(500);
+    drivetrain->move(0, 0);
     drive_controller->drive_time(-127, 700);
     drive_controller->faceAngle(-90_deg, { threshold: 7_deg });
 
     // push other goal in corner
-    drive_controller->boomerang(pose(35, 144 - 14, -90_deg), { lead: 0.8 });
+    drive_controller->boomerang(pose(35, 144 - 15, -90_deg), { lead: 0.6 });
     drivetrain->move(127, 60);
     pros::delay(500);
     drivetrain->move(0, 0);
     drive_controller->drive_time(-80, 300);
 
     // grab next goal
-    drive_controller->drive_to(pose(72, 144 - 24, 90_deg), { backwards: true, threshold: 6, max_speed: 60 });
+    drive_controller->drive_to(pose(72 - 20, 144 - 24, 90_deg), { r: 14, backwards: true, max_speed: 80 });
+    drive_controller->facePoint(pos(144 - 48, 24).vec(), 180_deg, { threshold: 5_deg });
+    drive_controller->drive_time(-60, 700);
     clamp.extend();
-    drive_controller->drive_time(-100, 100);
-    pros::delay(300);
+    drive_controller->drive_time(-60, 100);
+    pros::delay(150);
 
     // pickup rings
     ring_mech->set_state(mechanism::INTAKE_HOOD);
@@ -112,27 +123,29 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->drive_time(-100, 400);
     
     // score wall stake
-    drive_controller->boomerang(pos(24, 72));
-    drive_controller->faceAngle(-90_deg, { min_speed: 23 });
+    drive_controller->boomerang(pos(24, 72), { backwards: true, max_speed: 80 });
+    drive_controller->facePoint(pos(2, 72).vec(), 0_deg, { min_speed: 23 });
     ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
     pros::delay(500);
-    drive_controller->drive_time(100, 500);
+    drive_controller->boomerang(pos(2, 72), { threshold: 12 });
     ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
     pros::delay(300);
     drive_controller->drive_time(-100, 300);
+    alliance_stake_adjust.extend();
 
     // get more rings for wall stake
     drive_controller->boomerang(pose(72, 144 - 24, 90_deg), { lead: 0.4, threshold: 10, min_speed: 100 });
+    alliance_stake_adjust.retract();
     drive_controller->boomerang(pos(144 - 24, 144 - 24));
     drive_controller->boomerang(pos(144 - 48, 144 - 48), { backwards: true, threshold: 5 });
     drive_controller->boomerang(pos(144 - 12, 144 - 24));
     
     // score wall stake
-    drive_controller->boomerang(pos(144 - 24, 72));
-    drive_controller->faceAngle(90_deg, { min_speed: 23 });
+    drive_controller->boomerang(pos(144 - 24, 72), { backwards: true, max_speed: 80 });
+    drive_controller->facePoint(pos(144 - 2, 72).vec(), 0_deg, { min_speed: 23 });
     ring_mech->set_state(mechanism::ARM_NEUTRAL_STAKE);
     pros::delay(500);
-    drive_controller->drive_time(100, 500);
+    drive_controller->boomerang(pos(144 - 2, 72), { threshold: 12 });
     ring_mech->set_state(mechanism::INTAKE_WALL_STAKE);
     pros::delay(300);
     drive_controller->drive_time(-100, 300);

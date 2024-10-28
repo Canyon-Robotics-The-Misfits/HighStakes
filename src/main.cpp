@@ -35,10 +35,10 @@ void initialize() {
 		display_description: ""
 	});
 
-	// gui.register_autonomous(gui::Route::SOLO, {
-	// 	display_name: "Solo",
-	// 	display_description: ""
-	// });
+	gui.register_autonomous(gui::Route::SOLO, {
+		display_name: "Solo",
+		display_description: ""
+	});
 	gui.register_autonomous(gui::Route::SKILLS, {
 		display_name: "Skills",
 		display_description: "The skills program"

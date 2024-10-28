@@ -23,8 +23,9 @@ AUTO_ROUTE(auto_routes::positive_red)
 
     // pickup next goal
     drive_controller->boomerang(pose(144 - 48, 48, 30_deg + 180_deg), { backwards: true, lead: 0.4, threshold: 6 });
+    drive_controller->drive_time(-100, 150);
     clamp.extend();
-    drive_controller->drive_time(-100, 75);
+    drive_controller->drive_time(-100, 100);
     pros::delay(50);
     ring_mech->set_state(mechanism::INTAKE_HOOD);
     pros::delay(100);
@@ -35,7 +36,7 @@ AUTO_ROUTE(auto_routes::positive_red)
     
     // get the center ring
     drive_controller->facePoint(pos(144 - 72, 24).vec(), 0_deg, { threshold: 10_deg });
-    drive_controller->drive_to(pose(144 - 48 - 12 + 3, 24 + 12 - 9, -130_deg));
+    drive_controller->drive_to(pose(144 - 48 - 12 + 4, 24 + 12 - 9, -130_deg));
     oinker.extend();
     pros::delay(150);
     drive_controller->drive_time(-100, 300);
@@ -45,7 +46,7 @@ AUTO_ROUTE(auto_routes::positive_red)
     pros::delay(150);
     drive_controller->turn(30_deg, { threshold: 10_deg });
     drive_controller->drive_time(127, 300);
-    drive_controller->drive_time(-60, 300);
+    drive_controller->drive_time(-60, 150);
     pros::delay(300);
 
     // score on alliance stake
@@ -53,34 +54,43 @@ AUTO_ROUTE(auto_routes::positive_red)
     drive_controller->facePoint(pos(72, 0).vec(), -5_deg, { threshold: 5_deg, min_speed: 22 });
     alliance_stake_adjust.extend();
 
-    double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
-    drive_controller->drive(distance - 14, { min_speed: 120, chained: true });
+    drive_controller->boomerang(pos(72, 2), { threshold: 14 });
 
     ring_mech->set_state(mechanism::INTAKE_HOOD);
-    drive_controller->drive_time(127, 200);
-    ring_mech->set_state(mechanism::DISABLED);
     drive_controller->drive_time(127, 100);
+    ring_mech->set_state(mechanism::DISABLED);
+    drive_controller->drive_time(127, 50);
     drive_controller->drive_time(-127, 200);
     alliance_stake_adjust.retract();
 
     // clear corner
     drive_controller->boomerang(pose(144 - 28, 11, 95_deg), { lead: 0.75 });
     ring_mech->set_state(mechanism::INTAKE_HOOD);
-    drive_controller->faceAngle(99_deg, { threshold: 5_deg });
+    drive_controller->faceAngle(99_deg, { threshold: 5_deg, max_speed: 40 });
     oinker.extend();
     pros::delay(200);
     drive_controller->drive_time(80, 400);
     pros::delay(100);
     drivetrain->move(0, -127);
-    pros::delay(300);
+    pros::delay(400);
     drivetrain->move(0, 127);
     oinker.retract();
-    pros::delay(200);
+    pros::delay(400);
     drive_controller->drive_time(100, 400);
-    drive_controller->drive_time(-100, 250);
+    drive_controller->faceAngle(135_deg, { threshold: 5_deg });
+    drive_controller->drive_time(-100, 350);
 
-    // touch ladder
-    drive_controller->boomerang(pos(144 - 36, 36), { backwards: true, threshold: 10, min_speed: 80 });
-    drive_controller->boomerang(pose(144 - (48 + 12 - 4.5), 48 + 12 - 4.5, -45_deg), { backwards: true, lead: 0.7, threshold: 2.0, max_speed: 50 });
-    drive_controller->faceAngle(-45_deg + 180_deg);
+    // dropoff goal
+    drive_controller->faceAngle(-135_deg, { threshold: 5_deg });
+    clamp.retract();
+    pros::delay(200);
+    drive_controller->drive_time(100, 100);
+    drive_controller->faceAngle(0_deg, { threshold: 5_deg });
+    drive_controller->drive_time(127, 150);
+    drive_controller->faceAngle(180_deg, { threshold: 5_deg });
+
+    // // touch ladder
+    // drive_controller->boomerang(pos(144 - 36, 36), { backwards: true, threshold: 10, min_speed: 80 });
+    // drive_controller->boomerang(pose(144 - (48 + 12 - 4.5), 48 + 12 - 4.5, -45_deg), { backwards: true, lead: 0.7, threshold: 2.0, max_speed: 50 });
+    // drive_controller->faceAngle(-45_deg + 180_deg);
 }

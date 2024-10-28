@@ -8,9 +8,10 @@ AUTO_ROUTE(auto_routes::negative_red)
     
     // pickup goal
     clamp.retract();
-    drive_controller->drive_to(pose(48, 48, 30_deg), { r: 14, backwards: true, threshold: 7, max_speed: 127 });
+    drive_controller->drive_to(pose(48, 48, 30_deg), { r: 14, backwards: true, threshold: 9, max_speed: 127 });
+    drive_controller->drive_time(-100, 150);
     clamp.extend();
-    drive_controller->drive_time(-100, 50);
+    drive_controller->drive_time(-100, 100);
     pros::delay(50);
     ring_mech->set_state(mechanism::INTAKE_HOOD);
     pros::delay(100);
@@ -49,7 +50,7 @@ AUTO_ROUTE(auto_routes::negative_red)
     pros::delay(250);
     drive_controller->turn(20_deg, { threshold: 10_deg });
     drive_controller->drive_time(127, 300);
-    drive_controller->drive_time(-60, 300);
+    drive_controller->drive_time(-60, 150);
     pros::delay(500);
 
     // score on alliance stake
@@ -57,8 +58,9 @@ AUTO_ROUTE(auto_routes::negative_red)
     drive_controller->facePoint(pos(72, 3).vec(), 3_deg, { threshold: 5_deg, min_speed: 22 });
     alliance_stake_adjust.extend();
 
-    double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
-    drive_controller->drive(distance - 14, { min_speed: 120, chained: true });
+    // double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
+    // drive_controller->drive(distance - 14, { min_speed: 120, chained: true });
+    drive_controller->boomerang(pos(72, 2), { threshold: 14 });
 
     ring_mech->set_state(mechanism::INTAKE_HOOD);
     drive_controller->drive_time(127, 200);
