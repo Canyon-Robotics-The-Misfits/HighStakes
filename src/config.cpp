@@ -41,7 +41,6 @@ std::shared_ptr<mechanism::RingMech> config::make_ring_mech()
     auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
 
 	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
-	auto limit_switch = std::make_shared<pros::adi::DigitalIn>(config::PORT_ARM_LIMIT);
 	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
 
 	return std::make_shared<mechanism::RingMech>(mechanism::RingMechParams {
@@ -49,7 +48,6 @@ std::shared_ptr<mechanism::RingMech> config::make_ring_mech()
 		intake_redirect: redirect,
 		intake_optical: color_sensor,
 		arm_rotation_sensor: rotation_sensor,
-		arm_limit: limit_switch,
 		arm_pid: pid,
 		arm_target_config: config::ARM_TARGET_CONFIG
 	});
@@ -102,7 +100,6 @@ std::shared_ptr<lib15442c::DriveController> config::make_drive_controller(std::s
 		drivetrain,
 		odometry,
 		drive_pid,
-		turn_pid,
-		22
+		turn_pid
 	);
 }

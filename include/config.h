@@ -44,7 +44,6 @@ namespace config
         neutral_stake : 75.0
     };
     constexpr int PORT_ARM_ROTATION = 10;
-    constexpr char PORT_ARM_LIMIT = 'F';
     constexpr int PORT_OPTICAL = 12;
     constexpr char PORT_REDIRECT = 'G';
 

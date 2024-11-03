@@ -8,7 +8,6 @@ mechanism::RingMech::RingMech(RingMechParams params)
       intake_redirect(params.intake_redirect),
       intake_optical(params.intake_optical),
       arm_rotation_sensor(params.arm_rotation_sensor),
-      arm_limit(params.arm_limit),
       arm_pid(params.arm_pid),
       arm_target_config(params.arm_target_config)
 {

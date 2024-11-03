@@ -47,7 +47,6 @@ namespace mechanism
         std::shared_ptr<pros::Optical> intake_optical;
         
         std::shared_ptr<pros::Rotation> arm_rotation_sensor;
-        std::shared_ptr<pros::adi::DigitalIn> arm_limit;
         std::shared_ptr<lib15442c::PID> arm_pid; 
 
         ArmTargetConfig arm_target_config;
@@ -62,7 +61,6 @@ namespace mechanism
         std::shared_ptr<pros::Optical> intake_optical;
         
         std::shared_ptr<pros::Rotation> arm_rotation_sensor;
-        std::shared_ptr<pros::adi::DigitalIn> arm_limit;
         std::shared_ptr<lib15442c::PID> arm_pid;
 
         ArmTargetConfig arm_target_config;
@@ -102,6 +100,11 @@ namespace mechanism
          */
         RingMechState get_state();
 
+        /**
+         * @brief Whether the arm is in loading position
+         * 
+         * @return bool
+         */
         bool is_arm_loading();
 
         /**
