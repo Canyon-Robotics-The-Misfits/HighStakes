@@ -3,8 +3,8 @@
 
 AUTO_ROUTE(auto_routes::negative_red)
 {
-    odometry->setRotation(180_deg);
-    odometry->setPosition(lib15442c::Vec(35, 10.5 + 10));
+    odometry->set_rotation(180_deg);
+    odometry->set_position(lib15442c::Vec(35, 10.5 + 10));
     
     // pickup goal
     clamp.retract();
@@ -27,7 +27,7 @@ AUTO_ROUTE(auto_routes::negative_red)
     drivetrain->move(0, 0);
 
     // mess up other rings
-    drive_controller->facePoint(pos(24, 48).vec(), 0_deg, { arc_radius: -7, threshold: 5_deg });
+    drive_controller->face_point(pos(24, 48).vec(), 0_deg, { arc_radius: -7, threshold: 5_deg });
     pros::delay(250);
 
     // get stack
@@ -38,9 +38,9 @@ AUTO_ROUTE(auto_routes::negative_red)
     drive_controller->drive_time(-100, 250);
 
     // get center ring
-    drive_controller->facePoint(pos(48 + 12 - 6.5, 24 + 12 - 9.5).vec(), 20_deg, { threshold: 5_deg });
+    drive_controller->face_point(pos(48 + 12 - 6.5, 24 + 12 - 9.5).vec(), 20_deg, { threshold: 5_deg });
     drive_controller->boomerang(pos(48 + 12 - 6.5, 24 + 12 - 9.5));
-    drive_controller->faceAngle(70_deg, { threshold: 5_deg });
+    drive_controller->face_angle(70_deg, { threshold: 5_deg });
     ring_mech->set_state(mechanism::INTAKE_HOOD);
     oinker.extend();
     pros::delay(200);
@@ -55,7 +55,7 @@ AUTO_ROUTE(auto_routes::negative_red)
 
     // score on alliance stake
     ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
-    drive_controller->facePoint(pos(72, 3).vec(), 3_deg, { threshold: 5_deg, min_speed: 22 });
+    drive_controller->face_point(pos(72, 3).vec(), 3_deg, { threshold: 5_deg, min_speed: 22 });
     alliance_stake_adjust.extend();
 
     // double distance = odometry->getPose().vec().distance_to(pos(72, 0).vec());
@@ -73,5 +73,5 @@ AUTO_ROUTE(auto_routes::negative_red)
     drive_controller->boomerang(pos(40, 40), { backwards: true, threshold: 15, max_speed: 100 });
     pros::delay(100);
     drive_controller->boomerang(pose(48 + 12 - 5, 48 + 12 - 5, 45_deg), { backwards: true, lead: 0.8, threshold: 2, max_speed: 50 });
-    drive_controller->faceAngle(45_deg + 180_deg);
+    drive_controller->face_angle(45_deg + 180_deg);
 }

@@ -25,8 +25,8 @@ void autonomous() {
     lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
-    odometry->startTask();
-	odometry->setRotation(0_deg);
+    odometry->start_task();
+	odometry->set_rotation(0_deg);
 	
 	#ifndef AUTO_SELECT
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
@@ -86,7 +86,7 @@ void autonomous() {
 	double end_time = pros::millis() / 1000.0;
 
 	ring_mech->stop_task();
-	odometry->stopTask();
+	odometry->stop_task();
 	drivetrain->move(0, 0);
 	
 	INFO("Autonomous End. Took %.2fs", end_time - start_time);

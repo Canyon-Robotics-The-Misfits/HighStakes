@@ -3,8 +3,8 @@
 
 AUTO_ROUTE(auto_routes::left_safe)
 {
-    odometry->setRotation(180_deg);
-    odometry->setPosition(lib15442c::Vec(35, 10.5 + 10));
+    odometry->set_rotation(180_deg);
+    odometry->set_position(lib15442c::Vec(35, 10.5 + 10));
     
     // pickup goal
     clamp.retract();
@@ -22,7 +22,7 @@ AUTO_ROUTE(auto_routes::left_safe)
     ring_pickup->await();
 
     // touch ladder
-    drive_controller->facePoint(pos(36, 36).vec(), 180_deg, { chained: true });
+    drive_controller->face_point(pos(36, 36).vec(), 180_deg, { chained: true });
     drive_controller->boomerang(pos(36, 36), { backwards: true, threshold: 15, max_speed: 60 });
     drive_controller->boomerang(pose(48 + 12 - 4, 48 + 12 - 4, 45_deg), { backwards: true, lead: 0.8, threshold: 0.5, angle_priority_threshold: 5, max_speed: 40 });
 }

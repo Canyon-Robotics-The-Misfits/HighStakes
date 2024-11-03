@@ -3,16 +3,16 @@
 
 AUTO_ROUTE(auto_routes::positive_blue)
 {
-    odometry->setRotation(0_deg);
-    odometry->setPosition(lib15442c::Vec(35, 18.5 + 10 - 5));
+    odometry->set_rotation(0_deg);
+    odometry->set_position(lib15442c::Vec(35, 18.5 + 10 - 5));
 
     // rush goal
     drive_controller->drive_time(127, 300);
     drive_controller->drive_to(pose(24 + 10, 48 + 9, 0_deg), { r: 10, threshold: 3, timeout: 4000 });
-    drive_controller->faceAngle(-55_deg, { threshold: 10_deg, min_speed: 30, chained: true });
+    drive_controller->face_angle(-55_deg, { threshold: 10_deg, min_speed: 30, chained: true });
     oinker.extend();
     pros::delay(75);
-    drive_controller->faceAngle(-90_deg, { threshold: 10_deg, min_speed: 30, chained: true });
+    drive_controller->face_angle(-90_deg, { threshold: 10_deg, min_speed: 30, chained: true });
     oinker.retract();
     // pros::delay(100);
     drive_controller->drive_time(100, 100);
@@ -34,12 +34,12 @@ AUTO_ROUTE(auto_routes::positive_blue)
     drive_controller->drive_time(-100, 250);
     
     // (dont) get the center ring
-    drive_controller->facePoint(pos(48 + 12 - 6, 24 + 12 - 9).vec(), 25_deg, { threshold: 10_deg });
+    drive_controller->face_point(pos(48 + 12 - 6, 24 + 12 - 9).vec(), 25_deg, { threshold: 10_deg });
     drive_controller->boomerang(pos(48 + 12 - 6, 24 + 12 - 9));
 
     // score on alliance stake
     ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
-    drive_controller->facePoint(pos(72, 3).vec(), 2_deg, { threshold: 1_deg, min_speed: 23 });
+    drive_controller->face_point(pos(72, 3).vec(), 2_deg, { threshold: 1_deg, min_speed: 23 });
     alliance_stake_adjust.extend();
     pros::delay(100);
 
@@ -55,7 +55,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     // clear corner
     drive_controller->boomerang(pose(14, 26, 192_deg), { lead: 0.45, threshold: 3, timeout: 3500 });
     ring_mech->set_state(mechanism::INTAKE_HOOD);
-    drive_controller->faceAngle(192_deg, { threshold: 5_deg, max_speed: 40 });
+    drive_controller->face_angle(192_deg, { threshold: 5_deg, max_speed: 40 });
     oinker.extend();
     pros::delay(200);
     drive_controller->drive_time(100, 400);
@@ -66,17 +66,17 @@ AUTO_ROUTE(auto_routes::positive_blue)
     oinker.retract();
     pros::delay(400);
     drive_controller->drive_time(100, 400);
-    drive_controller->faceAngle(-135_deg, { threshold: 5_deg });
+    drive_controller->face_angle(-135_deg, { threshold: 5_deg });
     drive_controller->drive_time(-100, 200);
 
     // dropoff goal
-    drive_controller->faceAngle(135_deg, { threshold: 5_deg });
+    drive_controller->face_angle(135_deg, { threshold: 5_deg });
     clamp.retract();
     pros::delay(200);
     drive_controller->drive_time(100, 100);
-    drive_controller->faceAngle(0_deg, { threshold: 5_deg });
+    drive_controller->face_angle(0_deg, { threshold: 5_deg });
     drive_controller->drive_time(127, 150);
-    drive_controller->faceAngle(180_deg, { threshold: 5_deg });
+    drive_controller->face_angle(180_deg, { threshold: 5_deg });
 
     // // touch ladder
     // drive_controller->boomerang(pos(40, 35), { backwards: true, threshold: 10, min_speed: 80 });

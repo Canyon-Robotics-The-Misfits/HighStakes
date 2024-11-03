@@ -3,8 +3,8 @@
 
 AUTO_ROUTE(auto_routes::negative_blue)
 {
-    odometry->setRotation(180_deg);
-    odometry->setPosition(lib15442c::Vec(144 - 35, 10.5 + 10));
+    odometry->set_rotation(180_deg);
+    odometry->set_position(lib15442c::Vec(144 - 35, 10.5 + 10));
     
     // pickup goal
     clamp.retract();
@@ -28,7 +28,7 @@ AUTO_ROUTE(auto_routes::negative_blue)
     drivetrain->move(0, 0);
 
     // mess up other rings
-    drive_controller->facePoint(pos(144 - 24, 48).vec(), 0_deg, { arc_radius: 7 });
+    drive_controller->face_point(pos(144 - 24, 48).vec(), 0_deg, { arc_radius: 7 });
     pros::delay(250);
 
     // get stack
@@ -39,7 +39,7 @@ AUTO_ROUTE(auto_routes::negative_blue)
     drive_controller->drive_time(-100, 250);
 
     // get center ring
-    drive_controller->facePoint(pos(144 - 72, 24).vec(), 0_deg, { threshold: 5_deg });
+    drive_controller->face_point(pos(144 - 72, 24).vec(), 0_deg, { threshold: 5_deg });
     // drive_controller->drive_to(pose(144 - 48 - 12 + 2.5, 24 + 12 - 7.5, -125_deg));
     drive_controller->drive_to(pose(144 - 48 - 12 + 3, 24 + 12 - 9, -125_deg));
     ring_mech->set_state(mechanism::INTAKE_HOOD);
@@ -56,7 +56,7 @@ AUTO_ROUTE(auto_routes::negative_blue)
 
     // score on alliance stake
     ring_mech->set_state(mechanism::ARM_ALLIANCE_STAKE);
-    drive_controller->facePoint(pos(72, 0).vec(), -5_deg, { threshold: 5_deg, min_speed: 22 });
+    drive_controller->face_point(pos(72, 0).vec(), -5_deg, { threshold: 5_deg, min_speed: 22 });
     alliance_stake_adjust.extend();
 
     drive_controller->boomerang(pos(72, 2), { threshold: 14 });
@@ -88,5 +88,5 @@ AUTO_ROUTE(auto_routes::negative_blue)
     drive_controller->boomerang(pos(144 - 40, 40), { backwards: true, threshold: 15, max_speed: 100 });
     pros::delay(100);
     drive_controller->boomerang(pose(144 - (48 + 12 - 4), 48 + 12 - 4, -45_deg), { backwards: true, lead: 0.8, threshold: 2, max_speed: 50 });
-    drive_controller->faceAngle(-45_deg + 180_deg);
+    drive_controller->face_angle(-45_deg + 180_deg);
 }
