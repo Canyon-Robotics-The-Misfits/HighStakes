@@ -4,8 +4,7 @@
 
 AUTO_ROUTE(auto_routes::skills)
 {
-    odometry->set_rotation(-30_deg + 180_deg);
-    odometry->set_position(lib15442c::Vec(53.5, 13 + 4));
+    odometry->initialize(53.5, 13 + 4, -30_deg + 180_deg);
     
     // pickup mogo
     drive_controller->drive_time(-60, 50);

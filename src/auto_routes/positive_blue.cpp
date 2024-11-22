@@ -3,8 +3,7 @@
 
 AUTO_ROUTE(auto_routes::positive_blue)
 {
-    odometry->set_rotation(0_deg);
-    odometry->set_position(lib15442c::Vec(35, 18.5 + 10 - 5));
+    odometry->initialize(35, 18.5 + 10 - 5, 0_deg);
 
     // rush goal
     drive_controller->drive_time(127, 300);

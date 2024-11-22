@@ -3,8 +3,7 @@
 
 AUTO_ROUTE(auto_routes::negative_blue)
 {
-    odometry->set_rotation(180_deg);
-    odometry->set_position(lib15442c::Vec(144 - 35, 10.5 + 10));
+    odometry->initialize(44 - 35, 10.5 + 10, 180_deg);
     
     // pickup goal
     clamp.retract();

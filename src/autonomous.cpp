@@ -25,7 +25,6 @@ void autonomous() {
     lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
-    odometry->start_task();
 	odometry->set_rotation(0_deg);
 	
 	#ifndef AUTO_SELECT
