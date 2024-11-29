@@ -145,16 +145,12 @@ void opcontrol()
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
     
-    // std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
-    
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
     lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
-    // odometry->startTask();
     clamp.extend();
 
-    // int tick = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
@@ -162,17 +158,6 @@ void opcontrol()
         control_clamp(controller, clamp);
         control_oinker(controller, oinker);
 
-        // if (controller.get_digital_new_press(DIGITAL_A))
-        // {
-        //     alliance_stake_adjust.toggle();
-        // }
-
-        // if (tick % 5 == 0)
-        // {
-        //     std::cout << odometry->getX() << ", " << odometry->getY() << std::endl;
-        // }
-
-        // tick+=1;
         pros::delay(20);
     }
 }
