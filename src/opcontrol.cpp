@@ -149,6 +149,42 @@ void opcontrol()
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
     lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
+    std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
+    lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
+        {
+            particle_count: 2000,
+            uniform_random_percent: 0.1,
+            tracker_odom_sd: 0.05
+        },
+        tracker_odom,
+        {
+            { // front
+                port: 1,
+                x_offset: -5.5,
+                y_offset: 7,
+                theta_offset: 0,
+            },
+            { // back
+                port: 1,
+                x_offset: -5.5,
+                y_offset: -5.5,
+                theta_offset: M_PI,
+            },
+            { // left
+                port: 1,
+                x_offset: -5.25,
+                y_offset: -3,
+                theta_offset: M_PI / 2.0,
+            },
+            { // right
+                port: 1,
+                x_offset: 7,
+                y_offset: -5,
+                theta_offset: -M_PI / 2.0,
+            }
+        }
+    );
+
     clamp.extend();
 
     while (true)
@@ -157,6 +193,8 @@ void opcontrol()
         control_ring_mech(controller, ring_mech, alliance_stake_adjust);
         control_clamp(controller, clamp);
         control_oinker(controller, oinker);
+
+        std::cout << mcl_odom.get_x() << ", " << mcl_odom.get_y() << tracker_odom->get_x() << ", " << tracker_odom->get_y() << std::endl;
 
         pros::delay(20);
     }
