@@ -234,7 +234,7 @@ bool mechanism::RingMech::is_arm_loading()
         current = 0.0;
     }
 
-    return abs(current - arm_target_config.load) < 10.0;
+    return std::abs(current - arm_target_config.load) < 10.0;
 }
 
 void mechanism::RingMech::move_manual(double voltage)
