@@ -17,13 +17,13 @@ namespace config
     constexpr lib15442c::MotorGroupParameters PARAMS_LEFT_DRIVE = {
         reversed : true,
         brake_mode : config::DRIVE_BRAKE_MODE,
-        ratio : lib15442c::MOTOR_BLUE *config::DRIVE_GEAR_RATIO
+        ratio : lib15442c::MOTOR_BLUE * config::DRIVE_GEAR_RATIO
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_RIGHT_DRIVE = {
         reversed : false,
         brake_mode : config::DRIVE_BRAKE_MODE,
-        ratio : lib15442c::MOTOR_BLUE *config::DRIVE_GEAR_RATIO
+        ratio : lib15442c::MOTOR_BLUE * config::DRIVE_GEAR_RATIO
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_RING_MECH = {

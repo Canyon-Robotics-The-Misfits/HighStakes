@@ -15,7 +15,7 @@ double curve_joystick(double in)
 
     if (in != 0)
     {
-        double t = abs(in) / 127.0;
+        double t = std::abs(in) / 127.0;
 
         double out_normalized = a * pow(t, 5) + b * pow(t, 4) + c * pow(t, 3) + d * pow(t, 2) + e * t;
 
@@ -48,7 +48,7 @@ bool intake_on = true;
 bool arm_on = false;
 void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingMech> ring_mech, lib15442c::Pneumatic alliance_stake_adjust)
 {
-    if (abs(controller.get_analog(ANALOG_RIGHT_Y)) < 10)
+    if (std::abs(controller.get_analog(ANALOG_RIGHT_Y)) < 10)
     {
         // intake toggle
         if (controller.get_digital_new_press(DIGITAL_Y))
@@ -107,7 +107,7 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
 
         // double raw_joystick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-        // if (abs(raw_joystick) > 12)
+        // if (std::abs(raw_joystick) > 12)
         // {
         //     arm->move(raw_joystick);
         // }
