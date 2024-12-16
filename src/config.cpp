@@ -16,7 +16,7 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 
 	std::shared_ptr<lib15442c::TankDrive> drivetrain = std::make_shared<lib15442c::TankDrive>(
 		left_drive, right_drive,
-		config::DRIVE_WHEEL_DIAMETER, 1, config::DRIVE_TRACK_WIDTH);
+		config::DRIVE_WHEEL_DIAMETER, 1.0, 2.0, config::DRIVE_CONSTRAINTS);
 
 	if (!drivetrain->is_installed())
 	{

@@ -23,7 +23,14 @@ namespace config
     constexpr lib15442c::MotorGroupParameters PARAMS_RIGHT_DRIVE = {
         reversed : false,
         brake_mode : config::DRIVE_BRAKE_MODE,
-        ratio : lib15442c::MOTOR_BLUE * config::DRIVE_GEAR_RATIO
+        ratio : lib15442c::MOTOR_BLUE * DRIVE_GEAR_RATIO
+    };
+
+    constexpr lib15442c::DrivetrainConstraints DRIVE_CONSTRAINTS = {
+        max_speed: 76,
+        max_acceleration: 76 * 1.7,
+
+        track_width: DRIVE_TRACK_WIDTH
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_RING_MECH = {
