@@ -6,8 +6,8 @@
 
 namespace config
 {
-    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {-15, -14, -13};
-    constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {5, 4, 3};
+    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {-13, -12, 11};
+    constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {18, 19, -20};
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
