@@ -1,17 +1,12 @@
 #pragma once
 
 #include <memory>
+#include "pros/rtos.hpp"
 
 #include "lib15442c/device/motor.hpp"
 
-#include "lib15442c/device/pneumatic.hpp"
-#include "pros/optical.hpp"
-
 #include "lib15442c/controller/pid.hpp"
 #include "pros/rotation.hpp"
-#include "pros/adi.hpp"
-
-#include <variant>
 
 namespace mechanism
 {
@@ -23,59 +18,33 @@ namespace mechanism
         double neutral_stake;
     };
 
-    enum RingMechState
+    enum ArmState
     {
-        DISABLED = 0x00000,
-
-        ARM_LOAD = 0x10000,
-        ARM_ALLIANCE_STAKE = 0x10001,
-        ARM_NEUTRAL_STAKE = 0x10010,
-        ARM_LADDER_TOUCH = 0x10011,
-
-        INTAKE_HOOD = 0x11000,
-        INTAKE_WALL_STAKE = 0x11001,
-        INTAKE_OUTTAKE = 0x11010,
-        INTAKE_SORT_BLUE = 0x11011,
-        INTAKE_SORT_RED = 0x11100,
+        DISABLED,
+        LOAD,
+        ALLIANCE_STAKE,
+        LADDER_TOUCH,
+        NEUTRAL_STAKE
     };
 
-    struct RingMechParams
-    {
-        std::shared_ptr<lib15442c::MotorGroup> motors;
-
-        std::shared_ptr<lib15442c::IPneumatic> intake_redirect;
-        std::shared_ptr<pros::Optical> intake_optical;
-        
-        std::shared_ptr<pros::Rotation> arm_rotation_sensor;
-        std::shared_ptr<lib15442c::PID> arm_pid; 
-
-        ArmTargetConfig arm_target_config;
-    };
-
-    class RingMech
+    class Arm
     {
     private:
         std::shared_ptr<lib15442c::MotorGroup> motors;
 
-        std::shared_ptr<lib15442c::IPneumatic> intake_redirect;
-        std::shared_ptr<pros::Optical> intake_optical;
-        
         std::shared_ptr<pros::Rotation> arm_rotation_sensor;
         std::shared_ptr<lib15442c::PID> arm_pid;
 
         ArmTargetConfig arm_target_config;
 
-        RingMechState state = RingMechState::DISABLED;
+        ArmState state = ArmState::DISABLED;
 
         pros::Mutex mutex;
         bool task_on_flag = false;
         pros::Task task = pros::Task([]() { return; });
 
-        bool is_intake();
-        bool is_arm();
-
     public:
-        RingMech(RingMechParams params);
+        Arm(std::shared_ptr<lib15442c::MotorGroup> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config);
         
         /**
          * @brief Start the task
@@ -91,14 +60,14 @@ namespace mechanism
          * 
          * @param state The new state
          */
-        void set_state(RingMechState state);
+        void set_state(ArmState state);
 
         /**
          * @brief Get the state of the mechanism
          * 
          * @return RingMechState The current state
          */
-        RingMechState get_state();
+        ArmState get_state();
 
         /**
          * @brief Whether the arm is in loading position
