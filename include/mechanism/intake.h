@@ -10,7 +10,7 @@
 
 namespace mechanism
 {
-    enum IntakeState
+    enum class IntakeState
     {
         DISABLED,
         HOOD,
@@ -22,18 +22,20 @@ namespace mechanism
     class Intake
     {
     private:
-        std::shared_ptr<lib15442c::MotorGroup> motors;
+        std::shared_ptr<lib15442c::IMotor> motors;
 
         std::shared_ptr<lib15442c::Pneumatic> redirect;
 
         IntakeState state = IntakeState::DISABLED;
+        double dejam_start_time = -1;
+        IntakeState pre_dejam_state = IntakeState::DISABLED;
 
         pros::Mutex mutex;
         bool task_on_flag = false;
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        Intake(std::shared_ptr<lib15442c::MotorGroup> motors, std::shared_ptr<lib15442c::Pneumatic> redirect);
+        Intake(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<lib15442c::Pneumatic> redirect);
         
         /**
          * @brief Start the task

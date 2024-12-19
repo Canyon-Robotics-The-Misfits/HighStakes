@@ -4,7 +4,7 @@
 
 #define LOGGER "intake.cpp"
 
-mechanism::Intake::Intake(std::shared_ptr<lib15442c::MotorGroup> motors, std::shared_ptr<lib15442c::Pneumatic> redirect)
+mechanism::Intake::Intake(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<lib15442c::Pneumatic> redirect)
     : motors(motors),
       redirect(redirect)
 {
@@ -38,9 +38,38 @@ void mechanism::Intake::start_task()
             {
                 break;
             }
+
+            // if (this->state != IntakeState::DISABLED && this->state != IntakeState::DEJAM && std::abs(motors->get_velocity()) < 300)
+            // {
+            //     this->state = IntakeState::DEJAM;
+            // }
+
+            IntakeState state = this->state;
+
             mutex.unlock();
             
-            // TODO: make intake work
+            switch (state)
+            {
+            case IntakeState::HOOD: {
+                motors->move(127);
+                redirect->extend();
+            } break;
+            case IntakeState::WALL_STAKE: {
+                motors->move(127);
+                redirect->retract();
+            }
+            case IntakeState::REVERSE: {
+                motors->move(-127);
+                redirect->extend();
+            }
+            case IntakeState::DEJAM: {
+                motors->move(-127);
+                // redirect->extend();
+            }
+            case IntakeState::DISABLED: {
+                motors->move(0);
+            }
+            }
 
             pros::delay(20);
         } });
@@ -56,7 +85,7 @@ void mechanism::Intake::stop_task()
 void mechanism::Intake::set_state(mechanism::IntakeState state)
 {
     mutex.lock();
-    if (state == DISABLED)
+    if (state == IntakeState::DISABLED)
     {
         motors->move(0);
     }

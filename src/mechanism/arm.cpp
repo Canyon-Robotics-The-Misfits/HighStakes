@@ -4,11 +4,11 @@
 
 #define LOGGER "arm.cpp"
 
-mechanism::Arm::Arm(std::shared_ptr<lib15442c::MotorGroup> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config)
+mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config)
     : motors(motors),
       arm_rotation_sensor(arm_rotation_sensor),
       arm_pid(arm_pid),
-      arm_target_config(arm_target_config)
+      target_config(target_config)
 {
     if (!motors->is_installed())
     {
@@ -62,22 +62,22 @@ void mechanism::Arm::start_task()
             {
             case ArmState::LOAD:
             {
-                target_angle = arm_target_config.load;
+                target_angle = target_config.load;
             }
             break;
             case ArmState::ALLIANCE_STAKE:
             {
-                target_angle = arm_target_config.alliance_stake;
+                target_angle = target_config.alliance_stake;
             }
             break;
             case ArmState::NEUTRAL_STAKE:
             {
-                target_angle = arm_target_config.neutral_stake;
+                target_angle = target_config.neutral_stake;
             }
             break;
             case ArmState::LADDER_TOUCH:
             {
-                target_angle = arm_target_config.ladder_touch;
+                target_angle = target_config.ladder_touch;
             }
             break;
             default: break;
@@ -111,7 +111,7 @@ void mechanism::Arm::stop_task()
 void mechanism::Arm::set_state(mechanism::ArmState state)
 {
     mutex.lock();
-    if (state == DISABLED)
+    if (state == ArmState::DISABLED)
     {
         motors->move(0);
     }
@@ -138,5 +138,5 @@ bool mechanism::Arm::is_arm_loading()
         current = 0.0;
     }
 
-    return std::abs(current - arm_target_config.load) < 10.0;
+    return std::abs(current - target_config.load) < 10.0;
 }

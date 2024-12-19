@@ -18,7 +18,7 @@ namespace mechanism
         double neutral_stake;
     };
 
-    enum ArmState
+    enum class ArmState
     {
         DISABLED,
         LOAD,
@@ -30,12 +30,12 @@ namespace mechanism
     class Arm
     {
     private:
-        std::shared_ptr<lib15442c::MotorGroup> motors;
+        std::shared_ptr<lib15442c::IMotor> motors;
 
         std::shared_ptr<pros::Rotation> arm_rotation_sensor;
         std::shared_ptr<lib15442c::PID> arm_pid;
 
-        ArmTargetConfig arm_target_config;
+        ArmTargetConfig target_config;
 
         ArmState state = ArmState::DISABLED;
 
@@ -44,7 +44,7 @@ namespace mechanism
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        Arm(std::shared_ptr<lib15442c::MotorGroup> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config);
+        Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config);
         
         /**
          * @brief Start the task
