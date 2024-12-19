@@ -3,6 +3,8 @@
 #include <initializer_list>
 #include <cstdint>
 #include "mechanism/ring_mech.h"
+#include "lib15442c/chasis/drivetrain.hpp"
+#include "lib15442c/trajectory/trajectory_builder.hpp"
 
 namespace config
 {
@@ -26,11 +28,21 @@ namespace config
         ratio : lib15442c::MOTOR_BLUE * DRIVE_GEAR_RATIO
     };
 
-    constexpr lib15442c::DrivetrainConstraints DRIVE_CONSTRAINTS = {
+    constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
         max_speed: 76,
         max_acceleration: 76 * 1.7,
 
         track_width: DRIVE_TRACK_WIDTH
+    };
+    constexpr lib15442c::FeedforwardConstants FEEDFORWARD_CONSTANTS = {
+        // voltage required to overcome static friction
+        kS: 20,
+        // how much voltage to apply per in/s while maintaining speed
+        kV: 1.69333333,
+        // how much voltage to apply per in/s/s of acceleration
+        kA: 0.423333333,
+        // how much voltage to apply per in/s of error in velocity
+        kP: 0
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_RING_MECH = {
