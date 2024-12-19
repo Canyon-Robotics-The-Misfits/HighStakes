@@ -18,7 +18,7 @@ void autonomous() {
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
-    std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
+    // std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
 
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
@@ -41,50 +41,50 @@ void autonomous() {
 	gui::AllianceColor alliance = AUTO_SELECT_COLOR;
 	#endif
 
-	#ifndef AUTO_SELECT
-	switch (gui.get_selected_auto())
-	#else
-	switch (AUTO_SELECT)
-	#endif
-	{
-		case gui::Route::RIGHT_SAFE: {
-			RUN_AUTO(auto_routes::right_safe);
-		} break;
-		case gui::Route::LEFT_SAFE: {
-			RUN_AUTO(auto_routes::left_safe);
-		} break;
-		case gui::Route::POSITIVE: {
-			if (alliance == gui::AllianceColor::RED)
-			{
-				RUN_AUTO(auto_routes::positive_red);
-			}
-			else
-			{
-				RUN_AUTO(auto_routes::positive_blue);
-			}
-		} break;
-		case gui::Route::NEGATIVE: {
-			if (alliance == gui::AllianceColor::RED)
-			{
-				RUN_AUTO(auto_routes::negative_red);
-			}
-			else
-			{
-				RUN_AUTO(auto_routes::negative_blue);
-			}
-		} break;
-		case gui::Route::SOLO: {
-			RUN_AUTO(auto_routes::solo);
-		} break;
-		case gui::Route::SKILLS: {
-			RUN_AUTO(auto_routes::skills);
-		} break;
-		default: break;
-	}
+	// #ifndef AUTO_SELECT
+	// switch (gui.get_selected_auto())
+	// #else
+	// switch (AUTO_SELECT)
+	// #endif
+	// {
+		// case gui::Route::RIGHT_SAFE: {
+		// 	RUN_AUTO(auto_routes::right_safe);
+		// } break;
+		// case gui::Route::LEFT_SAFE: {
+		// 	RUN_AUTO(auto_routes::left_safe);
+		// } break;
+		// case gui::Route::POSITIVE: {
+		// 	if (alliance == gui::AllianceColor::RED)
+		// 	{
+		// 		RUN_AUTO(auto_routes::positive_red);
+		// 	}
+		// 	else
+		// 	{
+		// 		RUN_AUTO(auto_routes::positive_blue);
+		// 	}
+		// } break;
+		// case gui::Route::NEGATIVE: {
+		// 	if (alliance == gui::AllianceColor::RED)
+		// 	{
+		// 		RUN_AUTO(auto_routes::negative_red);
+		// 	}
+		// 	else
+		// 	{
+		// 		RUN_AUTO(auto_routes::negative_blue);
+		// 	}
+		// } break;
+		// case gui::Route::SOLO: {
+		// 	RUN_AUTO(auto_routes::solo);
+		// } break;
+		// case gui::Route::SKILLS: {
+		// 	RUN_AUTO(auto_routes::skills);
+		// } break;
+		// default: break;
+	// }
 
 	double end_time = pros::millis() / 1000.0;
 
-	ring_mech->stop_task();
+	// ring_mech->stop_task();
 	odometry->stop_task();
 	drivetrain->move(0, 0);
 	
