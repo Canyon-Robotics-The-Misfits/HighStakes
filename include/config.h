@@ -30,8 +30,8 @@ namespace config
     };
 
     constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
-        max_speed: 76,
-        max_acceleration: 76,
+        max_speed: 74.22,
+        starting_acceleration: 310.44,
 
         track_width: DRIVE_TRACK_WIDTH
     };
