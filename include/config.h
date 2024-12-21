@@ -8,20 +8,21 @@
 
 namespace config
 {
-    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {-15, -14, -13};
+    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {15, 14, 13};
     constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {5, 4, 3};
+    // constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {-13, -12, 11};
+    // constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {18, 19, -20};
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
-    constexpr double DRIVE_TRACK_WIDTH = 14; // TODO: get real number
+    constexpr double DRIVE_TRACK_WIDTH = 11; // TODO: get real number
     constexpr lib15442c::MotorBrakeMode DRIVE_BRAKE_MODE = lib15442c::MotorBrakeMode::COAST;
 
     constexpr lib15442c::MotorGroupParameters PARAMS_LEFT_DRIVE = {
         reversed : true,
         brake_mode : config::DRIVE_BRAKE_MODE,
-        ratio : lib15442c::MOTOR_BLUE * config::DRIVE_GEAR_RATIO
+        ratio : lib15442c::MOTOR_BLUE * DRIVE_GEAR_RATIO
     };
-
     constexpr lib15442c::MotorGroupParameters PARAMS_RIGHT_DRIVE = {
         reversed : false,
         brake_mode : config::DRIVE_BRAKE_MODE,
@@ -30,7 +31,7 @@ namespace config
 
     constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
         max_speed: 76,
-        max_acceleration: 76 * 1.7,
+        max_acceleration: 76,
 
         track_width: DRIVE_TRACK_WIDTH
     };
@@ -38,11 +39,13 @@ namespace config
         // voltage required to overcome static friction
         kS: 20,
         // how much voltage to apply per in/s while maintaining speed
-        kV: 1.69333333,
+        // kV: 1.69333333,
+        kV: 0.9,
         // how much voltage to apply per in/s/s of acceleration
-        kA: 0.423333333,
+        // kA: 0.423333333,
+        kA: 0.25,
         // how much voltage to apply per in/s of error in velocity
-        kP: 0
+        kP: 3
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_RING_MECH = {

@@ -3,6 +3,10 @@
 
 #include "mechanism/ring_mech.h"
 
+#include "lib15442c/trajectory/trajectory_builder.hpp"
+#include "lib15442c/motion/ramsete.hpp"
+
+
 #define LOGGER "opcontrol.cpp"
 
 double curve_joystick(double in)
@@ -139,62 +143,79 @@ void control_oinker(pros::Controller controller, lib15442c::Pneumatic oinker)
 void opcontrol()
 {
     INFO_TEXT("OPControl Start");
+    
+    
+	lib15442c::TrajectoryBuilder trajectory_builder = lib15442c::TrajectoryBuilder({ point: lib15442c::Vec(0.0, 0.0), tangent: lib15442c::Vec(0.0, 100.0) });
+	trajectory_builder.append_hermite({ point: lib15442c::Vec(24.0, 48.0), tangent: lib15442c::Vec(0.0, 100.0) });
+    // trajectory_builder.add_max_speed_zone(lib15442c::circle_zone(lib15442c::Vec(25, 25), 10, 60));
+	auto trajectory = trajectory_builder.compute(config::TRAJECTORY_CONSTRAINTS, -1, true);
+    // trajectory.debug_log();
+    // std::cout << "-----" << std::endl;
+    pros::delay(300);
 
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
-    std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
+    // std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
-    lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
+    // lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
+    // lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
     std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
-    lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
-        {
-            particle_count: 2000,
-            uniform_random_percent: 0.1,
-            tracker_odom_sd: 0.05
-        },
-        tracker_odom,
-        {
-            { // front
-                port: 1,
-                x_offset: -5.5,
-                y_offset: 7,
-                theta_offset: 0,
-            },
-            { // back
-                port: 1,
-                x_offset: -5.5,
-                y_offset: -5.5,
-                theta_offset: M_PI,
-            },
-            { // left
-                port: 1,
-                x_offset: -5.25,
-                y_offset: -3,
-                theta_offset: M_PI / 2.0,
-            },
-            { // right
-                port: 1,
-                x_offset: 7,
-                y_offset: -5,
-                theta_offset: -M_PI / 2.0,
-            }
-        }
-    );
+
+    lib15442c::RAMSETE ramsete = lib15442c::RAMSETE(trajectory, 0.003, 0.2);
+
+    ramsete.execute(drivetrain, tracker_odom);
+
+
+    return;
+
+    // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
+    //     {
+    //         particle_count: 2000,
+    //         uniform_random_percent: 0.1,
+    //         tracker_odom_sd: 0.05
+    //     },
+    //     tracker_odom,
+    //     {
+    //         { // front
+    //             port: 1,
+    //             x_offset: -5.5,
+    //             y_offset: 7,
+    //             theta_offset: 0,
+    //         },
+    //         { // back
+    //             port: 1,
+    //             x_offset: -5.5,
+    //             y_offset: -5.5,
+    //             theta_offset: M_PI,
+    //         },
+    //         { // left
+    //             port: 1,
+    //             x_offset: -5.25,
+    //             y_offset: -3,
+    //             theta_offset: M_PI / 2.0,
+    //         },
+    //         { // right
+    //             port: 1,
+    //             x_offset: 7,
+    //             y_offset: -5,
+    //             theta_offset: -M_PI / 2.0,
+    //         }
+    //     }
+    // );
 
     clamp.extend();
 
     while (true)
     {
         control_drivetrain(controller, drivetrain);
-        control_ring_mech(controller, ring_mech, alliance_stake_adjust);
+        // control_ring_mech(controller, ring_mech, alliance_stake_adjust);
         control_clamp(controller, clamp);
-        control_oinker(controller, oinker);
+        // control_oinker(controller, oinker);
 
-        std::cout << mcl_odom.get_x() << ", " << mcl_odom.get_y() << tracker_odom->get_x() << ", " << tracker_odom->get_y() << std::endl;
+        // std::cout << mcl_odom.get_x() << ", " << mcl_odom.get_y() << tracker_odom->get_x() << ", " << tracker_odom->get_y() << std::endl;
 
         pros::delay(20);
     }
