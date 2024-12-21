@@ -57,18 +57,18 @@ void mechanism::Intake::start_task()
             case IntakeState::WALL_STAKE: {
                 motors->move(127);
                 redirect->retract();
-            }
+            } break;
             case IntakeState::REVERSE: {
                 motors->move(-127);
                 redirect->extend();
-            }
+            } break;
             case IntakeState::DEJAM: {
                 motors->move(-127);
                 // redirect->extend();
-            }
+            } break;
             case IntakeState::DISABLED: {
                 motors->move(0);
-            }
+            } break;
             }
 
             pros::delay(20);

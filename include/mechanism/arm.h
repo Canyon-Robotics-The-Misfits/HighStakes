@@ -74,7 +74,7 @@ namespace mechanism
          * 
          * @return bool
          */
-        bool is_arm_loading();
+        bool is_loading();
 
         /**
          * @brief Manually move the arm. Automatically sets state to DISABLED

@@ -27,11 +27,8 @@ namespace config
         ratio : lib15442c::MOTOR_BLUE * DRIVE_GEAR_RATIO
     };
 
-    constexpr lib15442c::DrivetrainConstraints DRIVE_CONSTRAINTS = {
-        max_speed: 76,
-        max_acceleration: 76 * 1.7,
+    constexpr lib15442c::FeedforwardConstants DRIVE_CONSTRAINTS = {
 
-        track_width: DRIVE_TRACK_WIDTH
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_ARM = {
@@ -56,7 +53,7 @@ namespace config
     
     constexpr lib15442c::MotorParameters PARAMS_INTAKE = {
         port: 2,
-        reversed : false,
+        reversed : true,
         brake_mode : lib15442c::MotorBrakeMode::COAST,
         ratio : lib15442c::MOTOR_GREEN,
     };

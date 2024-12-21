@@ -129,7 +129,7 @@ mechanism::ArmState mechanism::Arm::get_state()
     return temp;
 }
 
-bool mechanism::Arm::is_arm_loading()
+bool mechanism::Arm::is_loading()
 {
     double current = 360.0 - (arm_rotation_sensor->get_angle() / 100.0);
 
@@ -139,4 +139,13 @@ bool mechanism::Arm::is_arm_loading()
     }
 
     return std::abs(current - target_config.load) < 10.0;
+}
+
+void mechanism::Arm::move_manual(double voltage)
+{
+    mutex.lock();
+    state = ArmState::DISABLED;
+
+    motors->move(voltage);
+    mutex.unlock();
 }
