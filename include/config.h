@@ -40,13 +40,13 @@ namespace config
     constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
         kP : 5.0,
         kI : 0.0,
-        kD : 0.0
+        kD : 1.0
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
-        load : 0.0,
-        alliance_stake : 40.0,
-        ladder_touch : 40.0,
-        neutral_stake : 55.0
+        load : -45.0,
+        alliance_stake : 3.0,
+        ladder_touch : 34.0,
+        neutral_stake : 44.0
     };
     constexpr int PORT_ARM_ROTATION = 4;
 
@@ -62,7 +62,7 @@ namespace config
 
 
     constexpr char PORT_CLAMP = 'B';
-    constexpr char PORT_OINKER = 'E';
+    constexpr char PORT_DOINKER = 'C';
     constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
 
     constexpr int PORT_IMU = 3;

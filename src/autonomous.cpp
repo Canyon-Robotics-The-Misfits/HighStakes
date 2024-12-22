@@ -21,7 +21,7 @@ void autonomous() {
     // std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
 
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
+    lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
     lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
 
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);

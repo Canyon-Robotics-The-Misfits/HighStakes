@@ -54,7 +54,8 @@ std::shared_ptr<mechanism::Arm> config::make_arm()
 		motors,
 		rotation_sensor,
 		pid,
-		config::ARM_TARGET_CONFIG
+		config::ARM_TARGET_CONFIG,
+		10.0
 	);
 }
 

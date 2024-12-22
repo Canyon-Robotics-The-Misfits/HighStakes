@@ -114,11 +114,11 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
     }
 }
 
-void control_oinker(pros::Controller controller, lib15442c::Pneumatic oinker)
+void control_doinker(pros::Controller controller, lib15442c::Pneumatic doinker)
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
     {
-        oinker.toggle();
+        doinker.toggle();
     }
 }
 
@@ -133,7 +133,7 @@ void opcontrol()
     std::shared_ptr<mechanism::Arm> arm = config::make_arm();
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    // lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+    lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
 
     // std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
     // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
@@ -188,7 +188,7 @@ void opcontrol()
         control_clamp(controller, clamp);
         control_intake(controller, intake);
         control_arm(controller, arm);
-        // control_oinker(controller, oinker);
+        control_doinker(controller, doinker);
 
         // std::cout << mcl_odom.get_x() << ", " << mcl_odom.get_y() << tracker_odom->get_x() << ", " << tracker_odom->get_y() << std::endl;
 

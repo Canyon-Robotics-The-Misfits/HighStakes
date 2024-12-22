@@ -36,6 +36,7 @@ namespace mechanism
         std::shared_ptr<lib15442c::PID> arm_pid;
 
         ArmTargetConfig target_config;
+        double kG;
 
         ArmState state = ArmState::DISABLED;
 
@@ -44,7 +45,7 @@ namespace mechanism
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config);
+        Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config, double kG);
         
         /**
          * @brief Start the task

@@ -4,11 +4,12 @@
 
 #define LOGGER "arm.cpp"
 
-mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config)
+mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config, double kG)
     : motors(motors),
       arm_rotation_sensor(arm_rotation_sensor),
       arm_pid(arm_pid),
-      target_config(target_config)
+      target_config(target_config),
+      kG(kG)
 {
     if (!motors->is_installed())
     {
@@ -45,16 +46,8 @@ void mechanism::Arm::start_task()
                 break;
             }
             mutex.unlock();
-            
-            motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
 
-            double current_angle = 360.0 - (arm_rotation_sensor->get_angle() / 100.0); // divide by 100 to convert centidegrees to degrees
-
-            // make 359 equal to 0
-            if (current_angle > 180)
-            {
-                current_angle = 0;
-            }
+            double current_angle = ((arm_rotation_sensor->get_position() / 100.0) - 360) / 5.0; // divide by 100 to convert centidegrees to degrees
 
             double target_angle = INFINITY;
                 
@@ -86,7 +79,7 @@ void mechanism::Arm::start_task()
                 
             if (target_angle != INFINITY)
             {
-                double output = -arm_pid->calculate(current_angle, target_angle);
+                double output = arm_pid->calculate(current_angle, target_angle);
                 // std::cout << current_angle << ", " << target_angle << ", " << output << std::endl;
 
                 // if (arm_limit->arm_limit->get_value() == true)
@@ -94,7 +87,9 @@ void mechanism::Arm::start_task()
                 //     output = std::max(output, 0.0);
                 // }
 
-                motors->move(output);
+                double real_theta = -current_angle / 5.0 * M_PI / 180.0 + M_PI / 2.0;
+
+                motors->move(output + kG * cos(real_theta));
             }
 
             pros::delay(20);
@@ -131,7 +126,7 @@ mechanism::ArmState mechanism::Arm::get_state()
 
 bool mechanism::Arm::is_loading()
 {
-    double current = 360.0 - (arm_rotation_sensor->get_angle() / 100.0);
+    double current = ((arm_rotation_sensor->get_position() / 100.0) - 360) / 5.0;
 
     if (current > 180.0)
     {
@@ -145,7 +140,11 @@ void mechanism::Arm::move_manual(double voltage)
 {
     mutex.lock();
     state = ArmState::DISABLED;
+    
+    double current_angle = ((arm_rotation_sensor->get_position() / 100.0) - 360) / 5.0;
 
-    motors->move(voltage);
+    double real_theta = -current_angle * M_PI / 180.0;
+
+    motors->move(voltage + kG * cos(real_theta));
     mutex.unlock();
 }
