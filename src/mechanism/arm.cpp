@@ -89,7 +89,14 @@ void mechanism::Arm::start_task()
 
                 double real_theta = -current_angle / 5.0 * M_PI / 180.0 + M_PI / 2.0;
 
-                motors->move(output + kG * cos(real_theta));
+                if (output > -50)
+                {
+                    motors->move(output + kG * cos(real_theta));
+                }
+                else
+                {
+                    motors->move(-50);
+                }
             }
 
             pros::delay(20);
@@ -133,7 +140,7 @@ bool mechanism::Arm::is_loading()
         current = 0.0;
     }
 
-    return std::abs(current - target_config.load) < 10.0;
+    return std::abs(current - target_config.load) < 3.0;
 }
 
 void mechanism::Arm::move_manual(double voltage)
