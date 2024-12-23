@@ -31,7 +31,7 @@ namespace config
 
     constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
         max_speed: 74.22,
-        starting_acceleration: 310.44,
+        starting_acceleration: 300,
 
         track_width: DRIVE_TRACK_WIDTH
     };
@@ -40,12 +40,14 @@ namespace config
         kS: 20,
         // how much voltage to apply per in/s while maintaining speed
         // kV: 1.69333333,
-        kV: 0.9,
+        // kV: 0.9,
+        kv: 1.4445,
         // how much voltage to apply per in/s/s of acceleration
         // kA: 0.423333333,
-        kA: 0.25,
+        // kA: 0.25,
+        kA: 0.356666666667,
         // how much voltage to apply per in/s of error in velocity
-        kP: 3
+        kP: 0.0
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_RING_MECH = {

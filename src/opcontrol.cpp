@@ -164,7 +164,7 @@ void opcontrol()
 
     std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
 
-    lib15442c::RAMSETE ramsete = lib15442c::RAMSETE(trajectory, 0.003, 0.2);
+    lib15442c::RAMSETE ramsete = lib15442c::RAMSETE(trajectory, 0.0013, 0.7);
 
     ramsete.execute(drivetrain, tracker_odom);
 
