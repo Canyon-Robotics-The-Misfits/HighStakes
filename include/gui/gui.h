@@ -4,7 +4,11 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
 #include "liblvgl/lvgl.h"
+#pragma GCC diagnostic pop
+
 
 namespace gui
 {

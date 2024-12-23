@@ -41,7 +41,7 @@ namespace config
         // how much voltage to apply per in/s while maintaining speed
         // kV: 1.69333333,
         // kV: 0.9,
-        kv: 1.4445,
+        kV: 1.4445,
         // how much voltage to apply per in/s/s of acceleration
         // kA: 0.423333333,
         // kA: 0.25,

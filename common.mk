@@ -8,12 +8,12 @@ GCCFLAGS=-ffunction-sections -fdata-sections -fdiagnostics-color -funwind-tables
 # Check if the llemu files in libvgl exist. If they do, define macros that the
 # llemu headers in the kernel repo can use to conditionally include the libvgl
 # versions
-ifneq (,$(wildcard ./include/liblvgl/llemu.h))
-	CPPFLAGS += -D_PROS_INCLUDE_LIBLVGL_LLEMU_H
-endif
-ifneq (,$(wildcard ./include/liblvgl/llemu.hpp))
-	CPPFLAGS += -D_PROS_INCLUDE_LIBLVGL_LLEMU_HPP
-endif
+# ifneq (,$(wildcard ./include/liblvgl/llemu.h))
+# 	CPPFLAGS += -D_PROS_INCLUDE_LIBLVGL_LLEMU_H
+# endif
+# ifneq (,$(wildcard ./include/liblvgl/llemu.hpp))
+# 	CPPFLAGS += -D_PROS_INCLUDE_LIBLVGL_LLEMU_HPP
+# endif
 
 WARNFLAGS+=-Wno-psabi -Wall
 
