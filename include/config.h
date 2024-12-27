@@ -46,6 +46,7 @@ namespace config
         // kA: 0.423333333,
         // kA: 0.25,
         kA: 0.356666666667,
+        kA_down: 0.356666666667 * 1.0,
         // how much voltage to apply per in/s of error in velocity
         kP: 0.0
     };
