@@ -33,24 +33,30 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 	return drivetrain;
 }
 
-std::shared_ptr<mechanism::RingMech> config::make_ring_mech()
+std::shared_ptr<mechanism::Intake> config::make_intake()
 {
-	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_RING_MECH, config::PORT_RING_MECH);
+	auto motors = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
 
     auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT, true, false);
-    auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
+    // auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
+
+	return std::make_shared<mechanism::Intake>(motors, redirect);
+}
+
+std::shared_ptr<mechanism::Arm> config::make_arm()
+{
+	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_ARM, config::PORT_ARM);
 
 	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
 	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
 
-	return std::make_shared<mechanism::RingMech>(mechanism::RingMechParams {
-		motors: motors,
-		intake_redirect: redirect,
-		intake_optical: color_sensor,
-		arm_rotation_sensor: rotation_sensor,
-		arm_pid: pid,
-		arm_target_config: config::ARM_TARGET_CONFIG
-	});
+	return std::make_shared<mechanism::Arm>(
+		motors,
+		rotation_sensor,
+		pid,
+		config::ARM_TARGET_CONFIG,
+		10.0
+	);
 }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()
@@ -85,15 +91,19 @@ std::shared_ptr<lib15442c::DriveController> config::make_drive_controller(std::s
 		kP: config::DRIVE_KP,
 		kI: config::DRIVE_KI,
 		kD: config::DRIVE_KD,
-		slew_rate: config::DRIVE_SLEW_RATE
+		// slew_rate: config::DRIVE_SLEW_RATE
+		integral_active_zone: config::DRIVE_KI_RANGE,
+		integral_max: config::DRIVE_KI * 25,
+		reset_integral_on_cross: true,
 	});
 
 	auto turn_pid = std::make_shared<lib15442c::PID>(lib15442c::PIDParameters {
 		kP: config::TURN_KP,
 		kI: config::TURN_KI,
 		kD: config::TURN_KD,
-		// integral_active_zone: 10,
-		// integral_max: config::TURN_KI * 15
+		integral_active_zone: config::TURN_KI_RANGE,
+		integral_max: config::TURN_KI * 15,
+		reset_integral_on_cross: true,
 	});
 
 	return std::make_shared<lib15442c::DriveController>(

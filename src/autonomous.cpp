@@ -4,10 +4,10 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance_stake_adjust, alliance)
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, alliance)
 
-// #define AUTO_SELECT gui::Route::NEGATIVE
-// #define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
+#define AUTO_SELECT gui::Route::POSITIVE
+#define AUTO_SELECT_COLOR gui::AllianceColor::RED
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -15,17 +15,18 @@ void autonomous() {
 	double start_time = pros::millis() / 1000.0;
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
+    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
+    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
+    
+    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
-    std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
-
-    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    lib15442c::Pneumatic oinker = lib15442c::Pneumatic(config::PORT_OINKER);
-    lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
-
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
-	odometry->set_rotation(0_deg);
+    // odometry->start_task();
+	// odometry->set_rotation(0_deg);
 	
 	#ifndef AUTO_SELECT
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
@@ -84,7 +85,7 @@ void autonomous() {
 
 	double end_time = pros::millis() / 1000.0;
 
-	ring_mech->stop_task();
+	// ring_mech->stop_task();
 	odometry->stop_task();
 	drivetrain->move(0, 0);
 	
