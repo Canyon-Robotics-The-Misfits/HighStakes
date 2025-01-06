@@ -16,7 +16,7 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 
 	std::shared_ptr<lib15442c::TankDrive> drivetrain = std::make_shared<lib15442c::TankDrive>(
 		left_drive, right_drive,
-		config::DRIVE_WHEEL_DIAMETER, 1.0, config::DRIVE_TRACK_WIDTH, config::DRIVE_CONSTRAINTS);
+		config::DRIVE_WHEEL_DIAMETER, 1.0, config::DRIVE_TRACK_WIDTH, config::FEEDFORWARD_CONSTANTS);
 
 	if (!drivetrain->is_installed())
 	{
@@ -91,15 +91,19 @@ std::shared_ptr<lib15442c::DriveController> config::make_drive_controller(std::s
 		kP: config::DRIVE_KP,
 		kI: config::DRIVE_KI,
 		kD: config::DRIVE_KD,
-		slew_rate: config::DRIVE_SLEW_RATE
+		// slew_rate: config::DRIVE_SLEW_RATE
+		integral_active_zone: config::DRIVE_KI_RANGE,
+		integral_max: config::DRIVE_KI * 25,
+		reset_integral_on_cross: true,
 	});
 
 	auto turn_pid = std::make_shared<lib15442c::PID>(lib15442c::PIDParameters {
 		kP: config::TURN_KP,
 		kI: config::TURN_KI,
 		kD: config::TURN_KD,
-		// integral_active_zone: 10,
-		// integral_max: config::TURN_KI * 15
+		integral_active_zone: config::TURN_KI_RANGE,
+		integral_max: config::TURN_KI * 15,
+		reset_integral_on_cross: true,
 	});
 
 	return std::make_shared<lib15442c::DriveController>(

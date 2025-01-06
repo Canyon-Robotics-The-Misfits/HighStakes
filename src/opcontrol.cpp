@@ -135,7 +135,7 @@ void opcontrol()
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
 
-    // std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
+    std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
     // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
     //     {
     //         particle_count: 2000,
@@ -174,6 +174,10 @@ void opcontrol()
     clamp.extend();
     arm->set_state(mechanism::ArmState::DISABLED);
 
+    tracker_odom->initialize(0, 0, 0_deg);
+
+    // int i = 0;
+
     // x alliance stake
     // b doinker
     // a intake
@@ -190,7 +194,11 @@ void opcontrol()
         control_arm(controller, arm);
         control_doinker(controller, doinker);
 
-        // std::cout << mcl_odom.get_x() << ", " << mcl_odom.get_y() << tracker_odom->get_x() << ", " << tracker_odom->get_y() << std::endl;
+        // i++;
+        // if (i % 10 == 0) {
+        //     std::cout << tracker_odom->get_rotation().deg_unwrapped() << std::endl;
+        // }
+
 
         pros::delay(20);
     }

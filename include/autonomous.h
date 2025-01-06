@@ -12,8 +12,7 @@
     std::shared_ptr<mechanism::Intake> intake,                      \
     std::shared_ptr<mechanism::Arm> arm,                            \
     lib15442c::Pneumatic clamp,                                     \
-    lib15442c::Pneumatic oinker,                                    \
-    lib15442c::Pneumatic alliance_stake_adjust,                     \
+    lib15442c::Pneumatic doinker,                                   \
     gui::AllianceColor alliance                                     \
 )
 

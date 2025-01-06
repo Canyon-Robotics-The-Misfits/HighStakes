@@ -2,6 +2,7 @@
 
 #include <initializer_list>
 #include <cstdint>
+#include "lib15442c/trajectory/trajectory_builder.hpp"
 #include "mechanism/arm.h"
 #include "mechanism/intake.h"
 
@@ -20,15 +21,29 @@ namespace config
         brake_mode : config::DRIVE_BRAKE_MODE,
         ratio : lib15442c::MOTOR_BLUE * config::DRIVE_GEAR_RATIO
     };
-
     constexpr lib15442c::MotorGroupParameters PARAMS_RIGHT_DRIVE = {
         reversed : false,
         brake_mode : config::DRIVE_BRAKE_MODE,
         ratio : lib15442c::MOTOR_BLUE * DRIVE_GEAR_RATIO
     };
 
-    constexpr lib15442c::FeedforwardConstants DRIVE_CONSTRAINTS = {
+    
+    constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
+        max_speed: 74.22,
+        starting_acceleration: 300,
 
+        track_width: DRIVE_TRACK_WIDTH
+    };
+    constexpr lib15442c::FeedforwardConstants FEEDFORWARD_CONSTANTS = {
+        // voltage required to overcome static friction
+        kS: 20,
+        // how much voltage to apply per in/s while maintaining speed
+        kV: 1.4445,
+        // how much voltage to apply per in/s/s of acceleration
+        kA: 0.356666666667,
+        kA_down: 0.356666666667 * 1.0,
+        // how much voltage to apply per in/s of error in velocity
+        kP: 0.0
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_ARM = {
@@ -65,23 +80,29 @@ namespace config
     constexpr char PORT_DOINKER = 'C';
     constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
 
-    constexpr int PORT_IMU = 3;
-    constexpr double IMU_SCALE = 1.00287313022;
+    constexpr int PORT_IMU = 9;
+    constexpr double IMU_SCALE = 1.00538559931;
 
-    constexpr int PORT_PARALLEL_TRACKER = 17;
+    constexpr int PORT_PARALLEL_TRACKER = -17;
     constexpr int PORT_PERPENDICULAR_TRACKER = 14;
-    constexpr double PARALLEL_TRACKER_OFFSET = 0;
-    constexpr double PERPENDICULAR_TRACKER_OFFSET = 0;
+    constexpr double PARALLEL_TRACKER_OFFSET = -91.80031;
+    constexpr double PERPENDICULAR_TRACKER_OFFSET = -131.41628;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;
 
     constexpr double DRIVE_SLEW_RATE = (127.0 / 0.35) / (20.0/1000.0);
-    constexpr double DRIVE_KP = 13.0;
+    // constexpr double DRIVE_KP = 11.0;
+    constexpr double DRIVE_KP = 6.0;
+    // constexpr double DRIVE_KI = 4.0;
+    // constexpr double DRIVE_KI_RANGE = 1.0;
+    // constexpr double DRIVE_KD = 40.0;
     constexpr double DRIVE_KI = 0.0;
-    constexpr double DRIVE_KD = 50.0;
+    constexpr double DRIVE_KI_RANGE = 1.0;
+    constexpr double DRIVE_KD = 17.0;
     constexpr double TURN_KP = 5.5;
-    constexpr double TURN_KI = 0.0;
-    constexpr double TURN_KD = 30.0;
+    constexpr double TURN_KI = 5.0;
+    constexpr double TURN_KI_RANGE = 5.0;
+    constexpr double TURN_KD = 23.0;
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::Intake> make_intake();

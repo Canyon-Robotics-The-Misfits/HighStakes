@@ -4,10 +4,10 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, ring_mech, clamp, oinker, alliance_stake_adjust, alliance)
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, alliance)
 
-// #define AUTO_SELECT gui::Route::NEGATIVE
-// #define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
+#define AUTO_SELECT gui::Route::POSITIVE
+#define AUTO_SELECT_COLOR gui::AllianceColor::RED
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -15,17 +15,18 @@ void autonomous() {
 	double start_time = pros::millis() / 1000.0;
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
+    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
+    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
+    
+    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
-    // std::shared_ptr<mechanism::RingMech> ring_mech = config::make_ring_mech();
-
-    lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
-    lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
-    lib15442c::Pneumatic alliance_stake_adjust = lib15442c::Pneumatic(config::PORT_ALLIANCE_STAKE_ADJUST);
-
 	drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
-	odometry->set_rotation(0_deg);
+    // odometry->start_task();
+	// odometry->set_rotation(0_deg);
 	
 	#ifndef AUTO_SELECT
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
@@ -41,46 +42,46 @@ void autonomous() {
 	gui::AllianceColor alliance = AUTO_SELECT_COLOR;
 	#endif
 
-	// #ifndef AUTO_SELECT
-	// switch (gui.get_selected_auto())
-	// #else
-	// switch (AUTO_SELECT)
-	// #endif
-	// {
-		// case gui::Route::RIGHT_SAFE: {
-		// 	RUN_AUTO(auto_routes::right_safe);
-		// } break;
-		// case gui::Route::LEFT_SAFE: {
-		// 	RUN_AUTO(auto_routes::left_safe);
-		// } break;
-		// case gui::Route::POSITIVE: {
-		// 	if (alliance == gui::AllianceColor::RED)
-		// 	{
-		// 		RUN_AUTO(auto_routes::positive_red);
-		// 	}
-		// 	else
-		// 	{
-		// 		RUN_AUTO(auto_routes::positive_blue);
-		// 	}
-		// } break;
-		// case gui::Route::NEGATIVE: {
-		// 	if (alliance == gui::AllianceColor::RED)
-		// 	{
-		// 		RUN_AUTO(auto_routes::negative_red);
-		// 	}
-		// 	else
-		// 	{
-		// 		RUN_AUTO(auto_routes::negative_blue);
-		// 	}
-		// } break;
-		// case gui::Route::SOLO: {
-		// 	RUN_AUTO(auto_routes::solo);
-		// } break;
-		// case gui::Route::SKILLS: {
-		// 	RUN_AUTO(auto_routes::skills);
-		// } break;
-		// default: break;
-	// }
+	#ifndef AUTO_SELECT
+	switch (gui.get_selected_auto())
+	#else
+	switch (AUTO_SELECT)
+	#endif
+	{
+		case gui::Route::RIGHT_SAFE: {
+			RUN_AUTO(auto_routes::right_safe);
+		} break;
+		case gui::Route::LEFT_SAFE: {
+			RUN_AUTO(auto_routes::left_safe);
+		} break;
+		case gui::Route::POSITIVE: {
+			if (alliance == gui::AllianceColor::RED)
+			{
+				RUN_AUTO(auto_routes::positive_red);
+			}
+			else
+			{
+				RUN_AUTO(auto_routes::positive_blue);
+			}
+		} break;
+		case gui::Route::NEGATIVE: {
+			if (alliance == gui::AllianceColor::RED)
+			{
+				RUN_AUTO(auto_routes::negative_red);
+			}
+			else
+			{
+				RUN_AUTO(auto_routes::negative_blue);
+			}
+		} break;
+		case gui::Route::SOLO: {
+			RUN_AUTO(auto_routes::solo);
+		} break;
+		case gui::Route::SKILLS: {
+			RUN_AUTO(auto_routes::skills);
+		} break;
+		default: break;
+	}
 
 	double end_time = pros::millis() / 1000.0;
 
