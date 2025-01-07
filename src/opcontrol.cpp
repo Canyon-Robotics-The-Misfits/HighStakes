@@ -131,13 +131,13 @@ void opcontrol()
     INFO_TEXT("OPControl Start");
     
     
-	lib15442c::TrajectoryBuilder trajectory_builder = lib15442c::TrajectoryBuilder({ point: lib15442c::Vec(0.0, 0.0), tangent: lib15442c::Vec(0.0, 100.0) });
-	trajectory_builder.append_hermite({ point: lib15442c::Vec(24.0, 48.0), tangent: lib15442c::Vec(0.0, 100.0) });
-    // trajectory_builder.add_max_speed_zone(lib15442c::circle_zone(lib15442c::Vec(25, 25), 10, 60));
-	auto trajectory = trajectory_builder.compute(config::TRAJECTORY_CONSTRAINTS, -1, true);
-    // trajectory.debug_log();
-    // std::cout << "-----" << std::endl;
-    pros::delay(300);
+	// lib15442c::TrajectoryBuilder trajectory_builder = lib15442c::TrajectoryBuilder({ point: lib15442c::Vec(0.0, 0.0), tangent: lib15442c::Vec(0.0, 100.0) });
+	// trajectory_builder.append_hermite({ point: lib15442c::Vec(24.0, 48.0), tangent: lib15442c::Vec(0.0, 100.0) });
+    // // trajectory_builder.add_max_speed_zone(lib15442c::circle_zone(lib15442c::Vec(25, 25), 10, 60));
+	// auto trajectory = trajectory_builder.compute(config::TRAJECTORY_CONSTRAINTS, -1, true);
+    // // trajectory.debug_log();
+    // // std::cout << "-----" << std::endl;
+    // pros::delay(300);
 
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 

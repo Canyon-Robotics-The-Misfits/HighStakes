@@ -85,7 +85,8 @@ void autonomous() {
 
 	double end_time = pros::millis() / 1000.0;
 
-	// ring_mech->stop_task();
+	intake->stop_task();
+	arm->stop_task();
 	odometry->stop_task();
 	drivetrain->move(0, 0);
 	

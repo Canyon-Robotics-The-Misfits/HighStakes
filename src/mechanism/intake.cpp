@@ -28,6 +28,8 @@ void mechanism::Intake::start_task()
     task_on_flag = true;
     mutex.unlock();
 
+    redirect->extend();
+
     task = pros::Task([this]()
                       {
         

@@ -60,7 +60,7 @@ namespace config
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
         load : -45.0,
         alliance_stake : 3.0,
-        ladder_touch : 34.0,
+        ladder_touch : 25.0,
         neutral_stake : 44.0
     };
     constexpr int PORT_ARM_ROTATION = 4;
