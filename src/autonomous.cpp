@@ -91,4 +91,7 @@ void autonomous() {
 	drivetrain->move(0, 0);
 	
 	INFO("Autonomous End. Took %.2fs", end_time - start_time);
+
+	pros::delay(2000);
+	INFO("Took %.2fs", end_time - start_time); // second log a second late to make sure any disconnects won't prevent it from logging
 }
