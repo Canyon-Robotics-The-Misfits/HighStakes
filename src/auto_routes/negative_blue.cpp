@@ -36,20 +36,6 @@ AUTO_ROUTE(auto_routes::negative_blue)
     pros::delay(100);
     drive_controller->drive(-10, { min_speed: 60, chained: true });
 
-    // // get corner
-    // arm->set_state(ArmState::ALLIANCE_STAKE);
-    // drive_controller->boomerang(pos(144-30, 30));
-    // intake->set_state(IntakeState::HOOD);
-    // drive_controller->face_angle(odometry->get_pose().vec().angle_to(lib15442c::Vec(144, 0)));
-    // pros::delay(50);
-    // drivetrain->move(127, 0);
-    // pros::delay(700);
-    // drivetrain->move(0, 0);
-    // pros::delay(100);
-    // drivetrain->move(127, 0);
-    // pros::delay(100);
-    // arm->set_state(ArmState::LADDER_TOUCH);
-
     // get center ring
     drive_controller->boomerang(pos(144 - 48, 24+6.5));
     drive_controller->face_angle(-90_deg, { chained: true });
