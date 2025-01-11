@@ -13,7 +13,7 @@ namespace config
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
-    constexpr double DRIVE_TRACK_WIDTH = 11.5; // TODO: get real number
+    constexpr double DRIVE_TRACK_WIDTH = 11.5;
     constexpr lib15442c::MotorBrakeMode DRIVE_BRAKE_MODE = lib15442c::MotorBrakeMode::COAST;
 
     constexpr lib15442c::MotorGroupParameters PARAMS_LEFT_DRIVE = {
@@ -29,8 +29,10 @@ namespace config
 
     
     constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
-        max_speed: 74.22,
-        starting_acceleration: 300,
+        // max_speed: 74.22,
+        max_speed: 80.0,
+        // starting_acceleration: 300,
+        starting_acceleration: 300.0,
 
         track_width: DRIVE_TRACK_WIDTH
     };
@@ -38,10 +40,14 @@ namespace config
         // voltage required to overcome static friction
         kS: 20,
         // how much voltage to apply per in/s while maintaining speed
-        kV: 1.4445,
+        // kV: 1.4445,
+        kV: 1.35153787308,
         // how much voltage to apply per in/s/s of acceleration
-        kA: 0.356666666667,
-        kA_down: 0.356666666667 * 1.0,
+        // kA: 0.356666666667,
+        // kA_down: 0.356666666667 * 1.0,
+
+        kA: 0.411787878788,
+        kA_down: 0.411787878788 * 1.0,
         // how much voltage to apply per in/s of error in velocity
         kP: 0.0
     };
@@ -85,7 +91,7 @@ namespace config
 
     constexpr int PORT_PARALLEL_TRACKER = -17;
     constexpr int PORT_PERPENDICULAR_TRACKER = 14;
-    constexpr double PARALLEL_TRACKER_OFFSET = -91.80031;
+    constexpr double PARALLEL_TRACKER_OFFSET = 96.80031;
     constexpr double PERPENDICULAR_TRACKER_OFFSET = -131.41628;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;

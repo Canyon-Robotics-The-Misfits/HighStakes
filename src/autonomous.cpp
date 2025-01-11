@@ -6,7 +6,7 @@
 
 #define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, alliance)
 
-#define AUTO_SELECT gui::Route::POSITIVE
+#define AUTO_SELECT gui::Route::SKILLS
 #define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
 
 void autonomous() {

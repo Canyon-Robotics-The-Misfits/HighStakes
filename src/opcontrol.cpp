@@ -187,9 +187,9 @@ void opcontrol()
     clamp.extend();
     arm->set_state(mechanism::ArmState::DISABLED);
 
-    tracker_odom->initialize(0, 0, 0_deg);
+    tracker_odom->initialize(57, 16, 137_deg);
 
-    // int i = 0;
+    int i = 0;
 
     // x alliance stake
     // b doinker
@@ -209,7 +209,7 @@ void opcontrol()
 
         // i++;
         // if (i % 10 == 0) {
-        //     std::cout << tracker_odom->get_rotation().deg_unwrapped() << std::endl;
+        //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg() << std::endl;
         // }
 
 
