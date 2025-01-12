@@ -6,35 +6,37 @@ using mechanism::ArmState;
 
 AUTO_ROUTE(auto_routes::positive_red)
 {
-    odometry->initialize(144-2, 24, -20_deg); // start position is way off the actual one but it works for some reason
+    odometry->initialize(144-9, 20, -20_deg); // start position is way off the actual one but it works for some reason
 
     // goal rush
     doinker.extend();
     intake->set_state(IntakeState::HOOD);
-    // drive_controller->drive_to(pose(144-23, 53.5, -25_deg), { threshold: 1 });
-    drive_controller->drive(37.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1 });
+    auto goal_rush = drive_controller->drive(37.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1, async: true });
+    arm->move_manual(127);
+    pros::delay(200);
+    arm->move_manual(0);
+    goal_rush->await();
     doinker.retract();
     pros::delay(50);
-    drive_controller->drive_time(-127, 250);
     intake->set_state(IntakeState::DISABLED);
+    arm->set_state(ArmState::LOAD);
+    drive_controller->drive_time(-127, 250);
     drive_controller->drive_time(-80, 200);
     doinker.extend();
     pros::delay(100);
     drive_controller->drive_time(40, 50);
     pros::delay(100);
-    drive_controller->drive(-6, { threshold: 1, min_speed: 40, chained: true });
+    drive_controller->drive(-3, { threshold: 1, min_speed: 40, chained: true });
     doinker.retract();
 
     // get next goal
-    drive_controller->face_point(lib15442c::Vec(144-48, 48), 180_deg, { threshold: 5_deg, min_speed: 60, chained: true });
-    drive_controller->drive(-3, { min_speed: 80, chained: true });
-    drive_controller->boomerang(pose(144 - 48, 48-5, 90_deg), { backwards: true, lead: 0.6, threshold: 7, min_speed: 60 });
+    drive_controller->face_point(lib15442c::Vec(144 - 48, 48-2), 180_deg - 20_deg, { threshold: 20_deg, min_speed: 60, chained: true });
+    drive_controller->boomerang(pose(144 - 48, 48, 100_deg), { backwards: true, lead: 0.5, threshold: 7, min_speed: 60 });
     clamp.extend();
     pros::delay(100);
 
     // score alliance stake
-    // auto drive_to_alliance_stake = drive_controller->drive_to(pose(72+10, 15.5, -145_deg), { min_speed: 25, async: true });
-    auto drive_to_alliance_stake = drive_controller->drive_to(pose(72+9, 16.5, -147_deg), { min_speed: 25, async: true });
+    auto drive_to_alliance_stake = drive_controller->drive_to(pose(72+9-0.5, 16.5-3.5, -152_deg), { min_speed: 25, async: true });
     arm->set_state(ArmState::ALLIANCE_STAKE);
     intake->set_state(IntakeState::REVERSE);
     pros::delay(100);
@@ -52,33 +54,28 @@ AUTO_ROUTE(auto_routes::positive_red)
     drive_controller->drive_time(-100, 200);
 
     // dropoff goal
-    drive_controller->face_angle(10_deg, {threshold: 10_deg, chained: true });
+    drive_controller->face_angle(45_deg, {threshold: 10_deg, chained: true });
     clamp.retract();
 
     // get rush goal
     drive_controller->drive(15, {min_speed: 60, chained: true });
-    drive_controller->face_angle(60_deg + 180_deg, {threshold: 3_deg, chained: true });
-    drive_controller->boomerang(pos(144-20, 65), { backwards: true, threshold: 6, min_speed: 60 });
+    drive_controller->face_angle(-135_deg, {threshold: 3_deg, chained: true });
+    drive_controller->boomerang(pos(144-24, 58), { backwards: true, threshold: 4, min_speed: 60 });
     clamp.extend();
 
     // get corner 
     arm->set_state(ArmState::ALLIANCE_STAKE);
     intake->set_state(IntakeState::REVERSE);
-    drive_controller->boomerang(pose(144-30, 30, -142_deg), { lead: 0.4, threshold: 1.5, min_speed: 30 } );
-    drive_controller->drive_time(-100, 150);
+    drive_controller->boomerang(pos(144-24, 24));
+    drive_controller->drive_time(-100, 50);
     intake->set_state(IntakeState::HOOD);
-    drive_controller->face_angle(odometry->get_pose().vec().angle_to(lib15442c::Vec(144, 0)));
+    drive_controller->face_point(lib15442c::Vec(144, 0));
     pros::delay(50);
-    drivetrain->move(127, 0);
-    pros::delay(700);
-    drivetrain->move(0, 0);
-    pros::delay(100);
-    drivetrain->move(127, 0);
-    pros::delay(100);
-    arm->set_state(ArmState::LADDER_TOUCH);
-
+    drive_controller->drive_time(60, 800);
+    drive_controller->drive_time(-100, 300);
+    
     // touch ladder
-    drive_controller->boomerang(pos(144-40, 36), { backwards: true, threshold: 2, min_speed: 60 } );
+    drive_controller->boomerang(pos(144-40, 36), { backwards: true, threshold: 2, min_speed: 80 } );
     drive_controller->face_angle(-45_deg, { threshold: 8_deg });
     drive_controller->drive_time(80, 500);
     drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
