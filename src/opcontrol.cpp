@@ -129,15 +129,6 @@ void control_doinker(pros::Controller controller, lib15442c::Pneumatic doinker)
 void opcontrol()
 {
     INFO_TEXT("OPControl Start");
-    
-    
-	// lib15442c::TrajectoryBuilder trajectory_builder = lib15442c::TrajectoryBuilder({ point: lib15442c::Vec(0.0, 0.0), tangent: lib15442c::Vec(0.0, 100.0) });
-	// trajectory_builder.append_hermite({ point: lib15442c::Vec(24.0, 48.0), tangent: lib15442c::Vec(0.0, 100.0) });
-    // // trajectory_builder.add_max_speed_zone(lib15442c::circle_zone(lib15442c::Vec(25, 25), 10, 60));
-	// auto trajectory = trajectory_builder.compute(config::TRAJECTORY_CONSTRAINTS, -1, true);
-    // // trajectory.debug_log();
-    // // std::cout << "-----" << std::endl;
-    // pros::delay(300);
 
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -187,7 +178,9 @@ void opcontrol()
     clamp.extend();
     arm->set_state(mechanism::ArmState::DISABLED);
 
-    tracker_odom->initialize(57, 16, 137_deg);
+    // tracker_odom->initialize(57, 16, 137_deg);
+    // tracker_odom->initialize(0, 0, 180_deg);
+    // tracker_odom->set_perpendicular_offset(config::PERPENDICULAR_TRACKER_OFFSET_MOGO);
 
     int i = 0;
 
@@ -208,7 +201,7 @@ void opcontrol()
         control_doinker(controller, doinker);
 
         // i++;
-        // if (i % 10 == 0) {
+        // if (i % 2 == 0) {
         //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg() << std::endl;
         // }
 

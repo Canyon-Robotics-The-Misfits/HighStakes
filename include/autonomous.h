@@ -8,7 +8,7 @@
 #define AUTO_ROUTE(name) void name(                                 \
     std::shared_ptr<lib15442c::DriveController> drive_controller,   \
     std::shared_ptr<lib15442c::IDrivetrain> drivetrain,             \
-    std::shared_ptr<lib15442c::IOdometry> odometry,                 \
+    std::shared_ptr<lib15442c::TrackerOdom> odometry,               \
     std::shared_ptr<mechanism::Intake> intake,                      \
     std::shared_ptr<mechanism::Arm> arm,                            \
     lib15442c::Pneumatic clamp,                                     \

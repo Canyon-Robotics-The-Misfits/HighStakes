@@ -93,6 +93,7 @@ namespace config
     constexpr int PORT_PERPENDICULAR_TRACKER = 14;
     constexpr double PARALLEL_TRACKER_OFFSET = 96.80031;
     constexpr double PERPENDICULAR_TRACKER_OFFSET = -131.41628;
+    constexpr double PERPENDICULAR_TRACKER_OFFSET_MOGO = -61.11289;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;
 
