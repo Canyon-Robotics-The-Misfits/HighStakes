@@ -11,7 +11,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     // goal rush
     doinker.extend();
     intake->set_state(IntakeState::HOOD);
-    auto goal_rush = drive_controller->drive(37.5, { angle: odometry->get_rotation() + 5_deg, threshold: 1, async: true });
+    auto goal_rush = drive_controller->drive(37.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1, async: true });
     arm->move_manual(127);
     pros::delay(200);
     arm->move_manual(0);
@@ -36,7 +36,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     pros::delay(100);
 
     // score alliance stake
-    auto drive_to_alliance_stake = drive_controller->drive_to(pose(72-9+4, 16.5, 147_deg), { min_speed: 25, async: true });
+    auto drive_to_alliance_stake = drive_controller->drive_to(pose(72-9+4 - 1, 16.5 + 1, 148_deg), { min_speed: 25, async: true });
     arm->set_state(ArmState::ALLIANCE_STAKE);
     intake->set_state(IntakeState::REVERSE);
     pros::delay(100);
@@ -71,7 +71,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     intake->set_state(IntakeState::HOOD);
     drive_controller->face_point(lib15442c::Vec(0, 0));
     pros::delay(50);
-    drive_controller->drive_time(60, 800);
+    drive_controller->drive_time(60, 1100);
     drive_controller->drive_time(-100, 300);
 
     // touch ladder
