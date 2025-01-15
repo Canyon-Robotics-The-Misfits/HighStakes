@@ -134,7 +134,7 @@ void opcontrol()
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    std::shared_ptr<mechanism::Arm> arm = config::make_arm();
+    std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);

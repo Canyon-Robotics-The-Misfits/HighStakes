@@ -4,9 +4,10 @@
 
 #define LOGGER "arm.cpp"
 
-mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config, double kG)
+mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config, double kG)
     : motors(motors),
       arm_rotation_sensor(arm_rotation_sensor),
+      intake(intake),
       arm_pid(arm_pid),
       target_config(target_config),
       kG(kG)
@@ -76,8 +77,12 @@ void mechanism::Arm::start_task()
             default: break;
             }
 
-                
-            if (target_angle != INFINITY)
+            
+            if (is_loading() && intake->get_state() == IntakeState::WALL_STAKE)
+            {
+                motors->move(-5);
+            }
+            else if (target_angle != INFINITY)
             {
                 double output = arm_pid->calculate(current_angle, target_angle);
                 // std::cout << current_angle << ", " << target_angle << ", " << output << std::endl;

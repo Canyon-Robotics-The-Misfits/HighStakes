@@ -43,7 +43,7 @@ std::shared_ptr<mechanism::Intake> config::make_intake()
 	return std::make_shared<mechanism::Intake>(motors, redirect);
 }
 
-std::shared_ptr<mechanism::Arm> config::make_arm()
+std::shared_ptr<mechanism::Arm> config::make_arm(std::shared_ptr<mechanism::Intake> intake)
 {
 	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_ARM, config::PORT_ARM);
 
@@ -53,6 +53,7 @@ std::shared_ptr<mechanism::Arm> config::make_arm()
 	return std::make_shared<mechanism::Arm>(
 		motors,
 		rotation_sensor,
+		intake,
 		pid,
 		config::ARM_TARGET_CONFIG,
 		10.0

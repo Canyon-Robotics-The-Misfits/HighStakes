@@ -8,6 +8,8 @@
 #include "lib15442c/controller/pid.hpp"
 #include "pros/rotation.hpp"
 
+#include "intake.h"
+
 namespace mechanism
 {
     struct ArmTargetConfig
@@ -31,8 +33,10 @@ namespace mechanism
     {
     private:
         std::shared_ptr<lib15442c::IMotor> motors;
-
         std::shared_ptr<pros::Rotation> arm_rotation_sensor;
+
+        std::shared_ptr<mechanism::Intake> intake;
+
         std::shared_ptr<lib15442c::PID> arm_pid;
 
         ArmTargetConfig target_config;
@@ -45,7 +49,7 @@ namespace mechanism
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config, double kG);
+        Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig arm_target_config, double kG);
         
         /**
          * @brief Start the task
