@@ -16,6 +16,8 @@
     gui::AllianceColor alliance                                     \
 )
 
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, alliance)
+
 namespace auto_routes
 {
     AUTO_ROUTE(right_safe);
