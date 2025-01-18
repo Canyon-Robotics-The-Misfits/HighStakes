@@ -175,11 +175,14 @@ void opcontrol()
     //     }
     // );
 
+    pros::Distance distance1 = pros::Distance(16);
+    pros::Distance distance2 = pros::Distance(11);
+
     clamp.extend();
     arm->set_state(mechanism::ArmState::DISABLED);
 
-    // tracker_odom->initialize(57, 16, 137_deg);
-    // tracker_odom->initialize(0, 0, 180_deg);
+    // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
+    // tracker_odom->initialize(0, 0, 0_deg);
     // tracker_odom->set_perpendicular_offset(config::PERPENDICULAR_TRACKER_OFFSET_MOGO);
 
     int i = 0;
@@ -201,10 +204,11 @@ void opcontrol()
         control_doinker(controller, doinker);
 
         // i++;
-        // if (i % 2 == 0) {
+        // if (i % 5 == 0) {
         //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg() << std::endl;
         // }
-
+    
+        // std::cout << i << ", " << distance1.get() << ", " << distance2.get() << std::endl;
 
         pros::delay(20);
     }

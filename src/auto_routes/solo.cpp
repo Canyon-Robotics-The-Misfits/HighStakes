@@ -3,5 +3,5 @@
 
 AUTO_ROUTE(auto_routes::solo)
 {
-    
+
 }

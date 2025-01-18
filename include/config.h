@@ -64,10 +64,10 @@ namespace config
         kD : 1.0
     };
     constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
-        load : -45.0,
+        load : -44.0,
         alliance_stake : 10.0,
         ladder_touch : 25.0,
-        neutral_stake : 44.0
+        neutral_stake : 39.0
     };
     constexpr int PORT_ARM_ROTATION = 4;
 
@@ -86,14 +86,16 @@ namespace config
     constexpr char PORT_DOINKER = 'C';
     constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
 
-    constexpr int PORT_IMU = 9;
+    constexpr int PORT_IMU = 7;
     constexpr double IMU_SCALE = 1.00538559931;
+    constexpr int PORT_IMU_2 = 6;
+    constexpr double IMU_SCALE_2 = 1.01077119862;
 
-    constexpr int PORT_PARALLEL_TRACKER = -17;
+    constexpr int PORT_PARALLEL_TRACKER = 17;
     constexpr int PORT_PERPENDICULAR_TRACKER = 14;
-    constexpr double PARALLEL_TRACKER_OFFSET = 96.80031;
-    constexpr double PERPENDICULAR_TRACKER_OFFSET = -131.41628;
-    constexpr double PERPENDICULAR_TRACKER_OFFSET_MOGO = -61.11289;
+    constexpr double PARALLEL_TRACKER_OFFSET = -106.93905;
+    constexpr double PERPENDICULAR_TRACKER_OFFSET = -125.20224;
+    // constexpr double PERPENDICULAR_TRACKER_OFFSET_MOGO = -61.11289;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;
 
@@ -107,7 +109,7 @@ namespace config
     constexpr double DRIVE_KI_RANGE = 1.0;
     constexpr double DRIVE_KD = 17.0;
     constexpr double TURN_KP = 5.5;
-    constexpr double TURN_KI = 5.0;
+    constexpr double TURN_KI = 3.0;
     constexpr double TURN_KI_RANGE = 5.0;
     constexpr double TURN_KD = 23.0;
 
