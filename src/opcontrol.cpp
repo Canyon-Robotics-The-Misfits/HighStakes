@@ -175,8 +175,8 @@ void opcontrol()
     //     }
     // );
 
-    pros::Distance distance1 = pros::Distance(16);
-    pros::Distance distance2 = pros::Distance(11);
+    // pros::Distance distance1 = pros::Distance(16);
+    // pros::Distance distance2 = pros::Distance(11);
 
     clamp.extend();
     arm->set_state(mechanism::ArmState::DISABLED);
@@ -185,7 +185,7 @@ void opcontrol()
     // tracker_odom->initialize(0, 0, 0_deg);
     // tracker_odom->set_perpendicular_offset(config::PERPENDICULAR_TRACKER_OFFSET_MOGO);
 
-    int i = 0;
+    // int i = 0;
 
     // x alliance stake
     // b doinker

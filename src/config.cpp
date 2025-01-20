@@ -62,10 +62,10 @@ std::shared_ptr<mechanism::Arm> config::make_arm(std::shared_ptr<mechanism::Inta
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()
 {
-	lib15442c::TrackerIMU imu_1 = {
-		imu : std::make_shared<pros::IMU>(config::PORT_IMU),
-		scale : config::IMU_SCALE
-	};
+	// lib15442c::TrackerIMU imu_1 = {
+	// 	imu : std::make_shared<pros::IMU>(config::PORT_IMU),
+	// 	scale : config::IMU_SCALE
+	// };
 	lib15442c::TrackerIMU imu_2 = {
 		imu : std::make_shared<pros::IMU>(config::PORT_IMU_2),
 		scale : config::IMU_SCALE_2
@@ -86,7 +86,7 @@ std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()
 		parallel,
 		perpendicular,
 		false,
-		imu_1,
+		// imu_1,
 		imu_2
 	);
 }
