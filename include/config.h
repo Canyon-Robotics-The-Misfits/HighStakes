@@ -86,8 +86,8 @@ namespace config
     constexpr char PORT_DOINKER = 'C';
     constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
 
-    constexpr int PORT_IMU = 7;
-    constexpr double IMU_SCALE = 1.00538559931;
+    // constexpr int PORT_IMU = 7;
+    // constexpr double IMU_SCALE = 1.00538559931;
     constexpr int PORT_IMU_2 = 6;
     constexpr double IMU_SCALE_2 = 1.01077119862;
 
