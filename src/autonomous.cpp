@@ -73,7 +73,14 @@ void autonomous() {
 			}
 		} break;
 		case gui::Route::SOLO: {
-			RUN_AUTO(auto_routes::solo);
+			if (alliance == gui::AllianceColor::RED)
+			{
+				RUN_AUTO(auto_routes::solo_red);
+			}
+			else
+			{
+				RUN_AUTO(auto_routes::solo_blue);
+			}
 		} break;
 		case gui::Route::SKILLS: {
 			RUN_AUTO(auto_routes::skills);

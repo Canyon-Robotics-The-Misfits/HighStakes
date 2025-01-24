@@ -4,9 +4,9 @@
 using mechanism::IntakeState;
 using mechanism::ArmState;
 
-AUTO_ROUTE(auto_routes::positive_red)
+AUTO_ROUTE(auto_routes::red_rush_segment)
 {
-    odometry->initialize(144-9, 20, -20_deg); // start position is way off the actual one but it works for some reason
+    odometry->initialize(144-9, 20, -20_deg);
 
     // goal rush
     doinker.extend();
@@ -17,8 +17,8 @@ AUTO_ROUTE(auto_routes::positive_red)
     arm->move_manual(0);
     goal_rush->await();
     doinker.retract();
-    pros::delay(50);
     intake->set_state(IntakeState::DISABLED);
+    pros::delay(50);
     arm->set_state(ArmState::LOAD);
     drive_controller->drive_time(-127, 250);
     drive_controller->drive_time(-80, 200);
@@ -35,6 +35,11 @@ AUTO_ROUTE(auto_routes::positive_red)
     drive_controller->drive_time(-60, 150);
     clamp.extend();
     pros::delay(100);
+}
+
+AUTO_ROUTE(auto_routes::positive_red)
+{
+    RUN_AUTO(red_rush_segment);
 
     // score alliance stake
     auto drive_to_alliance_stake = drive_controller->drive_to(pose(72+9-0.5, 16.5-4 -2, -153_deg), { min_speed: 25, async: true });

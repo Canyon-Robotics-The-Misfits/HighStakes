@@ -1,12 +1,9 @@
 #include "main.h"
 #include "autonomous.h"
 
-using mechanism::IntakeState;
-using mechanism::ArmState;
-
-AUTO_ROUTE(auto_routes::positive_blue)
+AUTO_ROUTE(auto_routes::blue_rush_segment)
 {
-    odometry->initialize(38 +1.5, 24, -20_deg); // start position is way off the actual one but it works for some reason
+    odometry->initialize(38 +1.5, 24, -20_deg);
 
     // goal rush
     doinker.extend();
@@ -34,6 +31,10 @@ AUTO_ROUTE(auto_routes::positive_blue)
     drive_controller->boomerang(pos(48, 48+4), { backwards: true, threshold: 7, min_speed: 60 });
     clamp.extend();
     pros::delay(100);
+}
+
+AUTO_ROUTE(auto_routes::positive_blue)
+{
 
     // score alliance stake
     auto drive_to_alliance_stake = drive_controller->drive_to(pose(72-9+4 - 1, 16.5 + 1, 148_deg), { min_speed: 25, async: true });
