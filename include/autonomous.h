@@ -20,6 +20,9 @@
 
 namespace auto_routes
 {
+    using mechanism::IntakeState;
+    using mechanism::ArmState;
+
     AUTO_ROUTE(right_safe);
     AUTO_ROUTE(left_safe);
 
@@ -28,7 +31,13 @@ namespace auto_routes
     AUTO_ROUTE(negative_red);
     AUTO_ROUTE(negative_blue);
 
-    AUTO_ROUTE(solo);
+    AUTO_ROUTE(solo_red);
+    AUTO_ROUTE(solo_blue);
 
     AUTO_ROUTE(skills);
+
+    // route segments
+    AUTO_ROUTE(red_rush_segment);
+    AUTO_ROUTE(blue_rush_segment);
+    AUTO_ROUTE(skills_start_segment);
 };
