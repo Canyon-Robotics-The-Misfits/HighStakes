@@ -7,33 +7,30 @@
 
 double distance_left()
 {
-    pros::Distance distance_left = pros::Distance(11);
+    pros::Distance sensor = pros::Distance(11);
 
-    return distance_left.get() * 0.0361882 + 6.63209;
+    return sensor.get() * 0.0361882 + 6.63209; // line of best fit to convert millimeters sensed to robot displacement in inches
 }
 
 double distance_right()
 {
-    pros::Distance distance_right = pros::Distance(16);
+    pros::Distance sensor = pros::Distance(16);
 
-    return distance_right.get() * 0.038347 + 5.9759;
+    return sensor.get() * 0.038347 + 5.9759; // line of best fit to convert millimeters sensed to robot displacement in inches
 }
 
-double distance_front_left()
+double distance_front()
 {
-    pros::Distance distance_front_left = pros::Distance(3);
+    pros::Distance sensor = pros::Distance(3);
 
-    return distance_front_left.get() * 0.0389846 + 6.03126;
+    return sensor.get() * 0.0389846 + 6.03126; // line of best fit to convert millimeters sensed to robot displacement in inches
 }
 
-
-double distance_front_right()
+double distance_back()
 {
-    return distance_front_left();
+    pros::Distance sensor = pros::Distance(5);
 
-    // pros::Distance distance_front_right = pros::Distance(9);
-
-    // return distance_front_right.get() * 0.0379644 + 6.55835;
+    return sensor.get() * 0.0395116 + 5.06893; // line of best fit to convert millimeters sensed to robot displacement in inches
 }
 
 AUTO_ROUTE(auto_routes::skills_start_segment) {
@@ -81,8 +78,8 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(300);
     drive_controller->drive(10, { angle: 0_deg, min_speed: 30, chained: true});
     pros::delay(150);
-    odometry->set_x(142 - distance_right());
-    odometry->set_y(142 - distance_front_right());
+    odometry->set_x(142 - distance_right()); // reset odom w/ distance sensors
+    odometry->set_y(142 - distance_front());
 
     // wall stake again
     drive_controller->boomerang(pos(144 - 24, 72 - 6), { backwards: true });
@@ -95,12 +92,10 @@ AUTO_ROUTE(auto_routes::skills)
     
     // get rings near corner; dropoff goal
     drive_controller->face_point(lib15442c::Vec(144 - 24, 72 - 24), 0_deg, { threshold: 15_deg, chained: true });
-    drive_controller->boomerang(pos(144 - 24, 72 - 24), { min_speed: 60 });
-    // pros::delay(50);
-    // drive_controller->boomerang(pos(144 - 24 - 2, 24 + 5));
-    // pros::delay(50);
-    drive_controller->boomerang(pos(144 - 24, 12), { max_speed: 100, min_speed: 30 });
+    drive_controller->boomerang(pos(144 - 24, 72 - 24), { threshold: 5, min_speed: 110 });
+    drive_controller->boomerang(pos(144 - 24, 12 - 1), { min_speed: 25 });
     pros::delay(50);
+    odometry->set_x(142 - distance_left()); // reset odom w/ distance sensors
     drive_controller->face_angle(45_deg, { threshold: 10_deg, chained: true });
     drive_controller->boomerang(pos(144 - 12 -1, 24), { min_speed: 50 });
     drive_controller->boomerang(pos(144 - 18, 18), { backwards: true, threshold: 5, min_speed: 80 });
@@ -129,9 +124,10 @@ AUTO_ROUTE(auto_routes::skills)
     turn_to_goal_2->await();
     drive_controller->boomerang(pose(48 -3, 24, -30_deg + 180_deg), { backwards: true, lead: 0.7, threshold: 8, min_speed: 60, chained: true,  });
 
-    drive_controller->drive_time(-60, 100);
+    drive_controller->drive_time(-60, 100, { angle: 0_deg });
     clamp.extend();
-    pros::delay(100);
+    drive_controller->drive_time(-60, 100, { angle: 0_deg });
+    odometry->set_y(distance_back());
     intake->set_state(IntakeState::HOOD);
 
     // ---------- START SIDE 2 ---------- //
@@ -149,7 +145,7 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::HOOD);
     arm->set_state(ArmState::NEUTRAL_STAKE);
     pros::delay(500);
-    drive_controller->drive_to(pose(14, 72 -3, -90_deg), { min_speed: 30 });
+    drive_controller->drive_to(pose(12, 72 -3, -90_deg), { min_speed: 30 });
     arm->set_state(ArmState::LOAD);
     pros::delay(200);
     drive_controller->drive(-8, { min_speed: 80, chained: true });
@@ -163,8 +159,8 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(300);
     drive_controller->drive(9, { angle: 0_deg, min_speed: 30, chained: true});
     pros::delay(150);
-    odometry->set_x(distance_left());
-    odometry->set_y(142 - distance_front_left());
+    odometry->set_x(distance_left()); // reset odom w/ distance sensors
+    odometry->set_y(142 - distance_front());
 
     // wall stake again
     drive_controller->boomerang(pos(24, 72 - 6), { backwards: true });
@@ -177,11 +173,8 @@ AUTO_ROUTE(auto_routes::skills)
     
     // get rings near corner; dropoff goal
     drive_controller->face_point(lib15442c::Vec(24, 72 - 24), 0_deg, { threshold: 15_deg, chained: true });
-    drive_controller->boomerang(pos(24, 72 - 24), { min_speed: 60 });
-    // pros::delay(50);
-    // drive_controller->boomerang(pos(144 - 24 - 2, 24 + 5));
-    // pros::delay(50);
-    drive_controller->boomerang(pos(24, 12 + 2), { min_speed: 30 });
+    drive_controller->boomerang(pos(24, 72 - 24), { threshold: 5, min_speed: 110 });
+    drive_controller->boomerang(pos(24, 12 - 1), { min_speed: 30 });
     pros::delay(50);
     drive_controller->face_angle(-45_deg, { threshold: 10_deg, chained: true });
     drive_controller->boomerang(pos(12 +1, 24), { min_speed: 50 });
@@ -230,8 +223,8 @@ AUTO_ROUTE(auto_routes::skills)
     // drive_controller->boomerang(pose(72, 144 - 14, -30_deg), { lead: 0.4, max_speed: 60, min_speed: 35 });
     // drive_controller->face_angle(0_deg, { max_speed: 40 });
     drive_controller->drive(4, { min_speed: 60, chained: true });
-    drive_controller->face_point(lib15442c::Vec(72, 144), 0_deg, { threshold: 10_deg, chained: true });
-    drive_controller->drive_to(pose(72, 144 - 15, 0_deg), { min_speed: 30 });
+    drive_controller->face_point(lib15442c::Vec(72, 144), 0_deg, { threshold: 5_deg, chained: true });
+    drive_controller->drive_to(pose(72, 144 - 14, 0_deg), { min_speed: 30 });
     pros::delay(50);
     arm->set_state(ArmState::LOAD);
     pros::delay(200);
