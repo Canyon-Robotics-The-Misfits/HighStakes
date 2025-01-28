@@ -11,11 +11,7 @@ AUTO_ROUTE(auto_routes::red_rush_segment)
     // goal rush
     doinker.extend();
     intake->set_state(IntakeState::HOOD);
-    auto goal_rush = drive_controller->drive(37.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1, async: true });
-    arm->move_manual(127);
-    pros::delay(200);
-    arm->move_manual(0);
-    goal_rush->await();
+    drive_controller->drive(37.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1 });
     doinker.retract();
     intake->set_state(IntakeState::DISABLED);
     pros::delay(50);
@@ -72,16 +68,12 @@ AUTO_ROUTE(auto_routes::positive_red)
     // get corner 
     arm->set_state(ArmState::ALLIANCE_STAKE);
     intake->set_state(IntakeState::REVERSE);
-    drive_controller->boomerang(pose(144-24, 24, -147_deg), { lead: 0.4 });
+    drive_controller->boomerang(pose(144-18, 18, -147_deg), { lead: 0.4 });
     drive_controller->drive_time(-100, 50);
     intake->set_state(IntakeState::HOOD);
-    // drive_controller->face_point(lib15442c::Vec(144, 0), 0_deg, { chained: true });
-    // drive_controller->face_point(lib15442c::Vec(144, 0), 0_deg, { max_speed: 30 });
-    drive_controller->face_angle(135_deg, { chained: true });
-    drive_controller->face_angle(135_deg, { max_speed: 30 });
+    drive_controller->face_point(lib15442c::Vec(144, 0));
     pros::delay(50);
-    drive_controller->drive_time(50, 1000);
-    pros::delay(100);
+    drive_controller->drive_time(60, 800);
     drive_controller->drive_time(-100, 300);
     
     // go to end spot
