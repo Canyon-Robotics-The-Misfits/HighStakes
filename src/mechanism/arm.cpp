@@ -38,11 +38,12 @@ void mechanism::Arm::start_task()
 
     task = pros::Task([this]()
                       {
+        auto initial_comp_status = pros::c::competition_get_status();
         
-        while (true)
+        while (initial_comp_status == pros::c::competition_get_status())
         {
             mutex.lock();
-            if (task_on_flag == false || ((pros::c::competition_get_status() & COMPETITION_DISABLED) != 0))
+            if (task_on_flag == false)
             {
                 break;
             }
@@ -145,7 +146,7 @@ bool mechanism::Arm::is_loading()
         current = 0.0;
     }
 
-    return std::abs(current - target_config.load) < 3.0;
+    return std::abs(current - target_config.load) < 5.0;
 }
 
 void mechanism::Arm::move_manual(double voltage)

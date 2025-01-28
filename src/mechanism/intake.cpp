@@ -32,11 +32,12 @@ void mechanism::Intake::start_task()
 
     task = pros::Task([this]()
                       {
+        auto initial_comp_status = pros::c::competition_get_status();
         
-        while (true)
+        while (pros::c::competition_get_status() == initial_comp_status)
         {
             mutex.lock();
-            if (task_on_flag == false || ((pros::c::competition_get_status() & COMPETITION_DISABLED) != 0))
+            if (task_on_flag == false)
             {
                 break;
             }
