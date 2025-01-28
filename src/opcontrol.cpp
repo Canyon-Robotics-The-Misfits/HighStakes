@@ -52,7 +52,7 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
 // r2 redirect hold + intake forward, let go intake off + redirect off
 // l2 intake reverse
 bool intake_on = false;
-void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake)
+void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<mechanism::Arm> arm)
 {
     if (controller.get_digital_new_press(DIGITAL_A))
     {
@@ -66,6 +66,11 @@ void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Inta
     else if (controller.get_digital(DIGITAL_R2))
     {
         intake->set_state(mechanism::IntakeState::WALL_STAKE);
+
+        if (arm->get_state() != mechanism::ArmState::LOAD)
+        {
+            arm->set_state(mechanism::ArmState::LOAD);
+        }
     }
     else if (intake_on)
     {
@@ -115,6 +120,15 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
     {
         clamp.toggle();
+
+        if (!clamp.get_value())
+        {
+            controller.print(0, 0, "CLAMP ON ");
+        }
+        else
+        {
+            controller.print(0, 0, "CLAMP OFF");
+        }
     }
 }
 
@@ -178,7 +192,8 @@ void opcontrol()
     // pros::Distance distance1 = pros::Distance(16);
     // pros::Distance distance2 = pros::Distance(11);
 
-    clamp.extend();
+    clamp.retract();
+    controller.print(0, 0, "CLAMP OFF");
     arm->set_state(mechanism::ArmState::DISABLED);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
@@ -199,7 +214,7 @@ void opcontrol()
     {
         control_drivetrain(controller, drivetrain);
         control_clamp(controller, clamp);
-        control_intake(controller, intake);
+        control_intake(controller, intake, arm);
         control_arm(controller, arm);
         control_doinker(controller, doinker);
 
