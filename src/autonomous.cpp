@@ -4,8 +4,8 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define AUTO_SELECT gui::Route::SKILLS
-// #define AUTO_SELECT_COLOR gui::AllianceColor::BLUE
+// #define AUTO_SELECT gui::Route::NEGATIVE
+// #define AUTO_SELECT_COLOR gui::AllianceColor::RED
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");

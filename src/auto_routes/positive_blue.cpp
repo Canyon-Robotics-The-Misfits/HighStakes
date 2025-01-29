@@ -8,7 +8,7 @@ AUTO_ROUTE(auto_routes::blue_rush_segment)
     // goal rush
     doinker.extend();
     intake->set_state(IntakeState::HOOD);
-    drive_controller->drive(37.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1 });
+    drive_controller->drive(38.5, { angle: odometry->get_rotation() - 5_deg, threshold: 1 });
     doinker.retract();
     intake->set_state(IntakeState::DISABLED);
     pros::delay(50);
@@ -70,7 +70,11 @@ AUTO_ROUTE(auto_routes::positive_blue)
     // touch ladder
     arm->set_state(ArmState::LADDER_TOUCH);
     drive_controller->face_angle(45_deg, { threshold: 20_deg });
+    intake->set_state(IntakeState::DISABLED);
     drive_controller->boomerang(pose(48, 48, 45_deg), { threshold: 2, min_speed: 60 } );
     drive_controller->drive_time(80, 200);
     drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+    
+    // // go to end spot (replace touch ladder)
+    // drive_controller->boomerang(pos(24, 40), { backwards: true } );
 }
