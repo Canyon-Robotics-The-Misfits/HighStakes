@@ -146,7 +146,7 @@ bool mechanism::Arm::is_loading()
         current = 0.0;
     }
 
-    return std::abs(current - target_config.load) < 5.0;
+    return current < target_config.load + 5.0;
 }
 
 void mechanism::Arm::move_manual(double voltage)
