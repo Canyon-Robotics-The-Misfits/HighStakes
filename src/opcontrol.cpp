@@ -189,16 +189,12 @@ void opcontrol()
     //     }
     // );
 
-    // pros::Distance distance1 = pros::Distance(16);
-    // pros::Distance distance2 = pros::Distance(11);
-
     clamp.retract();
     controller.print(0, 0, "CLAMP OFF");
     arm->set_state(mechanism::ArmState::DISABLED);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
     // tracker_odom->initialize(0, 0, 0_deg);
-    // tracker_odom->set_perpendicular_offset(config::PERPENDICULAR_TRACKER_OFFSET_MOGO);
 
     // int i = 0;
 

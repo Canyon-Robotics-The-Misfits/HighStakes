@@ -57,11 +57,11 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::WALL_STAKE);
     drive_controller->boomerang(pos(144 - 48, 48), { threshold: 3, min_speed: 60 });
     drive_controller->drive_time(60, 100);
-    pros::delay(300);
+    pros::delay(200);
 
     // score wall stake
     auto wall_stake_1 = drive_controller->drive_to(pose(144 - 14, 72 +2, 90_deg), { max_speed: 80, min_speed: 30, async: true });
-    pros::delay(700);
+    pros::delay(600);
     intake->set_state(IntakeState::HOOD);
     arm->set_state(ArmState::NEUTRAL_STAKE);
     wall_stake_1->await();
@@ -93,7 +93,7 @@ AUTO_ROUTE(auto_routes::skills)
     // get rings near corner; dropoff goal
     drive_controller->face_point(lib15442c::Vec(144 - 24, 72 - 24), 0_deg, { threshold: 15_deg, chained: true });
     drive_controller->boomerang(pos(144 - 24, 72 - 24), { threshold: 5, min_speed: 110 });
-    drive_controller->boomerang(pos(144 - 24, 12 - 1), { min_speed: 25 });
+    drive_controller->boomerang(pos(144 - 24, 12 + 1), { min_speed: 25 });
     pros::delay(50);
     odometry->set_x(142 - distance_left()); // reset odom w/ distance sensors
     drive_controller->face_angle(45_deg, { threshold: 10_deg, chained: true });
@@ -119,14 +119,15 @@ AUTO_ROUTE(auto_routes::skills)
     drive_to_ring_before_goal_2->await();
 
     auto turn_to_goal_2 = drive_controller->face_angle(-30_deg, { threshold: 10_deg, chained: true, async: true });
-    pros::delay(200);
+    pros::delay(300);
     intake->set_state(IntakeState::DISABLED);
     turn_to_goal_2->await();
     drive_controller->boomerang(pose(48 -3, 24, -30_deg + 180_deg), { backwards: true, lead: 0.7, threshold: 8, min_speed: 60, chained: true,  });
 
     drive_controller->drive_time(-60, 100, { angle: 0_deg });
     clamp.extend();
-    drive_controller->drive_time(-60, 100, { angle: 0_deg });
+    drive_controller->drive_time(-60, 50, { angle: 0_deg });
+    drive_controller->face_angle(0_deg);
     odometry->set_y(distance_back());
     intake->set_state(IntakeState::HOOD);
 
@@ -144,9 +145,12 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(300);
     intake->set_state(IntakeState::HOOD);
     arm->set_state(ArmState::NEUTRAL_STAKE);
-    pros::delay(500);
+    pros::delay(100);
+    intake->set_state(IntakeState::REVERSE);
+    pros::delay(400);
     drive_controller->drive_to(pose(12, 72 -3, -90_deg), { min_speed: 30 });
     arm->set_state(ArmState::LOAD);
+    intake->set_state(IntakeState::HOOD);
     pros::delay(200);
     drive_controller->drive(-8, { min_speed: 80, chained: true });
 
@@ -190,7 +194,7 @@ AUTO_ROUTE(auto_routes::skills)
     // drive_controller->face_angle(45_deg);
 
     // go through ring and get 3rd goal
-    drive_controller->boomerang(pos(72 + 24, 72 + 24), { threshold: 9, min_speed: 80 });
+    drive_controller->boomerang(pos(72 + 24, 72 + 24), { threshold: 9, min_speed: 60 });
     auto face_third_goal = drive_controller->face_angle(135_deg, { threshold: 10_deg, chained: true, async: true });
     pros::delay(200);
     intake->set_state(IntakeState::DISABLED);
@@ -212,22 +216,22 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pos(24, 144 - 12), { threshold: 10 });
     intake->set_state(IntakeState::WALL_STAKE);
     pros::delay(400);
+    odometry->set_x(distance_left());
     drive_controller->drive_time(100, 300);
 
     // dropoff goal then alliance stake
     drive_controller->boomerang(pos(48, 144 - 30), { backwards: true, threshold: 6, min_speed: 80 });
-    drive_controller->boomerang(pos(72 + 10, 144 - 30), { backwards: true, min_speed: 80 });
+    drive_controller->boomerang(pose(72 + 10, 144 - 30, 90_deg), { backwards: true, min_speed: 80 });
     clamp.retract();
     pros::delay(50);
+    odometry->set_y(142 - distance_right());
     arm->set_state(ArmState::ALLIANCE_STAKE);
-    // drive_controller->boomerang(pose(72, 144 - 14, -30_deg), { lead: 0.4, max_speed: 60, min_speed: 35 });
-    // drive_controller->face_angle(0_deg, { max_speed: 40 });
-    drive_controller->drive(4, { min_speed: 60, chained: true });
-    drive_controller->face_point(lib15442c::Vec(72, 144), 0_deg, { threshold: 5_deg, chained: true });
-    drive_controller->drive_to(pose(72, 144 - 14, 0_deg), { min_speed: 30 });
+    drive_controller->drive(2, { min_speed: 60, chained: true });
+    drive_controller->face_point(lib15442c::Vec(72, 144 - 15), 0_deg, { threshold: 5_deg, chained: true });
+    drive_controller->drive_to(pose(72, 144 - 15, 0_deg), { threshold: 1.5, min_speed: 30 });
     pros::delay(50);
     arm->set_state(ArmState::LOAD);
-    pros::delay(200);
+    pros::delay(350);
     drive_controller->drive(-4, { min_speed: 60, chained: true });
 
     // push in corner goal
@@ -253,7 +257,7 @@ AUTO_ROUTE(auto_routes::skills)
     // drop goal and corner
     drive_controller->boomerang(pos(144 - 20, 144 - 20), { backwards: true, threshold: 5, min_speed: 80 });
     drive_controller->face_angle(-135_deg, { threshold: 3_deg, chained: true });
-    pros::delay(200);
+    pros::delay(400);
     clamp.retract();
     drive_controller->drive_time(-127, 500);
     intake->set_state(IntakeState::DISABLED);
