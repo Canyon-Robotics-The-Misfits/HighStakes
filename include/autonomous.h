@@ -40,4 +40,7 @@ namespace auto_routes
     AUTO_ROUTE(red_rush_segment);
     AUTO_ROUTE(blue_rush_segment);
     AUTO_ROUTE(skills_start_segment);
+
+    // tests
+    AUTO_ROUTE(skills_triple_test);
 };

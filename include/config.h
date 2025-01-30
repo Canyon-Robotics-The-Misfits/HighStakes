@@ -88,7 +88,7 @@ namespace config
 
     // constexpr int PORT_IMU = 7;
     // constexpr double IMU_SCALE = 1.00538559931;
-    constexpr int PORT_IMU_2 = 6;
+    constexpr int PORT_IMU_2 = 8;
     constexpr double IMU_SCALE_2 = 1.01077119862;
 
     constexpr int PORT_PARALLEL_TRACKER = 17;

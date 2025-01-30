@@ -4,8 +4,10 @@
 
 #define LOGGER "autonomous.cpp"
 
-// #define AUTO_SELECT gui::Route::NEGATIVE
+#define AUTO_SELECT gui::Route::SKILLS
 // #define AUTO_SELECT_COLOR gui::AllianceColor::RED
+
+// #define AUTO_OVERRIDE RUN_AUTO(auto_routes::skills_triple_test)
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -39,6 +41,8 @@ void autonomous() {
 	#else
 	gui::AllianceColor alliance = AUTO_SELECT_COLOR;
 	#endif
+
+	#ifndef AUTO_OVERRIDE
 
 	#ifndef AUTO_SELECT
 	switch (gui.get_selected_auto())
@@ -87,6 +91,12 @@ void autonomous() {
 		} break;
 		default: break;
 	}
+
+	#else
+
+	AUTO_OVERRIDE;
+
+	#endif
 
 	double end_time = pros::millis() / 1000.0;
 
