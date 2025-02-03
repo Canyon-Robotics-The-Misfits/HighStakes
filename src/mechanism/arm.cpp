@@ -81,7 +81,7 @@ void mechanism::Arm::start_task()
             
             if ((state == ArmState::DISABLED || target_angle < target_config.load + 5) && is_loading() && intake->get_state() == IntakeState::WALL_STAKE)
             {
-                motors->move(-5);
+                motors->move(-15);
             }
             else if (target_angle != INFINITY)
             {

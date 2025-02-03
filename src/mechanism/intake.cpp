@@ -2,6 +2,8 @@
 #include "lib15442c/logger.hpp"
 #include "pros/misc.h"
 
+#include <iostream>
+
 #define LOGGER "intake.cpp"
 
 mechanism::Intake::Intake(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<lib15442c::Pneumatic> redirect)
@@ -33,12 +35,15 @@ void mechanism::Intake::start_task()
     task = pros::Task([this]()
                       {
         auto initial_comp_status = pros::c::competition_get_status();
+
+        int i = 0;
         
         while (pros::c::competition_get_status() == initial_comp_status)
         {
             mutex.lock();
             if (task_on_flag == false)
             {
+                mutex.unlock();
                 break;
             }
 
@@ -50,26 +55,32 @@ void mechanism::Intake::start_task()
             IntakeState state = this->state;
 
             mutex.unlock();
+
             
             switch (state)
             {
             case IntakeState::HOOD: {
-                motors->move(127);
+                // std::cout << "hood" << std::endl;
+                motors->move(127 - (i % 20 == 0 ? 1 : 0));
                 redirect->extend();
             } break;
             case IntakeState::WALL_STAKE: {
-                motors->move(127);
+                // std::cout << "wall" << std::endl;
+                motors->move(127 - (i % 20 == 0 ? 1 : 0));
                 redirect->retract();
             } break;
             case IntakeState::REVERSE: {
-                motors->move(-127);
+                // std::cout << "rev" << std::endl;
+                motors->move(-127 + (i % 20 == 0 ? 1 : 0));
                 redirect->extend();
             } break;
             case IntakeState::DEJAM: {
-                motors->move(-127);
+                // std::cout << "dejam" << std::endl;
+                motors->move(-127 + (i % 20 == 0 ? 1 : 0));
                 // redirect->extend();
             } break;
             case IntakeState::DISABLED: {
+                // std::cout << "disable" << std::endl;
                 motors->move(0);
             } break;
             }

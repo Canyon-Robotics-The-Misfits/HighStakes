@@ -46,6 +46,7 @@ AUTO_ROUTE(auto_routes::positive_red)
     pros::delay(1300);
     intake->set_state(IntakeState::DISABLED);
     drive_to_alliance_stake->await();
+    drive_controller->face_point(lib15442c::Vec(72, 0));
     arm->set_state(ArmState::LOAD);
     pros::delay(200);
     drive_controller->drive_time(-100, 300);

@@ -7,7 +7,16 @@
 
 AUTO_ROUTE(auto_routes::skills_triple_test)
 {
-    RUN_AUTO(skills_start_segment);
+    // RUN_AUTO(skills_start_segment);
+
+    odometry->initialize(83 +1, 17 + 5, 250_deg);
+
+    clamp.retract();
+
+    drive_controller->drive(-4, { min_speed: 60, chained: true });
+    clamp.extend();
+    pros::delay(100);
+    drive_controller->face_point(lib15442c::Vec(144 - 48, 48));
 
     // get initial rings
     intake->set_state(IntakeState::HOOD);
@@ -18,8 +27,10 @@ AUTO_ROUTE(auto_routes::skills_triple_test)
     
     // get rings near corner; dropoff goal
     drive_controller->face_point(lib15442c::Vec(144 - 24, 72 - 24), 0_deg, { threshold: 15_deg, chained: true });
-    drive_controller->boomerang(pos(144 - 24, 72 - 24), { threshold: 5, min_speed: 110 });
-    drive_controller->boomerang(pos(144 - 24, 12 + 1), { min_speed: 25 });
+    drive_controller->boomerang(pos(144 - 24, 72 - 24), { threshold: 2 });
+    drive_controller->boomerang(pos(144 - 24, 24 + 1), { min_speed: 25 });
+    pros::delay(50);
+    drive_controller->boomerang(pos(144 - 24, 12 - 1), { min_speed: 25 });
     pros::delay(50);
     drive_controller->face_angle(45_deg, { threshold: 10_deg, chained: true });
     drive_controller->boomerang(pos(144 - 12 -1, 24), { min_speed: 50 });
