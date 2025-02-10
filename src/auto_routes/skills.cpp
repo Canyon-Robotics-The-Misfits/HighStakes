@@ -60,12 +60,12 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(200);
 
     // score wall stake
-    auto wall_stake_1 = drive_controller->drive_to(pose(144 - 14, 72 +2, 90_deg), { max_speed: 80, min_speed: 30, async: true });
+    auto wall_stake_1 = drive_controller->drive_to(pose(144 - 15, 72 +2, 90_deg), { max_speed: 80, min_speed: 30, async: true });
     pros::delay(600);
     intake->set_state(IntakeState::HOOD);
-    // arm->set_state(ArmState::NEUTRAL_STAKE);
+    arm->set_state(ArmState::NEUTRAL_STAKE);
     wall_stake_1->await();
-    // arm->set_state(ArmState::LOAD);
+    arm->set_state(ArmState::LOAD);
     pros::delay(200);
     drive_controller->drive(-8, { min_speed: 80, chained: true });
 
@@ -77,8 +77,8 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::WALL_STAKE);
     drive_to_ring_stack_2->await();
     pros::delay(300);
-    // drive_controller->drive(10, { angle: 0_deg, min_speed: 30, chained: true});
-    // pros::delay(150);
+    drive_controller->drive(10, { angle: 0_deg, min_speed: 30, chained: true});
+    pros::delay(150);
     odometry->set_x(142 - distance_right()); // reset odom w/ distance sensors
     odometry->set_y(142 - distance_front());
 
@@ -86,7 +86,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pos(144 - 24, 72 - 6), { backwards: true });
     arm->set_state(ArmState::NEUTRAL_STAKE);
     intake->set_state(IntakeState::HOOD);
-    drive_controller->drive_to(pose(144 - 14 +2, 72, 90_deg), { min_speed: 30 });
+    drive_controller->drive_to(pose(144 - 15, 72, 90_deg), { min_speed: 30 });
     arm->set_state(ArmState::LOAD);
     pros::delay(200);
     drive_controller->drive(-4, { min_speed: 80, chained: true });
@@ -127,9 +127,9 @@ AUTO_ROUTE(auto_routes::skills)
     turn_to_goal_2->await();
     drive_controller->boomerang(pose(48 -3, 24, -30_deg + 180_deg), { backwards: true, lead: 0.7, threshold: 8, min_speed: 60, chained: true,  });
 
-    drive_controller->drive_time(-60, 100, { angle: 0_deg });
+    drive_controller->drive_time(-60, 100);
     clamp.extend();
-    drive_controller->drive_time(-60, 100, { angle: 0_deg });
+    drive_controller->drive_time(-60, 50);
     drive_controller->face_angle(0_deg);
     odometry->set_y(distance_back());
     intake->set_state(IntakeState::HOOD);
@@ -151,7 +151,7 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(100);
     intake->set_state(IntakeState::REVERSE);
     pros::delay(400);
-    drive_controller->drive_to(pose(12, 72 -3, -90_deg), { min_speed: 30 });
+    drive_controller->drive_to(pose(13, 72 -3, -90_deg), { min_speed: 30 });
     arm->set_state(ArmState::LOAD);
     intake->set_state(IntakeState::HOOD);
     pros::delay(200);
@@ -164,8 +164,8 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::WALL_STAKE);
     drive_to_ring_stack_1->await();
     pros::delay(300);
-    // drive_controller->drive(9, { angle: 0_deg, min_speed: 30, chained: true});
-    // pros::delay(150);
+    drive_controller->drive(9, { angle: 0_deg, min_speed: 30, chained: true});
+    pros::delay(150);
     odometry->set_x(distance_left()); // reset odom w/ distance sensors
     odometry->set_y(142 - distance_front());
 
@@ -173,7 +173,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pos(24, 72 - 6), { backwards: true });
     arm->set_state(ArmState::NEUTRAL_STAKE);
     intake->set_state(IntakeState::HOOD);
-    drive_controller->drive_to(pose(12, 72, -90_deg), { min_speed: 30 });
+    drive_controller->drive_to(pose(13, 72, -90_deg), { min_speed: 30 });
     arm->set_state(ArmState::LOAD);
     pros::delay(200);
     drive_controller->drive(-4, { min_speed: 80, chained: true });
@@ -221,7 +221,7 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::WALL_STAKE);
     pros::delay(400);
     odometry->set_x(distance_left());
-    // drive_controller->drive_time(100, 300);
+    drive_controller->drive_time(100, 300);
 
     // dropoff goal then alliance stake
     drive_controller->boomerang(pos(48, 144 - 30), { backwards: true, threshold: 6, min_speed: 80 });

@@ -4,7 +4,7 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define AUTO_OVERRIDE auto_routes::skills_triple_test
+#define AUTO_OVERRIDE auto_routes::skills
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
