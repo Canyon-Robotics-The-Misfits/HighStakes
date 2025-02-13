@@ -17,6 +17,7 @@
 )
 
 #define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, alliance)
+#define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(20); }
 
 namespace auto_routes
 {
