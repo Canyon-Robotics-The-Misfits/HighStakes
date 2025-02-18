@@ -49,7 +49,7 @@ namespace config
         kA: 0.411787878788,
         kA_down: 0.411787878788 * 1.0,
         // how much voltage to apply per in/s of error in velocity
-        kP: 0.0
+        kP: 2.0
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_ARM = {

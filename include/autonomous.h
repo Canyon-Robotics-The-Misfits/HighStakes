@@ -44,4 +44,6 @@ namespace auto_routes
 
     // tests
     AUTO_ROUTE(skills_triple_test);
+    AUTO_ROUTE(corner_clear);
+    AUTO_ROUTE(mp_test);
 };

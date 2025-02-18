@@ -39,3 +39,33 @@ AUTO_ROUTE(auto_routes::skills_triple_test)
     clamp.retract();
     drive_controller->drive_time(-127, 300);
 }
+
+AUTO_ROUTE(auto_routes::corner_clear)
+{
+    odometry->initialize(0, 0, 0_deg);
+
+
+    arm->set_state(ArmState::ALLIANCE_STAKE);
+    clamp.extend();
+    intake->set_state(IntakeState::HOOD);
+    pros::delay(500);
+    drive_controller->drive_time(50, 500);
+    pros::delay(200);
+    drive_controller->drive_time(-127, 150);
+    drive_controller->drive(-15, { threshold: 0, min_speed: 30, chained: true  });
+    pros::delay(100);
+    drive_controller->drive_time(60, 300);
+    // drive_controller->drive(-15, { threshold: 0, min_speed: 35, chained: true  });
+}
+
+AUTO_ROUTE(auto_routes::mp_test)
+{
+    odometry->initialize(0, 0, 0_deg);
+
+    while (true) {
+        std::cout << odometry->get_x() << ", " << odometry->get_y() << std::endl;
+        // std::cout << pros::millis() / 1000.0 << ", ";
+        drivetrain->move_speed(50.0, -50.0 * (1.0/12.0));
+        pros::delay(20);
+    }
+}
