@@ -6,7 +6,7 @@ using mechanism::ArmState;
 
 AUTO_ROUTE(auto_routes::negative_blue)
 {
-    odometry->initialize(144-56, 20, -143.5_deg); // start position is way off the actual one but it works for some reason
+    odometry->initialize(144-56, 20, -143.5_deg);
 
     // score alliance stake
     arm->set_state(ArmState::ALLIANCE_STAKE);

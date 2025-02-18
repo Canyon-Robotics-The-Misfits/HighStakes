@@ -67,7 +67,7 @@ namespace config
         load : -46.0,
         alliance_stake : 10.0,
         ladder_touch : 25.0,
-        neutral_stake : 39.0
+        neutral_stake : 43.0
     };
     constexpr int PORT_ARM_ROTATION = 4;
 
