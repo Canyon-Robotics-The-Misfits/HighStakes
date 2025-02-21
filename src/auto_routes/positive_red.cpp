@@ -18,6 +18,7 @@ AUTO_ROUTE(auto_routes::red_rush_segment)
     intake->set_state(IntakeState::DISABLED);
     drive_controller->drive(-11, { min_speed: 80, chained: true });
     doinker.extend();
+    pros::delay(50);
     drive_controller->drive(-3, { min_speed: 80, chained: true });
     doinker.retract();
 
