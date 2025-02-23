@@ -121,14 +121,14 @@ void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
     {
         clamp.toggle();
 
-        if (!clamp.get_value())
-        {
-            controller.print(0, 0, "CLAMP ON ");
-        }
-        else
-        {
-            controller.print(0, 0, "CLAMP OFF");
-        }
+        // if (!clamp.get_value())
+        // {
+        //     controller.print(0, 0, "CLAMP ON ");
+        // }
+        // else
+        // {
+        //     controller.print(0, 0, "CLAMP OFF");
+        // }
     }
 }
 
@@ -190,7 +190,7 @@ void opcontrol()
     // );
 
     clamp.retract();
-    controller.print(0, 0, "CLAMP OFF");
+    // controller.print(0, 0, "CLAMP OFF");
     arm->set_state(mechanism::ArmState::DISABLED);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);

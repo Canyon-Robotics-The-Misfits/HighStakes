@@ -4,7 +4,7 @@
 
 #define LOGGER "autonomous.cpp"
 
-#define AUTO_OVERRIDE auto_routes::positive_blue
+#define AUTO_OVERRIDE auto_routes::skills
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -85,7 +85,8 @@ void autonomous() {
 	odometry->stop_task();
 	drivetrain->move(0, 0);
 	
-	INFO("Autonomous End. Took %.2fs", end_time - start_time);
+	// INFO("Autonomous End. Took %.2fs", end_time - start_time);
+	printf("Autonomous End. Took %.2fs", end_time - start_time);
 
 	pros::delay(2000);
 	INFO("Took %.2fs", end_time - start_time); // second log a second late to make sure any disconnects won't prevent it from logging
