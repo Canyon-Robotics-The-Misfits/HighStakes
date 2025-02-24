@@ -89,8 +89,8 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->face_angle(0_deg);
     // pros::delay(300);
     pros::delay(100);
-    drive_controller->drive(10, { angle: 0_deg, min_speed: 30, chained: true});
-    pros::delay(150);
+    // drive_controller->drive(10, { angle: 0_deg, min_speed: 30, chained: true});
+    // pros::delay(150);
     if (std::abs(odometry->get_rotation().deg()) < RESET_THRESHOLD)
     {
         odometry->set_x(142 - distance_right()); // reset odom w/ distance sensors
@@ -215,8 +215,8 @@ AUTO_ROUTE(auto_routes::skills)
     drive_to_ring_stack_2->await();
     drive_controller->face_angle(0_deg);
     pros::delay(300);
-    drive_controller->drive(9, { angle: 0_deg, min_speed: 30, chained: true });
-    pros::delay(150);
+    // drive_controller->drive(9, { angle: 0_deg, min_speed: 30, chained: true });
+    // pros::delay(150);
     
     if (std::abs(odometry->get_rotation().deg()) < RESET_THRESHOLD)
     {
@@ -297,9 +297,9 @@ AUTO_ROUTE(auto_routes::skills)
     }
     drive_controller->face_point(lib15442c::Vec(24, 144 - 12 +3), 0_deg, { threshold: 3_deg, min_speed: 40, chained: true });
     intake->set_state(IntakeState::WALL_STAKE);
-    drive_controller->drive_time(60, 100);
-    pros::delay(100);
     drive_controller->drive_time(60, 200);
+    pros::delay(100);
+    // drive_controller->drive_time(60, 100);
     // drive_controller->face_angle(0_deg, { threshold: 3_deg });
     // if (std::abs(odometry->get_rotation().deg()) < RESET_THRESHOLD)
     // {
@@ -353,8 +353,8 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pos(144 - 24, 144 - 24 -4), { lead: 0.4, threshold: 8, min_speed: 60 });
     drive_controller->face_point(lib15442c::Vec(144 - 24, 144 - 12), -15_deg, { threshold: 3_deg });
     drive_controller->drive_time(60, 900);
-    drive_controller->face_angle(-45_deg, { threshold: 20_deg, min_speed: 40, chained: true });
-    drive_controller->drive_time(60, 200);
+    // drive_controller->face_angle(-45_deg, { threshold: 20_deg, min_speed: 40, chained: true });
+    // drive_controller->drive_time(60, 200);
 
     // drop goal in corner
     drive_controller->boomerang(pos(144 - 22, 144 - 22), { backwards: true, threshold: 5, min_speed: 60 });

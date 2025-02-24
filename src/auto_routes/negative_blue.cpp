@@ -23,21 +23,23 @@ AUTO_ROUTE(auto_routes::negative_blue)
     WAIT_UNTIL(odometry->get_pose().vec().distance_to(lib15442c::Vec(72, 12)) < 14 || !drive_to_alliance_stake->is_running());
     intake->set_state(IntakeState::DISABLED);
     drive_to_alliance_stake->await();
-    arm->set_state(ArmState::LOAD);
+    arm->set_state(ArmState::LOAD); // TODO: REVERT
     pros::delay(200);
     drive_controller->drive(-4, { min_speed: 60, chained: true });
+    // arm->set_state(ArmState::LOAD); // TODO: REVERT
 
     // grab goal
     // drive_controller->boomerang(pose(48 -2, 48, -15_deg + 180_deg), { backwards: true, lead: 0.7, threshold: 3, angle_priority_threshold: 12, min_speed: 60 });
-    drive_controller->boomerang(pos(144 - (48 -2), 48), { backwards: true, threshold: 3, min_speed: 60 });
+    drive_controller->boomerang(pos(144 - (48 -2), 48 +1), { backwards: true, threshold: 3, min_speed: 60 });
     drive_controller->drive_time(-60, 100);
     clamp.extend();
     pros::delay(100);
     intake->set_state(IntakeState::HOOD);
     
     // get line rings
-    drive_controller->drive_to(pose(144 - 21, 72 - 12 + 3, 90_deg), { max_speed: 110, min_speed: 40 });
-    drive_controller->drive_time(60, 200);
+    drive_controller->drive_to(pose(144 - 21 -2, 72 - 12 + 3, 90_deg), { max_speed: 110, min_speed: 40 });
+    pros::delay(300);
+    drive_controller->drive_time(60, 250);
     pros::delay(100);
 
     // get stack

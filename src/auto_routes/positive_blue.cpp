@@ -11,7 +11,7 @@ AUTO_ROUTE(auto_routes::blue_rush_segment)
     // goal rush
     doinker.extend();
     intake->set_state(IntakeState::HOOD);
-    drive_controller->drive(29.5, { threshold: 0, min_speed: 40, chained: true });
+    drive_controller->drive(29.5, { threshold: 0, min_speed: 50, chained: true });
     doinker.retract();
     drive_controller->drive_time(-127, 250, { ramp_up: true, ramp_speed:  127.0/0.5 });
     intake->set_state(IntakeState::DISABLED);
@@ -56,7 +56,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
 
     // get corner
     arm->set_state(ArmState::ALLIANCE_STAKE);
-    auto drive_to_corner = drive_controller->boomerang(pose(18, 18, -65_deg), { lead: 0.4, threshold: 8, angle_priority_threshold: 10, min_speed: 60, async: true });
+    auto drive_to_corner = drive_controller->boomerang(pose(20, 20, -65_deg), { lead: 0.4, threshold: 8, angle_priority_threshold: 10, min_speed: 60, async: true });
     intake->set_state(IntakeState::HOOD);
     pros::delay(1000);
     intake->set_state(IntakeState::DISABLED);
@@ -66,7 +66,7 @@ AUTO_ROUTE(auto_routes::positive_blue)
     intake->set_state(IntakeState::HOOD);
     drive_controller->drive_time(80, 500);
     pros::delay(100);
-    auto leave_corner = drive_controller->drive(-12, { threshold: 0, min_speed: 40, chained: true, async: true });
+    auto leave_corner = drive_controller->drive(-10, { threshold: 0, min_speed: 40, chained: true, async: true });
     pros::delay(200);
     intake->set_state(IntakeState::DISABLED);
     leave_corner->await();
