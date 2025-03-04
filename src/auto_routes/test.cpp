@@ -47,15 +47,18 @@ AUTO_ROUTE(auto_routes::corner_clear)
 
     arm->set_state(ArmState::ALLIANCE_STAKE);
     clamp.extend();
-    intake->set_state(IntakeState::HOOD);
     pros::delay(500);
-    drive_controller->drive_time(50, 500);
-    pros::delay(200);
-    drive_controller->drive_time(-127, 150);
-    drive_controller->drive(-15, { threshold: 0, min_speed: 30, chained: true  });
+
+    drive_controller->drive_time(60, 400);
+    intake->set_state(IntakeState::HOOD);
+    pros::delay(150);
+    drive_controller->drive(-3, { min_speed: 40, chained: true });
+    intake_lift.extend();
     pros::delay(100);
     drive_controller->drive_time(60, 300);
-    // drive_controller->drive(-15, { threshold: 0, min_speed: 35, chained: true  });
+    pros::delay(100);
+    intake_lift.retract();
+    drive_controller->drive(-6, { min_speed: 40, chained: true });
 }
 
 AUTO_ROUTE(auto_routes::mp_test)

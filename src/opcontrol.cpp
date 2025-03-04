@@ -114,32 +114,6 @@ void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> ar
     }
 }
 
-// l1 clamp
-void control_clamp(pros::Controller controller, lib15442c::Pneumatic clamp)
-{
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
-    {
-        clamp.toggle();
-
-        // if (!clamp.get_value())
-        // {
-        //     controller.print(0, 0, "CLAMP ON ");
-        // }
-        // else
-        // {
-        //     controller.print(0, 0, "CLAMP OFF");
-        // }
-    }
-}
-
-void control_doinker(pros::Controller controller, lib15442c::Pneumatic doinker)
-{
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-    {
-        doinker.toggle();
-    }
-}
-
 void opcontrol()
 {
     INFO_TEXT("OPControl Start");
@@ -152,6 +126,7 @@ void opcontrol()
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+    lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
 
     std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
     // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
@@ -199,6 +174,7 @@ void opcontrol()
     // int i = 0;
 
     // x alliance stake
+    // y raise intake
     // b doinker
     // a intake
 
@@ -209,10 +185,23 @@ void opcontrol()
     while (true)
     {
         control_drivetrain(controller, drivetrain);
-        control_clamp(controller, clamp);
         control_intake(controller, intake, arm);
         control_arm(controller, arm);
-        control_doinker(controller, doinker);
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
+        {
+            intake_lift.toggle();
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+        {
+            doinker.toggle();
+        }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+        {
+            clamp.toggle();
+        }
 
         // i++;
         // if (i % 5 == 0) {

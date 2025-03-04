@@ -84,6 +84,7 @@ namespace config
 
     constexpr char PORT_CLAMP = 'B';
     constexpr char PORT_DOINKER = 'C';
+    constexpr char PORT_INTAKE_LIFT = 'H';
     constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
 
     // constexpr int PORT_IMU = 7;

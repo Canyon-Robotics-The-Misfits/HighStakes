@@ -6,61 +6,86 @@ using mechanism::ArmState;
 
 AUTO_ROUTE(auto_routes::negative_blue)
 {
-    odometry->initialize(144-56, 17.5, -90_deg);
+    odometry->initialize(144-57, 13, 301_deg);
 
-    // get center ring and alliance stake
-    doinker.extend();
+    // get center ring
     arm->set_state(ArmState::ALLIANCE_STAKE);
-    pros::delay(250);
-    drive_controller->drive(-3, { min_speed: 60, chained: true });
     pros::delay(100);
-    drive_controller->face_angle(-130_deg, { chained: true });
-    doinker.retract();
-    pros::delay(50);
+    intake_lift.extend();
     intake->set_state(IntakeState::HOOD);
-    drive_controller->face_angle(-125_deg, { chained: true });
-    auto drive_to_alliance_stake = drive_controller->drive_to(pose(72+7, 11, -145_deg), { threshold: 1, timeout: 1000, min_speed: 30, async: true });
-    WAIT_UNTIL(odometry->get_pose().vec().distance_to(lib15442c::Vec(72, 12)) < 14 || !drive_to_alliance_stake->is_running());
+    drive_controller->drive(13, { min_speed: 35, chained: true });
+    intake_lift.retract();
+    pros::delay(100);
+    auto backup_center_ring = drive_controller->drive(-6, { min_speed: 60, chained: true, async: true });
     intake->set_state(IntakeState::DISABLED);
-    drive_to_alliance_stake->await();
-    arm->set_state(ArmState::LOAD); // TODO: REVERT
-    pros::delay(200);
-    drive_controller->drive(-4, { min_speed: 60, chained: true });
-    // arm->set_state(ArmState::LOAD); // TODO: REVERT
+    // pros::delay(150);
+    backup_center_ring->await();
+    pros::delay(100);
+
+    // get alliance stake
+    drive_controller->face_point(lib15442c::Vec(72, 0), 0_deg, { threshold: 3_deg, chained: true });
+    drive_controller->drive_to(pose(72+9.5, 10.5, -145_deg), { r: 0.5, threshold: 0.5, timeout: 2000, min_speed: 30 });
+    arm->set_state(ArmState::LOAD);
+    pros::delay(150);
 
     // grab goal
     // drive_controller->boomerang(pose(48 -2, 48, -15_deg + 180_deg), { backwards: true, lead: 0.7, threshold: 3, angle_priority_threshold: 12, min_speed: 60 });
-    drive_controller->boomerang(pos(144 - (48 -2), 48 +1), { backwards: true, threshold: 3, min_speed: 60 });
-    drive_controller->drive_time(-60, 100);
+    drive_controller->boomerang(pos(144 - 48, 48), { backwards: true, threshold: 5, min_speed: 60 });
+    // drive_controller->drive_time(-60, 100);
     clamp.extend();
-    pros::delay(100);
+    pros::delay(150);
     intake->set_state(IntakeState::HOOD);
     
     // get line rings
-    drive_controller->drive_to(pose(144 - 21 -2, 72 - 12 + 3, 90_deg), { max_speed: 110, min_speed: 40 });
-    pros::delay(300);
-    drive_controller->drive_time(60, 250);
+    auto drive_to_line = drive_controller->drive_to(pose(144 - 21 -11, 72 - 12 + 2, 75_deg), { r: 7, max_speed: 110, min_speed: 40, async: true });
+    pros::delay(500);
+    intake->set_state(IntakeState::WALL_STAKE);
+    drive_to_line->await();
+    drive_controller->face_angle(95_deg);
+    pros::delay(350);
+    intake->set_state(IntakeState::HOOD);
+    drive_controller->drive(3, { min_speed: 60, chained: true });
+    arm->set_state(ArmState::NEUTRAL_STAKE);
     pros::delay(100);
 
+    // score on wall stake
+    auto drive_to_wall_stake = drive_controller->drive_to(pose(144 - 12.5, 72 - 7, 50_deg), { r: 4, timeout: 1500, min_speed: 30, async: true });
+    pros::delay(700);
+    intake->set_state(IntakeState::DISABLED);
+    intake_lift.extend();
+    drive_to_wall_stake->await();
+    arm->set_state(ArmState::LOAD);
+    pros::delay(200);
+
     // get stack
-    drive_controller->boomerang(pos(144 - 48, 48), { backwards: true, threshold: 2, min_speed: 40 });
-    drive_controller->boomerang(pos(144 - 24, 48), { threshold: 3, min_speed: 80 });
-    pros::delay(300);
-    drive_controller->drive(-10, { min_speed: 60, chained: true });
+    drive_controller->drive(-6, { min_speed: 80, chained: true });
+    intake_lift.retract();
+    // drive_controller->face_angle(125_deg, { min_speed: 40, chained: true });
 
     // get corner 
+    intake->set_state(IntakeState::HOOD);
     arm->set_state(ArmState::ALLIANCE_STAKE);
+    drive_controller->face_point(lib15442c::Vec(144 - 16, 16), -10_deg, { min_speed: 40, chained: true });
     drive_controller->boomerang(pos(144 - 16, 16), { threshold: 2 });
-    drive_controller->face_point(lib15442c::Vec(144, 0));
+    drive_controller->face_point(lib15442c::Vec(144, 0), -5_deg);
     pros::delay(50);
-    drive_controller->drive_time(60, 500);
-    drive_controller->drive_time(-100, 200);
+    intake->set_state(IntakeState::HOOD);
+    drive_controller->drive_time(60, 400);
+    pros::delay(150);
+    drive_controller->drive(-2, { min_speed: 40, chained: true });
+    pros::delay(150);
+    intake_lift.extend();
+    pros::delay(100);
+    drive_controller->drive_time(60, 200);
+    pros::delay(250);
+    intake_lift.retract();
+    drive_controller->drive(-10, { min_speed: 60, chained: true });
 
     // touch ladder
     arm->set_state(ArmState::LADDER_TOUCH);
-    drive_controller->boomerang(pos(144 - 36, 36), { backwards: true, threshold: 2, min_speed: 60 } );
-    drive_controller->face_angle(-40_deg, { threshold: 5_deg });
-    drive_controller->drive_time(60, 700);
+    // drive_controller->face_angle(-45_deg, { min_speed: 40, chained: true });
+    drive_controller->boomerang(pos(144 - 44, 44), { backwards: true, threshold: 2, timeout: 3000, min_speed: 60 } );
+    // drive_controller->face_angle(-40_deg, { threshold: 10_deg, chained: true  });
     arm->set_state(ArmState::DISABLED);
     // drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
 }

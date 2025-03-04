@@ -13,10 +13,11 @@
     std::shared_ptr<mechanism::Arm> arm,                            \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic doinker,                                   \
+    lib15442c::Pneumatic intake_lift,                               \
     gui::AllianceColor alliance                                     \
 )
 
-#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, alliance)
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, intake, arm, clamp, doinker, intake_lift, alliance)
 #define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(20); }
 
 namespace auto_routes

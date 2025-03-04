@@ -4,7 +4,7 @@
 
 #define LOGGER "autonomous.cpp"
 
-// #define AUTO_OVERRIDE auto_routes::skills
+#define AUTO_OVERRIDE auto_routes::negative_blue
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -17,6 +17,7 @@ void autonomous() {
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+    lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
 
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
