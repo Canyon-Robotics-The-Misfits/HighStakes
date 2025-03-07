@@ -13,7 +13,7 @@ double distance_left()
 {
     pros::Distance sensor = pros::Distance(11);
 
-    if (sensor.get() != 9999)
+    if (sensor.is_installed() && sensor.get() != 9999)
     {
         return sensor.get() * 0.0361882 + 6.63209; // line of best fit to convert millimeters sensed to robot displacement in inches
     }
@@ -27,7 +27,7 @@ double distance_right()
 {
     pros::Distance sensor = pros::Distance(9);
 
-    if (sensor.get() != 9999)
+    if (sensor.is_installed() && sensor.get() != 9999)
     {
         return sensor.get() * 0.038347 + 5.9759; // line of best fit to convert millimeters sensed to robot displacement in inches
     }
@@ -41,7 +41,7 @@ double distance_front()
 {
     pros::Distance sensor = pros::Distance(3);
 
-    if (sensor.get() != 9999)
+    if (sensor.is_installed() && sensor.get() != 9999)
     {
         return sensor.get() * 0.0389846 + 6.03126; // line of best fit to convert millimeters sensed to robot displacement in inches
     }
@@ -55,7 +55,7 @@ double distance_back()
 {
     pros::Distance sensor = pros::Distance(5);
 
-    if (sensor.get() != 9999)
+    if (sensor.is_installed() && sensor.get() != 9999)
     {
         return sensor.get() * 0.0395116 + 5.06893; // line of best fit to convert millimeters sensed to robot displacement in inches
     }
@@ -96,7 +96,7 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::HOOD);
     arm->set_state(ArmState::NEUTRAL_STAKE);
     wall_stake_1->await();
-    if (std::abs((odometry->get_rotation() - 90_deg).deg()) < RESET_THRESHOLD)
+    if (std::abs((odometry->get_rotation() - 90_deg).deg()) < RESET_THRESHOLD && distance_front() != INFINITY)
     {
         odometry->set_x(142 - distance_front() +3);
     }
@@ -110,7 +110,7 @@ AUTO_ROUTE(auto_routes::skills)
 
     // get next rings
     drive_controller->boomerang(pose(144 - 24, 72 + 24 - 4, 10_deg), { min_speed: 60 });
-    auto drive_to_ring_stack_1 = drive_controller->boomerang(pose(144 - (12 -2.5), 144 - 24 - 5, 0_deg), { lead: 0.7, min_speed: 30, async: true });
+    auto drive_to_ring_stack_1 = drive_controller->boomerang(pose(144 - 12, 144 - 24 - 7, 0_deg), { lead: 0.7, min_speed: 30, async: true });
     pros::delay(800);
     intake->set_state(IntakeState::WALL_STAKE);
     drive_to_ring_stack_1->await();
@@ -119,7 +119,7 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(100);
     // drive_controller->drive(10, { angle: 0_deg, min_speed: 30, chained: true});
     // pros::delay(150);
-    if (std::abs(odometry->get_rotation().deg()) < RESET_THRESHOLD && distance_right() != INFINITY && distance_left() != INFINITY)
+    if (std::abs(odometry->get_rotation().deg()) < RESET_THRESHOLD && distance_right() != INFINITY && distance_front() != INFINITY)
     {
         odometry->set_x(142 - distance_right()); // reset odom w/ distance sensors
         odometry->set_y(142 - distance_front());
@@ -237,7 +237,7 @@ AUTO_ROUTE(auto_routes::skills)
 
     // get next rings
     drive_controller->boomerang(pose(24, 72 + 24 - 4, -10_deg), { min_speed: 60 });
-    auto drive_to_ring_stack_2 = drive_controller->boomerang(pose(12 - 0.5, 144 - 24 - 8, 0_deg), { min_speed: 30, async: true });
+    auto drive_to_ring_stack_2 = drive_controller->boomerang(pose(12 - 0.5, 144 - 24 - 9, 0_deg), { min_speed: 30, async: true });
     pros::delay(800);
     intake->set_state(IntakeState::WALL_STAKE);
     drive_to_ring_stack_2->await();
@@ -386,10 +386,10 @@ AUTO_ROUTE(auto_routes::skills)
 
     // pickup last rings
     intake->set_state(IntakeState::HOOD);
-    drive_controller->face_point(lib15442c::Vec(144 - 24, 144 - 12), 0_deg, { chained: true });
-    drive_controller->boomerang(pos(144 - 24, 144 - 12), { threshold: 8, min_speed: 60 });
+    drive_controller->face_point(lib15442c::Vec(144 - 24, 144 - 12), -10_deg, { chained: true });
+    drive_controller->boomerang(pos(144 - 24, 144 - 12 +2), { threshold: 8, min_speed: 60 });
     drive_controller->face_point(lib15442c::Vec(144 - 24, 144 - 24), 0_deg, { threshold: 3_deg });
-    drive_controller->drive_time(60, 900);
+    drive_controller->drive_time(60, 400);
     // drive_controller->face_angle(-45_deg, { threshold: 20_deg, min_speed: 40, chained: true });
     // drive_controller->drive_time(60, 200);
 
