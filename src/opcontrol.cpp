@@ -165,6 +165,7 @@ void opcontrol()
     // );
 
     clamp.retract();
+    intake_lift.retract();
     // controller.print(0, 0, "CLAMP OFF");
     arm->set_state(mechanism::ArmState::DISABLED);
 
