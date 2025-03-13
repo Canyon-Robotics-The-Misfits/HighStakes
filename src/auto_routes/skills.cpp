@@ -155,7 +155,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pos(144 - 24 +1, 24 + 3), { min_speed: 25 });
     pros::delay(150);
     drive_controller->boomerang(pos(144 - 24 +1, 12 + 3), { min_speed: 25 });
-    pros::delay(50);
+    pros::delay(150);
     if (std::abs((odometry->get_rotation() - 180_deg).deg()) < RESET_THRESHOLD && distance_left() != INFINITY)
     {
         odometry->set_x(142 - distance_left()); // reset odom w/ distance sensors
@@ -240,7 +240,7 @@ AUTO_ROUTE(auto_routes::skills)
 
     // get next rings
     drive_controller->boomerang(pos(24, 72 + 24 - 4), { min_speed: 60 });
-    auto drive_to_ring_stack_2 = drive_controller->drive_to(pose(12 - 1, 144 - 24 - 5, 0_deg), { r: 4, min_speed: 40, async: true });
+    auto drive_to_ring_stack_2 = drive_controller->drive_to(pose(12 - 1, 144 - 24 - 5, 0_deg), { r: 4, min_speed: 45, async: true });
     pros::delay(800);
     intake->set_state(IntakeState::WALL_STAKE);
     drive_to_ring_stack_2->await();
@@ -299,9 +299,10 @@ AUTO_ROUTE(auto_routes::skills)
     // drive_controller->face_angle(45_deg);
 
     // go through ring and get 3rd goal
-    drive_controller->boomerang(pos(72 + 24, 72 + 24), { threshold: 11, min_speed: 60 });
+    drive_controller->boomerang(pos(72 + 24, 72 + 24), { threshold: 10, min_speed: 60 });
+    pros::delay(50);
     auto face_third_goal = drive_controller->face_angle(145_deg, { threshold: 10_deg, chained: true, async: true });
-    pros::delay(300);
+    pros::delay(250);
     intake->set_state(IntakeState::DISABLED);
     face_third_goal->await();
     drive_controller->boomerang(pos(72 + 12, 144 - 24 -4), { backwards: true, threshold: 12, min_speed: 80 });
@@ -320,8 +321,7 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->boomerang(pos(24, 144 - 24), { threshold: 8, min_speed: 60 });
     drive_controller->drive(2, { min_speed: 60, chained: true });
     drive_controller->face_angle(0_deg, { max_speed: 40 });
-    // pros::delay(150);
-    pros::delay(350);
+    pros::delay(150);
     if (std::abs((0_deg - odometry->get_rotation()).deg()) < RESET_THRESHOLD && distance_left() != INFINITY)
     {
         odometry->set_x(distance_left());
@@ -362,12 +362,11 @@ AUTO_ROUTE(auto_routes::skills)
     arm->set_state(ArmState::ALLIANCE_STAKE);
     drive_controller->drive(4, { min_speed: 60, chained: true });
     // drive_controller->face_point(lib15442c::Vec(72, 144 - 17), 0_deg, { threshold: 5_deg, chained: true });
-    drive_controller->drive_to(pose(72, 144 - 14.5, 0_deg), { r: 2, min_speed: 30 });
+    drive_controller->drive_to(pose(72, 144 - 14.5 -0.5, 0_deg), { r: 2, min_speed: 35 });
     pros::delay(50);
     arm->set_state(ArmState::LOAD);
-    pros::delay(200);
-    drive_controller->turn(-10_deg, { min_speed: 40, chained: true });
     pros::delay(100);
+    drive_controller->turn(-10_deg, { timeout: 250, min_speed: 40, chained: true });
     drive_controller->drive(-4, { min_speed: 60, chained: true });
 
     // push in corner goal
@@ -376,12 +375,14 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->face_angle(-35_deg, { threshold: 10_deg, chained: true });
     intake_lift.extend();
     drive_controller->boomerang(pos(72 - 24, 144 - 12), { threshold: 8, min_speed: 127 });
-    drive_controller->drive_time(127, 900, { angle: -85_deg, end_condition: [](lib15442c::Pose pose) { return pose.x < 22; } });
+    drive_controller->drive_time(127, 900, { angle: -85_deg, ramp_down: true, end_condition: [](lib15442c::Pose pose) { return pose.x < 16; } });
+    pros::delay(100);
     intake_lift.retract();
 
     // pickup goal
     intake->set_state(IntakeState::REVERSE);
-    drive_controller->drive_to(pose(72 + 18, 144 - 30, 90_deg), { r: 4, backwards: true, threshold: 2.5, min_speed: 60 });
+    drive_controller->boomerang(pos(72 + 18 - 12, 144 - 30 +3), { backwards: true, threshold: 15, min_speed: 100 });
+    drive_controller->boomerang(pos(72 + 18, 144 - 30 +3), { backwards: true, threshold: 2.5, max_speed: 80, min_speed: 20 });
     arm->set_state(ArmState::LOAD);
     intake->set_state(IntakeState::HOOD);
     clamp.extend();
