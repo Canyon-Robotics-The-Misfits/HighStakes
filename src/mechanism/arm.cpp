@@ -95,13 +95,13 @@ void mechanism::Arm::start_task()
 
                 double real_theta = -current_angle / 5.0 * M_PI / 180.0 + M_PI / 2.0;
 
-                if (output > -50)
+                if (output > -40)
                 {
                     motors->move(output + kG * cos(real_theta));
                 }
                 else
                 {
-                    motors->move(-50);
+                    motors->move(-40);
                 }
             }
 
