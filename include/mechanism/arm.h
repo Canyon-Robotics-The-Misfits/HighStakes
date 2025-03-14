@@ -18,6 +18,7 @@ namespace mechanism
         double alliance_stake;
         double ladder_touch;
         double neutral_stake;
+        double climb;
     };
 
     enum class ArmState
@@ -26,7 +27,8 @@ namespace mechanism
         LOAD,
         ALLIANCE_STAKE,
         LADDER_TOUCH,
-        NEUTRAL_STAKE
+        NEUTRAL_STAKE,
+        CLIMB
     };
 
     class Arm

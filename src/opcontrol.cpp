@@ -107,6 +107,10 @@ void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> ar
     {
         arm->set_state(mechanism::ArmState::ALLIANCE_STAKE);
     }
+    else if (controller.get_digital_new_press(DIGITAL_Y))
+    {
+        arm->set_state(mechanism::ArmState::CLIMB);
+    }
     else if (arm_manual)
     {
         arm->move_manual(0);
@@ -189,7 +193,7 @@ void opcontrol()
         control_intake(controller, intake, arm);
         control_arm(controller, arm);
         
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
             intake_lift.toggle();
         }

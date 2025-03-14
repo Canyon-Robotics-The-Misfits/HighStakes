@@ -75,6 +75,11 @@ void mechanism::Arm::start_task()
                 target_angle = target_config.ladder_touch;
             }
             break;
+            case ArmState::CLIMB:
+            {
+                target_angle = target_config.climb;
+            }
+            break;
             default: break;
             }
 

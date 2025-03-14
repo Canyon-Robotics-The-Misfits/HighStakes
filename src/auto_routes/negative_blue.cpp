@@ -60,14 +60,14 @@ AUTO_ROUTE(auto_routes::negative_blue)
     drive_controller->boomerang(pos(144 - 24, 28), { threshold: 8, min_speed: 60 });
     drive_controller->boomerang(pos(144 - 15, 15), { threshold: 2, min_speed: 40 });
 
-    drive_controller->face_point(lib15442c::Vec(144 -4, 0 +4), -5_deg, { threshold: 3_deg });
+    drive_controller->face_point(lib15442c::Vec(144 - 4, 0 +4), 5_deg, { threshold: 3_deg });
     pros::delay(50);
     intake->set_state(IntakeState::DISABLED);
-    drive_controller->drive_time(50, 500);
+    drive_controller->drive_time(50, 600);
     intake->set_state(IntakeState::HOOD);
     pros::delay(150);
     drive_controller->drive(-2.75, { min_speed: 40, chained: true });
-    pros::delay(175);
+    pros::delay(150);
     intake_lift.extend();
     pros::delay(100);
     drive_controller->drive_time(60, 250);
@@ -111,7 +111,7 @@ AUTO_ROUTE(auto_routes::negative_blue)
 
     // touch ladder
     arm->set_state(ArmState::LADDER_TOUCH);
-    drive_controller->boomerang(pos(144 - 46, 46), { backwards: true, threshold: 5, min_speed: 60 });
+    drive_controller->boomerang(pos(144 - 47, 47), { backwards: true, threshold: 5, min_speed: 60 });
     drive_controller->face_angle(-45_deg, { min_speed: 30, chained: true });
     drive_controller->drive_time(60, 200);
 

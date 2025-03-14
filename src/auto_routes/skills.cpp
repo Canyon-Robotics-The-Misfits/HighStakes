@@ -240,7 +240,7 @@ AUTO_ROUTE(auto_routes::skills)
 
     // get next rings
     drive_controller->boomerang(pos(24, 72 + 24 - 4), { min_speed: 60 });
-    auto drive_to_ring_stack_2 = drive_controller->drive_to(pose(12 - 1, 144 - 24 - 5, 0_deg), { r: 4, min_speed: 45, async: true });
+    auto drive_to_ring_stack_2 = drive_controller->drive_to(pose(12 - 1, 144 - 24 - 5, 0_deg), { r: 5, min_speed: 45, async: true });
     pros::delay(800);
     intake->set_state(IntakeState::WALL_STAKE);
     drive_to_ring_stack_2->await();
@@ -347,7 +347,7 @@ AUTO_ROUTE(auto_routes::skills)
 
     // dropoff goal then alliance stake
     // drive_controller->boomerang(pos(48, 144 - 30), { backwards: true, threshold: 6, min_speed: 80 });
-    drive_controller->drive_to(pose(72 + 13, 144 - 30, 90_deg), { r: 8, backwards: true, min_speed: 40 });
+    drive_controller->drive_to(pose(72 + 13, 144 - 30, 90_deg), { r: 4, backwards: true, min_speed: 40 });
     drive_controller->face_angle(-90_deg, { threshold: 2_deg });
     clamp.retract();
     pros::delay(250);
@@ -366,7 +366,7 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(50);
     arm->set_state(ArmState::LOAD);
     pros::delay(100);
-    drive_controller->turn(-10_deg, { timeout: 250, min_speed: 40, chained: true });
+    drive_controller->turn(-10_deg, { timeout: 150, min_speed: 40, chained: true });
     drive_controller->drive(-4, { min_speed: 60, chained: true });
 
     // push in corner goal
@@ -375,18 +375,18 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->face_angle(-35_deg, { threshold: 10_deg, chained: true });
     intake_lift.extend();
     drive_controller->boomerang(pos(72 - 24, 144 - 12), { threshold: 8, min_speed: 127 });
-    drive_controller->drive_time(127, 900, { angle: -85_deg, ramp_down: true, end_condition: [](lib15442c::Pose pose) { return pose.x < 16; } });
+    drive_controller->drive_time(127, 900, { angle: -80_deg, ramp_down: true, end_condition: [](lib15442c::Pose pose) { return pose.x < 16; } });
     pros::delay(100);
     intake_lift.retract();
 
     // pickup goal
     intake->set_state(IntakeState::REVERSE);
-    drive_controller->boomerang(pos(72 + 18 - 12, 144 - 30 +3), { backwards: true, threshold: 15, min_speed: 100 });
-    drive_controller->boomerang(pos(72 + 18, 144 - 30 +3), { backwards: true, threshold: 2.5, max_speed: 80, min_speed: 20 });
+    drive_controller->boomerang(pos(72 + 18 - 12, 144 - 30 +3), { backwards: true, threshold: 15, min_speed: 80 });
+    drive_controller->boomerang(pos(72 + 18, 144 - 30 +3), { backwards: true, threshold: 2.5, max_speed: 60, min_speed: 20 });
+    drive_controller->drive_time(-60, 100);
     arm->set_state(ArmState::LOAD);
     intake->set_state(IntakeState::HOOD);
     clamp.extend();
-    drive_controller->drive_time(-60, 100);
     pros::delay(150);
 
     // // pickup last rings
@@ -430,7 +430,7 @@ AUTO_ROUTE(auto_routes::skills)
     intake->set_state(IntakeState::DISABLED);
 
     // climb
-    arm->set_state(ArmState::NEUTRAL_STAKE);
+    arm->set_state(ArmState::CLIMB);
     drive_controller->boomerang(pos(144 - 48, 144 - 48), { threshold: 6, min_speed: 90 });
     drive_controller->drive_time(110, 550, { angle: -135_deg });
     drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
