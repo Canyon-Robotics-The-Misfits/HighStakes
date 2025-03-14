@@ -58,9 +58,9 @@ AUTO_ROUTE(auto_routes::negative_blue)
     arm->set_state(ArmState::ALLIANCE_STAKE);
     drive_controller->face_point(lib15442c::Vec(144 - 24, 28), 0_deg, { min_speed: 40, chained: true });
     drive_controller->boomerang(pos(144 - 24, 28), { threshold: 8, min_speed: 60 });
-    drive_controller->boomerang(pos(144 - 15, 15), { threshold: 2, min_speed: 40 });
+    drive_controller->boomerang(pos(144 - 15 +1, 15 +1), { threshold: 2, min_speed: 40 });
 
-    drive_controller->face_point(lib15442c::Vec(144 - 4, 0 +4), 5_deg, { threshold: 3_deg });
+    drive_controller->face_point(lib15442c::Vec(144 - 4, 0 +4), 0_deg, { threshold: 3_deg });
     pros::delay(50);
     intake->set_state(IntakeState::DISABLED);
     drive_controller->drive_time(50, 600);
