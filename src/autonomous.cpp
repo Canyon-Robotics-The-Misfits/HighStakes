@@ -4,7 +4,7 @@
 
 #define LOGGER "autonomous.cpp"
 
-// #define AUTO_OVERRIDE auto_routes::skills
+#define AUTO_OVERRIDE auto_routes::skills
 
 void autonomous() {
 	INFO_TEXT("Autonomous Start");
@@ -37,40 +37,44 @@ void autonomous() {
 			RUN_AUTO(AUTO_OVERRIDE);
 			#endif
 		} break;
-		case gui::Route::RIGHT_SAFE: {
-			RUN_AUTO(auto_routes::right_safe);
-		} break;
-		case gui::Route::LEFT_SAFE: {
-			RUN_AUTO(auto_routes::left_safe);
-		} break;
 		case gui::Route::POSITIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				RUN_AUTO(auto_routes::positive_red);
+				RUN_AUTO_PARAM(auto_routes::positive_red, false);
 			}
 			else
 			{
-				RUN_AUTO(auto_routes::positive_blue);
+				RUN_AUTO_PARAM(auto_routes::positive_blue, false);
 			}
 		} break;
 		case gui::Route::NEGATIVE: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				RUN_AUTO(auto_routes::negative_red);
+				RUN_AUTO_PARAM(auto_routes::negative_red, false);
 			}
 			else
 			{
-				RUN_AUTO(auto_routes::negative_blue);
+				RUN_AUTO_PARAM(auto_routes::negative_blue, false);
 			}
 		} break;
-		case gui::Route::SOLO: {
+		case gui::Route::POSITIVE_ELIMS: {
 			if (alliance == gui::AllianceColor::RED)
 			{
-				RUN_AUTO(auto_routes::solo_red);
+				RUN_AUTO_PARAM(auto_routes::positive_red, true);
 			}
 			else
 			{
-				RUN_AUTO(auto_routes::solo_blue);
+				RUN_AUTO_PARAM(auto_routes::positive_blue, true);
+			}
+		} break;
+		case gui::Route::NEGATIVE_ELIMS: {
+			if (alliance == gui::AllianceColor::RED)
+			{
+				RUN_AUTO_PARAM(auto_routes::negative_red, true);
+			}
+			else
+			{
+				RUN_AUTO_PARAM(auto_routes::negative_blue, true);
 			}
 		} break;
 		case gui::Route::SKILLS: {

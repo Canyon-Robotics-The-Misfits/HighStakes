@@ -27,6 +27,8 @@ namespace gui
 
         POSITIVE,
         NEGATIVE,
+        POSITIVE_ELIMS,
+        NEGATIVE_ELIMS,
 
         SOLO,
         SKILLS,
