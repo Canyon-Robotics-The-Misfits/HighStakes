@@ -2,7 +2,7 @@
 
 #include <initializer_list>
 #include <cstdint>
-#include "lib15442c/trajectory/trajectory_builder.hpp"
+#include "lib15442c/api.hpp"
 #include "mechanism/arm.h"
 #include "mechanism/intake.h"
 
@@ -30,7 +30,8 @@ namespace config
     
     constexpr lib15442c::TrajectoryConstraints TRAJECTORY_CONSTRAINTS = {
         // max_speed: 74.22,
-        max_speed: 80.0,
+        // max_speed: 80.0,
+        max_speed: 40,
         // starting_acceleration: 300,
         starting_acceleration: 300.0,
 
@@ -41,15 +42,14 @@ namespace config
         kS: 20,
         // how much voltage to apply per in/s while maintaining speed
         // kV: 1.4445,
-        kV: 1.35153787308,
+        kV: 1.3,
         // how much voltage to apply per in/s/s of acceleration
-        // kA: 0.356666666667,
-        // kA_down: 0.356666666667 * 1.0,
-
-        kA: 0.411787878788,
-        kA_down: 0.411787878788 * 1.0,
+        // kA: 0.3566666666,
+        // kA_down: 0.3566666666,
+        kA: 0.0,
+        kA_down: 0.0,
         // how much voltage to apply per in/s of error in velocity
-        kP: 2.0
+        kP: 0.0
     };
 
     constexpr lib15442c::MotorGroupParameters PARAMS_ARM = {
