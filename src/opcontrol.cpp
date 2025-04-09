@@ -125,8 +125,8 @@ void opcontrol()
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
-    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
+    // std::shared_ptr<mechanism::Intake> intake = config::make_intake();
+    // std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
@@ -171,7 +171,10 @@ void opcontrol()
     clamp.retract();
     intake_lift.retract();
     // controller.print(0, 0, "CLAMP OFF");
-    arm->set_state(mechanism::ArmState::DISABLED);
+    // arm->set_state(mechanism::ArmState::DISABLED);
+
+    lib15442c::MotorGroup lb = lib15442c::MotorGroup(config::PARAMS_LB, config::PORT_LB);
+    lib15442c::Motor intake = lib15442c::Motor(config::PARAMS_INTAKE);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
     // tracker_odom->initialize(0, 0, 0_deg);
@@ -190,23 +193,35 @@ void opcontrol()
     while (true)
     {
         control_drivetrain(controller, drivetrain);
-        control_intake(controller, intake, arm);
-        control_arm(controller, arm);
+        lb.move(curve_joystick(controller.get_analog(ANALOG_RIGHT_Y)));
         
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
+        if (controller.get_digital(DIGITAL_A))
         {
-            intake_lift.toggle();
+            intake.move(127);
+        }
+        else
+        {
+            intake.move(0);
         }
         
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-        {
-            doinker.toggle();
-        }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
-        {
-            clamp.toggle();
-        }
+        // control_intake(controller, intake, arm);
+        // control_arm(controller, arm);
+        
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
+        // {
+        //     intake_lift.toggle();
+        // }
+        
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+        // {
+        //     doinker.toggle();
+        // }
+
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+        // {
+        //     clamp.toggle();
+        // }
 
         // i++;
         // if (i % 5 == 0) {

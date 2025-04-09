@@ -43,22 +43,22 @@ std::shared_ptr<mechanism::Intake> config::make_intake()
 	return std::make_shared<mechanism::Intake>(motors, redirect);
 }
 
-std::shared_ptr<mechanism::Arm> config::make_arm(std::shared_ptr<mechanism::Intake> intake)
-{
-	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_ARM, config::PORT_ARM);
+// std::shared_ptr<mechanism::Arm> config::make_arm(std::shared_ptr<mechanism::Intake> intake)
+// {
+// 	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_ARM, config::PORT_ARM);
 
-	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
-	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
+// 	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
+// 	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
 
-	return std::make_shared<mechanism::Arm>(
-		motors,
-		rotation_sensor,
-		intake,
-		pid,
-		config::ARM_TARGET_CONFIG,
-		10.0
-	);
-}
+// 	return std::make_shared<mechanism::Arm>(
+// 		motors,
+// 		rotation_sensor,
+// 		intake,
+// 		pid,
+// 		config::ARM_TARGET_CONFIG,
+// 		10.0
+// 	);
+// }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()
 {

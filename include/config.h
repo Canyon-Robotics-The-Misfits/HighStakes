@@ -8,8 +8,8 @@
 
 namespace config
 {
-    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {13, 12, -15};
-    constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {18, 19, -20};
+    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {16, 15, -11};
+    constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {10, 13, -12};
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
     constexpr double DRIVE_GEAR_RATIO = 36.0 / 48.0;
@@ -52,29 +52,17 @@ namespace config
         kP: 0.0
     };
 
-    constexpr lib15442c::MotorGroupParameters PARAMS_ARM = {
+    constexpr lib15442c::MotorGroupParameters PARAMS_LB = {
         reversed : false,
-        brake_mode : lib15442c::MotorBrakeMode::COAST,
+        brake_mode : lib15442c::MotorBrakeMode::HOLD,
         ratio : lib15442c::MOTOR_GREEN,
     };
-    constexpr std::initializer_list<int> PORT_ARM = {1, -10};
-    constexpr lib15442c::PIDParameters PARAMS_ARM_PID = {
-        kP : 5.0,
-        kI : 0.0,
-        kD : 1.0
-    };
-    constexpr mechanism::ArmTargetConfig ARM_TARGET_CONFIG = {
-        load : -41.0,
-        alliance_stake : 12.0,
-        ladder_touch : 20.0,
-        neutral_stake : 43.0,
-        climb : 39.0
-    };
-    constexpr int PORT_ARM_ROTATION = 4;
+    constexpr std::initializer_list<int> PORT_LB = {-19, 17};
+    constexpr int PORT_LB_ROTATION = 14;
 
     
     constexpr lib15442c::MotorParameters PARAMS_INTAKE = {
-        port: 2,
+        port: 1,
         reversed : true,
         brake_mode : lib15442c::MotorBrakeMode::COAST,
         ratio : lib15442c::MOTOR_GREEN,

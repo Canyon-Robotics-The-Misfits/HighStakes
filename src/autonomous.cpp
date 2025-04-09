@@ -13,7 +13,7 @@ void autonomous() {
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
+    // std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
@@ -30,63 +30,63 @@ void autonomous() {
 
 	gui::AllianceColor alliance = gui.get_alliance();
 
-	switch (gui.get_selected_auto())
-	{
-		case gui::Route::NONE: {
-			#ifdef AUTO_OVERRIDE
-			RUN_AUTO(AUTO_OVERRIDE);
-			#endif
-		} break;
-		case gui::Route::POSITIVE: {
-			if (alliance == gui::AllianceColor::RED)
-			{
-				RUN_AUTO_PARAM(auto_routes::positive_red, false);
-			}
-			else
-			{
-				RUN_AUTO_PARAM(auto_routes::positive_blue, false);
-			}
-		} break;
-		case gui::Route::NEGATIVE: {
-			if (alliance == gui::AllianceColor::RED)
-			{
-				RUN_AUTO_PARAM(auto_routes::negative_red, false);
-			}
-			else
-			{
-				RUN_AUTO_PARAM(auto_routes::negative_blue, false);
-			}
-		} break;
-		case gui::Route::POSITIVE_ELIMS: {
-			if (alliance == gui::AllianceColor::RED)
-			{
-				RUN_AUTO_PARAM(auto_routes::positive_red, true);
-			}
-			else
-			{
-				RUN_AUTO_PARAM(auto_routes::positive_blue, true);
-			}
-		} break;
-		case gui::Route::NEGATIVE_ELIMS: {
-			if (alliance == gui::AllianceColor::RED)
-			{
-				RUN_AUTO_PARAM(auto_routes::negative_red, true);
-			}
-			else
-			{
-				RUN_AUTO_PARAM(auto_routes::negative_blue, true);
-			}
-		} break;
-		case gui::Route::SKILLS: {
-			RUN_AUTO(auto_routes::skills);
-		} break;
-		default: break;
-	}
+	// switch (gui.get_selected_auto())
+	// {
+	// 	case gui::Route::NONE: {
+	// 		#ifdef AUTO_OVERRIDE
+	// 		RUN_AUTO(AUTO_OVERRIDE);
+	// 		#endif
+	// 	} break;
+	// 	case gui::Route::POSITIVE: {
+	// 		if (alliance == gui::AllianceColor::RED)
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::positive_red, false);
+	// 		}
+	// 		else
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::positive_blue, false);
+	// 		}
+	// 	} break;
+	// 	case gui::Route::NEGATIVE: {
+	// 		if (alliance == gui::AllianceColor::RED)
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::negative_red, false);
+	// 		}
+	// 		else
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::negative_blue, false);
+	// 		}
+	// 	} break;
+	// 	case gui::Route::POSITIVE_ELIMS: {
+	// 		if (alliance == gui::AllianceColor::RED)
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::positive_red, true);
+	// 		}
+	// 		else
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::positive_blue, true);
+	// 		}
+	// 	} break;
+	// 	case gui::Route::NEGATIVE_ELIMS: {
+	// 		if (alliance == gui::AllianceColor::RED)
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::negative_red, true);
+	// 		}
+	// 		else
+	// 		{
+	// 			RUN_AUTO_PARAM(auto_routes::negative_blue, true);
+	// 		}
+	// 	} break;
+	// 	case gui::Route::SKILLS: {
+	// 		RUN_AUTO(auto_routes::skills);
+	// 	} break;
+	// 	default: break;
+	// }
 
 	double end_time = pros::millis() / 1000.0;
 
 	intake->stop_task();
-	arm->stop_task();
+	// arm->stop_task();
 	odometry->stop_task();
 	drivetrain->move(0, 0);
 	

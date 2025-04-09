@@ -40,26 +40,26 @@ namespace auto_routes
     using mechanism::IntakeState;
     using mechanism::ArmState;
 
-    AUTO_ROUTE(right_safe);
-    AUTO_ROUTE(left_safe);
+    // AUTO_ROUTE(right_safe);
+    // AUTO_ROUTE(left_safe);
 
-    AUTO_ROUTE_PARAM(positive_red, bool elims);
-    AUTO_ROUTE_PARAM(positive_blue, bool elims);
-    AUTO_ROUTE_PARAM(negative_red, bool elims);
-    AUTO_ROUTE_PARAM(negative_blue, bool elims);
+    // AUTO_ROUTE_PARAM(positive_red, bool elims);
+    // AUTO_ROUTE_PARAM(positive_blue, bool elims);
+    // AUTO_ROUTE_PARAM(negative_red, bool elims);
+    // AUTO_ROUTE_PARAM(negative_blue, bool elims);
 
-    AUTO_ROUTE(solo_red);
-    AUTO_ROUTE(solo_blue);
+    // AUTO_ROUTE(solo_red);
+    // AUTO_ROUTE(solo_blue);
 
-    AUTO_ROUTE(skills);
+    // AUTO_ROUTE(skills);
 
-    // route segments
-    AUTO_ROUTE(red_rush_segment);
-    AUTO_ROUTE(blue_rush_segment);
-    AUTO_ROUTE(skills_start_segment);
+    // // route segments
+    // AUTO_ROUTE(red_rush_segment);
+    // AUTO_ROUTE(blue_rush_segment);
+    // AUTO_ROUTE(skills_start_segment);
 
-    // tests
-    AUTO_ROUTE(skills_triple_test);
-    AUTO_ROUTE(corner_clear);
-    AUTO_ROUTE(mp_test);
+    // // tests
+    // AUTO_ROUTE(skills_triple_test);
+    // AUTO_ROUTE(corner_clear);
+    // AUTO_ROUTE(mp_test);
 };
