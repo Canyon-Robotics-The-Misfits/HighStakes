@@ -12,7 +12,7 @@ void autonomous() {
 	double start_time = pros::millis() / 1000.0;
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
-    std::shared_ptr<mechanism::Intake> intake = config::make_intake();
+    // std::shared_ptr<mechanism::Intake> intake = config::make_intake();
     // std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
@@ -85,7 +85,7 @@ void autonomous() {
 
 	double end_time = pros::millis() / 1000.0;
 
-	intake->stop_task();
+	// intake->stop_task();
 	// arm->stop_task();
 	odometry->stop_task();
 	drivetrain->move(0, 0);

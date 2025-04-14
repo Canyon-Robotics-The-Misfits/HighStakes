@@ -1,7 +1,8 @@
 #include "main.h"
 #include "config.h"
 
-#include "mechanism/intake.h"
+#include "mechanism/arm.hpp"
+#include "mechanism/ring_manager.hpp"
 
 #include "lib15442c/trajectory/trajectory_builder.hpp"
 #include "lib15442c/motion/ramsete.hpp"
@@ -48,73 +49,97 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
     drivetrain->move(linear_speed, rotational_speed);
 }
 
-// a intake
-// r2 redirect hold + intake forward, let go intake off + redirect off
-// l2 intake reverse
-bool intake_on = false;
-void control_intake(pros::Controller controller, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<mechanism::Arm> arm)
+// r1 score
+// r2 load
+// l2 intake
+
+// a reverse intake
+// x descore
+// y descore 2
+bool joystick_override_last = false;
+bool intake_last = false;
+bool load_last = false;
+bool score_last = false;
+void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::RingManager> rm, std::shared_ptr<mechanism::Arm> lb)
 {
-    if (controller.get_digital_new_press(DIGITAL_A))
+    bool joystick_override = abs(controller.get_analog(ANALOG_RIGHT_Y)) > 10;
+
+    if (joystick_override)
     {
-        intake_on = !intake_on;
+        rm->set_lb_override(true);
+        lb->move(controller.get_analog(ANALOG_RIGHT_Y));
+    }
+    else if (joystick_override != joystick_override_last)
+    {
+        lb->move(0);
     }
 
-    if (controller.get_digital(DIGITAL_L2))
-    {
-        intake->set_state(mechanism::IntakeState::REVERSE);
-    }
-    else if (controller.get_digital(DIGITAL_R2))
-    {
-        intake->set_state(mechanism::IntakeState::WALL_STAKE);
+    joystick_override_last = joystick_override;
 
-        if (arm->get_state() != mechanism::ArmState::LOAD)
+    if (!joystick_override)
+    {
+        bool intake = controller.get_digital(DIGITAL_L2);
+        bool intake_reverse = controller.get_digital(DIGITAL_A);
+        bool intake_override = controller.get_digital(DIGITAL_Y);
+
+        bool score = controller.get_digital(DIGITAL_R1);
+        bool load = controller.get_digital(DIGITAL_R2);
+
+        bool descore_1 = controller.get_digital(DIGITAL_X);
+        bool descore_2 = controller.get_digital(DIGITAL_UP);
+
+        if (intake || intake_reverse || score || load || descore_1 || descore_2)
         {
-            arm->set_state(mechanism::ArmState::LOAD);
+            rm->set_lb_override(false);
         }
-    }
-    else if (intake_on)
-    {
-        intake->set_state(mechanism::IntakeState::HOOD);
-    }
-    else 
-    {
-        intake->set_state(mechanism::IntakeState::DISABLED);
-    }
-}
 
-// x alliance stake
-// r1 arm
-bool arm_manual = false;
-void control_arm(pros::Controller controller, std::shared_ptr<mechanism::Arm> arm)
-{
-    if (std::abs(controller.get_analog(ANALOG_RIGHT_Y)) > 10)
-    {
-        arm->move_manual(controller.get_analog(ANALOG_RIGHT_Y));
-        arm_manual = true;
-    }
-    else if (controller.get_digital_new_press(DIGITAL_R1))
-    {
-        if (arm->is_loading())
+        if (intake)
         {
-            arm->set_state(mechanism::ArmState::NEUTRAL_STAKE);
+            rm->intake();
+        }
+        else if (intake_override)
+        {
+            rm->intake_override();
+        }
+        else if (intake_reverse)
+        {
+            rm->intake_reverse();
+        }
+        else if (score)
+        {
+            rm->score();
+        }
+        else if (load)
+        {
+            rm->load();
+        }
+        else if (descore_1)
+        {
+            rm->descore_1();
+        }
+        else if (descore_2)
+        {
+            rm->descore_2();
         }
         else
         {
-            arm->set_state(mechanism::ArmState::LOAD);
+            if (!(intake || intake_reverse || intake_override) && intake != intake_last)
+            {
+                rm->stop_intake();
+            }
+            if (!load && load != load_last)
+            {
+                rm->stop_load();
+            }
+            if (!score && score != score_last)
+            {
+                rm->idle();
+            }
         }
-    }
-    else if (controller.get_digital_new_press(DIGITAL_X))
-    {
-        arm->set_state(mechanism::ArmState::ALLIANCE_STAKE);
-    }
-    else if (controller.get_digital_new_press(DIGITAL_Y))
-    {
-        arm->set_state(mechanism::ArmState::CLIMB);
-    }
-    else if (arm_manual)
-    {
-        arm->move_manual(0);
-        arm_manual = false;
+        
+        intake_last = intake || intake_reverse || intake_override;
+        load_last = load;
+        score_last = score;
     }
 }
 
@@ -125,10 +150,11 @@ void opcontrol()
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
-    // std::shared_ptr<mechanism::Intake> intake = config::make_intake();
-    // std::shared_ptr<mechanism::Arm> arm = config::make_arm(intake);
+    std::shared_ptr<mechanism::Arm> lb = config::make_arm();
+    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb);
     
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
+    lib15442c::Pneumatic descore = lib15442c::Pneumatic(config::PORT_DESCORE);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
     lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
 
@@ -169,44 +195,32 @@ void opcontrol()
     // );
 
     clamp.retract();
+    descore.retract();
     intake_lift.retract();
-    // controller.print(0, 0, "CLAMP OFF");
-    // arm->set_state(mechanism::ArmState::DISABLED);
 
-    lib15442c::MotorGroup lb = lib15442c::MotorGroup(config::PARAMS_LB, config::PORT_LB);
-    lib15442c::Motor intake = lib15442c::Motor(config::PARAMS_INTAKE);
+    rm->set_color_sort(mechanism::SortColor::BLUE);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
     // tracker_odom->initialize(0, 0, 0_deg);
 
-    // int i = 0;
 
-    // x alliance stake
-    // y raise intake
+    // r1 score
+    // r2 load
+    // l1 toggle clamp
+    // l2 intake
+
+    // a reverse intake
     // b doinker
-    // a intake
+    // x descore 1
+    // y intake override
+    
+    // up arrow descore 2
+    // down arrow descore goal
 
-    // r1 arm
-    // r2 redirect hold + intake forward, let go intake off + redirect off
-    // l1 clamp
-    // l2 intake reverse
     while (true)
     {
         control_drivetrain(controller, drivetrain);
-        lb.move(curve_joystick(controller.get_analog(ANALOG_RIGHT_Y)));
-        
-        if (controller.get_digital(DIGITAL_A))
-        {
-            intake.move(127);
-        }
-        else
-        {
-            intake.move(0);
-        }
-        
-
-        // control_intake(controller, intake, arm);
-        // control_arm(controller, arm);
+        control_ring_mech(controller, rm, lb);
         
         // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         // {
@@ -218,17 +232,20 @@ void opcontrol()
         //     doinker.toggle();
         // }
 
-        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
-        // {
-        //     clamp.toggle();
-        // }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+        {
+            clamp.toggle();
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
+        {
+            descore.toggle();
+        }
 
         // i++;
         // if (i % 5 == 0) {
         //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg() << std::endl;
         // }
-    
-        // std::cout << i << ", " << distance1.get() << ", " << distance2.get() << std::endl;
 
         pros::delay(20);
     }

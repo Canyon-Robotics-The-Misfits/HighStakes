@@ -3,12 +3,12 @@
 #include <initializer_list>
 #include <cstdint>
 #include "lib15442c/api.hpp"
-#include "mechanism/arm.h"
-#include "mechanism/intake.h"
+#include "mechanism/arm.hpp"
+#include "mechanism/ring_manager.hpp"
 
 namespace config
 {
-    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {16, 15, -11};
+    constexpr std::initializer_list<int> PORT_LEFT_DRIVE = {20, 15, -11};
     constexpr std::initializer_list<int> PORT_RIGHT_DRIVE = {10, 13, -12};
 
     constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
@@ -57,28 +57,31 @@ namespace config
         brake_mode : lib15442c::MotorBrakeMode::HOLD,
         ratio : lib15442c::MOTOR_GREEN,
     };
+    constexpr lib15442c::PIDParameters PARAMS_LB_PID = {
+        kP: 5,
+        kD: 12,
+    };
     constexpr std::initializer_list<int> PORT_LB = {-19, 17};
-    constexpr int PORT_LB_ROTATION = 14;
+    constexpr int PORT_LB_ROTATION = 18;
 
     
     constexpr lib15442c::MotorParameters PARAMS_INTAKE = {
-        port: 1,
+        port: 3,
         reversed : true,
         brake_mode : lib15442c::MotorBrakeMode::COAST,
         ratio : lib15442c::MOTOR_GREEN,
     };
-    constexpr int PORT_OPTICAL = 12;
-    constexpr char PORT_REDIRECT = 'A';
+    constexpr int PORT_OPTICAL = 5;
 
-
-    constexpr char PORT_CLAMP = 'B';
-    constexpr char PORT_DOINKER = 'C';
+    constexpr char PORT_CLAMP = 'C';
+    constexpr char PORT_DESCORE = 'H';
+    constexpr char PORT_DOINKER = 'B';
     constexpr char PORT_INTAKE_LIFT = 'H';
-    constexpr char PORT_ALLIANCE_STAKE_ADJUST = 'B';
+    constexpr char PORT_LB_PISTONS = 'B';
 
     // constexpr int PORT_IMU = 7;
     // constexpr double IMU_SCALE = 1.00538559931;
-    constexpr int PORT_IMU_2 = 6;
+    constexpr int PORT_IMU_2 = 9;
     constexpr double IMU_SCALE_2 = 1.01077119862;
 
     constexpr int PORT_PARALLEL_TRACKER = 17;
@@ -88,6 +91,10 @@ namespace config
     // constexpr double PERPENDICULAR_TRACKER_OFFSET_MOGO = -61.11289;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;
+
+    constexpr int PORT_DISTANCE_LEFT = 2;
+    constexpr int PORT_DISTANCE_RIGHT = 1;
+    constexpr int PORT_DISTANCE_FRONT = 4;
 
     constexpr double DRIVE_SLEW_RATE = (127.0 / 0.35) / (20.0/1000.0);
     // constexpr double DRIVE_KP = 11.0;
@@ -104,8 +111,8 @@ namespace config
     constexpr double TURN_KD = 23.0;
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
-    std::shared_ptr<mechanism::Intake> make_intake();
-    std::shared_ptr<mechanism::Arm> make_arm(std::shared_ptr<mechanism::Intake> intake);
+    std::shared_ptr<mechanism::Arm> make_arm();
+    std::shared_ptr<mechanism::RingManager> make_ring_manager(std::shared_ptr<mechanism::Arm> lb);
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
     std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);

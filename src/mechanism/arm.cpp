@@ -1,24 +1,22 @@
-#include "arm.h"
+#include "arm.hpp"
 #include "lib15442c/logger.hpp"
 #include "pros/misc.h"
 
 #define LOGGER "arm.cpp"
 
-mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> arm_rotation_sensor, std::shared_ptr<mechanism::Intake> intake, std::shared_ptr<lib15442c::PID> arm_pid, ArmTargetConfig target_config, double kG)
+mechanism::Arm::Arm(std::shared_ptr<lib15442c::IMotor> motors, std::shared_ptr<pros::Rotation> rotation_sensor, std::shared_ptr<lib15442c::PID> pid, double kG)
     : motors(motors),
-      arm_rotation_sensor(arm_rotation_sensor),
-      intake(intake),
-      arm_pid(arm_pid),
-      target_config(target_config),
+      rotation_sensor(rotation_sensor),
+      pid(pid),
       kG(kG)
 {
     if (!motors->is_installed())
     {
         ERROR_TEXT("Arm motor(s) unplugged!");
     }
-    if (!arm_rotation_sensor->is_installed())
+    if (!rotation_sensor->is_installed())
     {
-        ERROR("Arm rotation sensor is not detected on port %d!", arm_rotation_sensor->get_port());
+        ERROR("Arm rotation sensor is not detected on port %d!", rotation_sensor->get_port());
     }
 
     start_task();
@@ -48,67 +46,27 @@ void mechanism::Arm::start_task()
                 break;
             }
             mutex.unlock();
-
-            double current_angle = ((arm_rotation_sensor->get_position() / 100.0) - 360) / 5.0; // divide by 100 to convert centidegrees to degrees
-
-            double target_angle = INFINITY;
-                
-            switch (state)
-            {
-            case ArmState::LOAD:
-            {
-                target_angle = target_config.load;
-            }
-            break;
-            case ArmState::ALLIANCE_STAKE:
-            {
-                target_angle = target_config.alliance_stake;
-            }
-            break;
-            case ArmState::NEUTRAL_STAKE:
-            {
-                target_angle = target_config.neutral_stake;
-            }
-            break;
-            case ArmState::LADDER_TOUCH:
-            {
-                target_angle = target_config.ladder_touch;
-            }
-            break;
-            case ArmState::CLIMB:
-            {
-                target_angle = target_config.climb;
-            }
-            break;
-            default: break;
-            }
-
             
-            if ((state == ArmState::DISABLED || target_angle < target_config.load + 5) && is_loading() && intake->get_state() == IntakeState::WALL_STAKE)
+            lib15442c::Angle current_angle = get_current_angle();
+
+            double pwm;
+            if (!target_angle.is_none())
             {
-                motors->move(-15);
+                double error = current_angle.error_from(target_angle).deg();
+    
+                pwm = pid->calculate_error(error);
+
             }
-            else if (target_angle != INFINITY)
+            else if (voltage_override != 0)
             {
-                double output = arm_pid->calculate(current_angle, target_angle);
-                // std::cout << current_angle << ", " << target_angle << ", " << output << std::endl;
-
-                // if (arm_limit->arm_limit->get_value() == true)
-                // {
-                //     output = std::max(output, 0.0);
-                // }
-
-                double real_theta = -current_angle / 5.0 * M_PI / 180.0 + M_PI / 2.0;
-
-                if (output > -40)
-                {
-                    motors->move(output + kG * cos(real_theta));
-                }
-                else
-                {
-                    motors->move(-40);
-                }
+                pwm = voltage_override;
             }
+            else
+            {
+                pwm = 0;
+            }
+            
+            motors->move(pwm - kG * sin(current_angle.rad_unwrapped()));
 
             pros::delay(20);
         } });
@@ -121,48 +79,27 @@ void mechanism::Arm::stop_task()
     mutex.unlock();
 }
 
-void mechanism::Arm::set_state(mechanism::ArmState state)
+void mechanism::Arm::set_target(lib15442c::Angle target)
 {
     mutex.lock();
-    if (state == ArmState::DISABLED)
-    {
-        motors->move(0);
-    }
-
-    this->state = state;
+    target_angle = target;
     mutex.unlock();
 }
 
-mechanism::ArmState mechanism::Arm::get_state()
+bool mechanism::Arm::is_settled(double threshold_deg)
 {
-    mutex.lock();
-    auto temp = state;
-    mutex.unlock();
-
-    return temp;
+    return abs((get_current_angle() - target_angle).deg()) < threshold_deg;
 }
 
-bool mechanism::Arm::is_loading()
-{
-    double current = ((arm_rotation_sensor->get_position() / 100.0) - 360) / 5.0;
-
-    if (current > 180.0)
-    {
-        current = 0.0;
-    }
-
-    return current < target_config.load + 5.0;
-}
-
-void mechanism::Arm::move_manual(double voltage)
+void mechanism::Arm::move(double voltage)
 {
     mutex.lock();
-    state = ArmState::DISABLED;
-    
-    double current_angle = ((arm_rotation_sensor->get_position() / 100.0) - 360) / 5.0;
-
-    double real_theta = -current_angle * M_PI / 180.0;
-
-    motors->move(voltage + kG * cos(real_theta));
+    target_angle = lib15442c::Angle::none();
+    voltage_override = voltage;
     mutex.unlock();
+}
+
+lib15442c::Angle mechanism::Arm::get_current_angle()
+{
+    return lib15442c::Angle::from_deg((-rotation_sensor->get_position() / 100.0) / 5.0);
 }

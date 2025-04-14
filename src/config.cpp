@@ -33,32 +33,29 @@ std::shared_ptr<lib15442c::TankDrive> config::make_drivetrain()
 	return drivetrain;
 }
 
-std::shared_ptr<mechanism::Intake> config::make_intake()
+std::shared_ptr<mechanism::Arm> config::make_arm()
 {
-	auto motors = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
+	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_LB, config::PORT_LB);
 
-    auto redirect = std::make_shared<lib15442c::Pneumatic>(config::PORT_REDIRECT, true, false);
-    // auto color_sensor = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
+	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_LB_ROTATION);
+	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_LB_PID);
 
-	return std::make_shared<mechanism::Intake>(motors, redirect);
+	return std::make_shared<mechanism::Arm>(
+		motors,
+		rotation_sensor,
+		pid,
+		10.0
+	);
 }
 
-// std::shared_ptr<mechanism::Arm> config::make_arm(std::shared_ptr<mechanism::Intake> intake)
-// {
-// 	auto motors = std::make_shared<lib15442c::MotorGroup>(config::PARAMS_ARM, config::PORT_ARM);
+std::shared_ptr<mechanism::RingManager> config::make_ring_manager(std::shared_ptr<mechanism::Arm> lb)
+{
+	auto intake_motors = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
+	auto optical = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
+	auto lb_pistions = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTONS);
 
-// 	auto rotation_sensor = std::make_shared<pros::Rotation>(config::PORT_ARM_ROTATION);
-// 	auto pid = std::make_shared<lib15442c::PID>(config::PARAMS_ARM_PID);
-
-// 	return std::make_shared<mechanism::Arm>(
-// 		motors,
-// 		rotation_sensor,
-// 		intake,
-// 		pid,
-// 		config::ARM_TARGET_CONFIG,
-// 		10.0
-// 	);
-// }
+	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, lb_pistions);
+}
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()
 {

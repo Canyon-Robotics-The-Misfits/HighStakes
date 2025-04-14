@@ -1,15 +1,15 @@
 #pragma once
 
 #include "main.h"
-#include "mechanism/intake.h"
-#include "mechanism/arm.h"
+#include "mechanism/ring_manager.hpp"
+#include "mechanism/arm.hpp"
 #include "gui/gui.h"
 
 #define AUTO_ROUTE(name) void name(                                 \
     std::shared_ptr<lib15442c::DriveController> drive_controller,   \
     std::shared_ptr<lib15442c::IDrivetrain> drivetrain,             \
     std::shared_ptr<lib15442c::TrackerOdom> odometry,               \
-    std::shared_ptr<mechanism::Intake> intake,                      \
+    std::shared_ptr<mechanism::RingManager> intake,                 \
     std::shared_ptr<mechanism::Arm> arm,                            \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic doinker,                                   \
@@ -18,11 +18,11 @@
 )
 
 
-#define AUTO_ROUTE_PARAM(name, param) void name(                   \
+#define AUTO_ROUTE_PARAM(name, param) void name(                    \
     std::shared_ptr<lib15442c::DriveController> drive_controller,   \
     std::shared_ptr<lib15442c::IDrivetrain> drivetrain,             \
     std::shared_ptr<lib15442c::TrackerOdom> odometry,               \
-    std::shared_ptr<mechanism::Intake> intake,                      \
+    std::shared_ptr<mechanism::RingManager> intake,                 \
     std::shared_ptr<mechanism::Arm> arm,                            \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic doinker,                                   \
@@ -37,9 +37,6 @@
 
 namespace auto_routes
 {
-    using mechanism::IntakeState;
-    using mechanism::ArmState;
-
     // AUTO_ROUTE(right_safe);
     // AUTO_ROUTE(left_safe);
 
