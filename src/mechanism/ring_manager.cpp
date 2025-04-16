@@ -70,6 +70,7 @@ void mechanism::RingManager::update_devices()
     static lib15442c::Angle lb_idle = lib15442c::Angle::from_deg(LB_IDLE_ANGLE_DEG);
     static lib15442c::Angle lb_load = lib15442c::Angle::from_deg(LB_LOAD_ANGLE_DEG);
     static lib15442c::Angle lb_score = lib15442c::Angle::from_deg(LB_SCORE_ANGLE_DEG);
+    static lib15442c::Angle lb_score_skills = lib15442c::Angle::from_deg(LB_SCORE_SKILLS_ANGLE_DEG);
     
     static lib15442c::Angle lb_descore_1 = lib15442c::Angle::from_deg(LB_DESCORE_1_ANGLE_DEG);
     static lib15442c::Angle lb_descore_2 = lib15442c::Angle::from_deg(LB_DESCORE_2_ANGLE_DEG);
@@ -139,6 +140,14 @@ void mechanism::RingManager::update_devices()
         if (!lb_override)
         {
             lb->set_target(lb_score);
+        }
+        intake_motors->move(0);
+    } break;
+
+    case RingManagerState::SCORE_SKILLS: {
+        if (!lb_override)
+        {
+            lb->set_target(lb_score_skills);
         }
         intake_motors->move(0);
     } break;
@@ -251,6 +260,11 @@ void mechanism::RingManager::descore_2()
 void mechanism::RingManager::score()
 {
     set_state(RingManagerState::SCORE);
+}
+
+void mechanism::RingManager::score_skills()
+{
+    set_state(RingManagerState::SCORE_SKILLS);
 }
 
 void mechanism::RingManager::idle()

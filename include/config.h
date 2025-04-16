@@ -79,16 +79,13 @@ namespace config
     constexpr char PORT_INTAKE_LIFT = 'H';
     constexpr char PORT_LB_PISTONS = 'B';
 
-    // constexpr int PORT_IMU = 7;
-    // constexpr double IMU_SCALE = 1.00538559931;
-    constexpr int PORT_IMU_2 = 9;
-    constexpr double IMU_SCALE_2 = 1.01077119862;
+    constexpr int PORT_IMU = 9;
+    constexpr double IMU_SCALE = 1.00524963699;
 
-    constexpr int PORT_PARALLEL_TRACKER = 17;
+    constexpr int PORT_PARALLEL_TRACKER = -14;
     constexpr int PORT_PERPENDICULAR_TRACKER = 16;
-    constexpr double PARALLEL_TRACKER_OFFSET = -106.93905;
-    constexpr double PERPENDICULAR_TRACKER_OFFSET = -125.20224;
-    // constexpr double PERPENDICULAR_TRACKER_OFFSET_MOGO = -61.11289;
+    constexpr double PARALLEL_TRACKER_OFFSET = -104;
+    constexpr double PERPENDICULAR_TRACKER_OFFSET = -3.60498;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;
 
@@ -97,18 +94,15 @@ namespace config
     constexpr int PORT_DISTANCE_FRONT = 4;
 
     constexpr double DRIVE_SLEW_RATE = (127.0 / 0.35) / (20.0/1000.0);
-    // constexpr double DRIVE_KP = 11.0;
-    constexpr double DRIVE_KP = 6.0;
-    // constexpr double DRIVE_KI = 4.0;
-    // constexpr double DRIVE_KI_RANGE = 1.0;
-    // constexpr double DRIVE_KD = 40.0;
-    constexpr double DRIVE_KI = 0.0;
+    constexpr double DRIVE_KP = 8.0;
+    constexpr double DRIVE_KI = 3.0;
     constexpr double DRIVE_KI_RANGE = 1.0;
-    constexpr double DRIVE_KD = 17.0;
-    constexpr double TURN_KP = 5.5;
-    constexpr double TURN_KI = 3.0;
-    constexpr double TURN_KI_RANGE = 5.0;
-    constexpr double TURN_KD = 23.0;
+    constexpr double DRIVE_KD = 36.5;
+    constexpr double TURN_KP = 4.0;
+    // constexpr double TURN_KI = 1.5;
+    constexpr double TURN_KI = 0.5;
+    constexpr double TURN_KI_RANGE = 3.0;
+    constexpr double TURN_KD = 21.5;
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::Arm> make_arm();

@@ -15,6 +15,7 @@ namespace mechanism
     constexpr double LB_IDLE_ANGLE_DEG = -62;
     constexpr double LB_LOAD_ANGLE_DEG = -54;
     constexpr double LB_SCORE_ANGLE_DEG = 40;
+    constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 34;
     constexpr double LB_DESCORE_1_ANGLE_DEG = 40;
     constexpr double LB_DESCORE_2_ANGLE_DEG = 40;
 
@@ -27,6 +28,7 @@ namespace mechanism
         LOAD,
         HOLD,
         SCORE,
+        SCORE_SKILLS,
         DESCORE_1,
         DESCORE_2,
         CLIMBING
@@ -88,6 +90,7 @@ namespace mechanism
         void descore_2();
 
         void score();
+        void score_skills();
         void idle();
 
         void set_lb_override(bool lb_overrided);

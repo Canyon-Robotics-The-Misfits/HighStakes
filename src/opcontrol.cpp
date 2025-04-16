@@ -37,7 +37,7 @@ void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::
     double linear_raw = controller.get_analog(ANALOG_LEFT_Y);
     double rotational_raw = controller.get_analog(ANALOG_LEFT_X);
 
-    if (sqrt(linear_raw * linear_raw + rotational_raw * rotational_raw) < 12)
+    if (linear_raw * linear_raw + rotational_raw * rotational_raw < 12 * 12)
     {
         linear_raw = 0;
         rotational_raw = 0;
@@ -201,7 +201,7 @@ void opcontrol()
     rm->set_color_sort(mechanism::SortColor::BLUE);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
-    // tracker_odom->initialize(0, 0, 0_deg);
+    tracker_odom->initialize(0, 0, 0_deg);
 
 
     // r1 score
@@ -217,6 +217,7 @@ void opcontrol()
     // up arrow descore 2
     // down arrow descore goal
 
+    // int i = 0;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
@@ -243,8 +244,8 @@ void opcontrol()
         }
 
         // i++;
-        // if (i % 5 == 0) {
-        //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg() << std::endl;
+        // if (i % 2 == 0) {
+        //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg_unwrapped() << std::endl;
         // }
 
         pros::delay(20);
