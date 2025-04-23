@@ -48,13 +48,12 @@ std::shared_ptr<mechanism::Arm> config::make_arm()
 	);
 }
 
-std::shared_ptr<mechanism::RingManager> config::make_ring_manager(std::shared_ptr<mechanism::Arm> lb)
+std::shared_ptr<mechanism::RingManager> config::make_ring_manager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift)
 {
 	auto intake_motors = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
 	auto optical = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
-	auto lb_pistions = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTONS);
 
-	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, lb_pistions);
+	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, lb_lift);
 }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()
@@ -89,10 +88,10 @@ std::shared_ptr<lib15442c::DriveController> config::make_drive_controller(std::s
 		kP: config::DRIVE_KP,
 		kI: config::DRIVE_KI,
 		kD: config::DRIVE_KD,
-		// slew_rate: config::DRIVE_SLEW_RATE
 		integral_active_zone: config::DRIVE_KI_RANGE,
 		integral_max: config::DRIVE_KI * 25,
 		reset_integral_on_cross: true,
+		slew_rate: config::DRIVE_SLEW_RATE,
 	});
 
 	auto turn_pid = std::make_shared<lib15442c::PID>(lib15442c::PIDParameters {

@@ -35,6 +35,7 @@ double curve_joystick(double in)
 void control_drivetrain(pros::Controller controller, std::shared_ptr<lib15442c::TankDrive> drivetrain)
 {
     double linear_raw = controller.get_analog(ANALOG_LEFT_Y);
+    // double linear_raw = 0;
     double rotational_raw = controller.get_analog(ANALOG_LEFT_X);
 
     if (linear_raw * linear_raw + rotational_raw * rotational_raw < 12 * 12)
@@ -149,14 +150,17 @@ void opcontrol()
 
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-    std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
-    std::shared_ptr<mechanism::Arm> lb = config::make_arm();
-    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb);
-    
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic descore = lib15442c::Pneumatic(config::PORT_DESCORE);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+	std::shared_ptr<lib15442c::Pneumatic> lb_lift_push = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PUSH, false, false);
+	std::shared_ptr<lib15442c::Pneumatic> lb_lift_pull = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PULL, false, false);
+    std::shared_ptr<lib15442c::PneumaticGroup> lb_lift = std::make_shared<lib15442c::PneumaticGroup>(std::vector({ lb_lift_push, lb_lift_pull }));
     lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
+
+    std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
+    std::shared_ptr<mechanism::Arm> lb = config::make_arm();
+    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb, lb_lift);
 
     std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
     // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
@@ -242,9 +246,14 @@ void opcontrol()
         {
             descore.toggle();
         }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
+        {
+            lb_lift_push->toggle();
+        }
 
         // i++;
-        // if (i % 2 == 0) {
+        // if (i % 5 == 0) {
         //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg_unwrapped() << std::endl;
         // }
 

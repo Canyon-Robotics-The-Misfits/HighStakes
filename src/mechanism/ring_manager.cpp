@@ -3,8 +3,8 @@
 
 #define LOGGER "ring_manager.cpp"
 
-mechanism::RingManager::RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_pistons)
-    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_pistons(lb_pistons)
+mechanism::RingManager::RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift)
+    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_lift(lb_lift)
 {
     if (!intake_motors->is_installed())
     {

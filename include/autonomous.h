@@ -13,6 +13,7 @@
     std::shared_ptr<mechanism::Arm> lb,                             \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic doinker,                                   \
+    std::shared_ptr<lib15442c::Pneumatic> lb_lift_push,             \
     lib15442c::Pneumatic intake_lift,                               \
     lib15442c::Pneumatic descore,                                   \
     gui::AllianceColor alliance                                     \
@@ -27,14 +28,15 @@
     std::shared_ptr<mechanism::Arm> lb,                             \
     lib15442c::Pneumatic clamp,                                     \
     lib15442c::Pneumatic doinker,                                   \
+    std::shared_ptr<lib15442c::Pneumatic> lb_lift_push,             \
     lib15442c::Pneumatic intake_lift,                               \
     lib15442c::Pneumatic descore,                                   \
     gui::AllianceColor alliance,                                    \
     param                                                           \
 )
 
-#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, rm, lb, clamp, doinker, intake_lift, descore, alliance)
-#define RUN_AUTO_PARAM(auto_route, param) auto_route(drive_controller, drivetrain, odometry, rm, lb, clamp, doinker, intake_lift, descore, alliance, param)
+#define RUN_AUTO(auto_route) auto_route(drive_controller, drivetrain, odometry, rm, lb, clamp, doinker, lb_lift_push, intake_lift, descore, alliance)
+#define RUN_AUTO_PARAM(auto_route, param) auto_route(drive_controller, drivetrain, odometry, rm, lb, clamp, doinker, lb_lift_push, intake_lift, descore, alliance, param)
 #define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(20); }
 
 namespace auto_routes

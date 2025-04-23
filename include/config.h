@@ -77,27 +77,29 @@ namespace config
     constexpr char PORT_DESCORE = 'H';
     constexpr char PORT_DOINKER = 'B';
     constexpr char PORT_INTAKE_LIFT = 'H';
-    constexpr char PORT_LB_PISTONS = 'B';
+    constexpr char PORT_LB_PISTON_PUSH = 'G';
+    constexpr char PORT_LB_PISTON_PULL = 'F';
 
     constexpr int PORT_IMU = 9;
     constexpr double IMU_SCALE = 1.00524963699;
 
     constexpr int PORT_PARALLEL_TRACKER = -14;
     constexpr int PORT_PERPENDICULAR_TRACKER = 16;
-    constexpr double PARALLEL_TRACKER_OFFSET = -104;
+    constexpr double PARALLEL_TRACKER_OFFSET = -104 + 3.08231636368;
     constexpr double PERPENDICULAR_TRACKER_OFFSET = -3.60498;
     constexpr double PARALLEL_TRACKER_DIAMETER = 2.75;
     constexpr double PERPENDICULAR_TRACKER_DIAMETER = 2.75;
 
     constexpr int PORT_DISTANCE_LEFT = 2;
-    constexpr int PORT_DISTANCE_RIGHT = 1;
+    constexpr int PORT_DISTANCE_RIGHT = 6;
     constexpr int PORT_DISTANCE_FRONT = 4;
 
-    constexpr double DRIVE_SLEW_RATE = (127.0 / 0.35) / (20.0/1000.0);
-    constexpr double DRIVE_KP = 8.0;
-    constexpr double DRIVE_KI = 3.0;
+    constexpr double DRIVE_SLEW_RATE = (127.0 / 0.25) * (20.0/1000.0);
+    constexpr double DRIVE_KP = 6.0;
+    constexpr double DRIVE_KI = 0.0;
     constexpr double DRIVE_KI_RANGE = 1.0;
-    constexpr double DRIVE_KD = 36.5;
+    // constexpr double DRIVE_KD = 36.5;
+    constexpr double DRIVE_KD = 26;
     constexpr double TURN_KP = 4.0;
     // constexpr double TURN_KI = 1.5;
     constexpr double TURN_KI = 0.5;
@@ -106,7 +108,7 @@ namespace config
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::Arm> make_arm();
-    std::shared_ptr<mechanism::RingManager> make_ring_manager(std::shared_ptr<mechanism::Arm> lb);
+    std::shared_ptr<mechanism::RingManager> make_ring_manager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift);
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
     std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);

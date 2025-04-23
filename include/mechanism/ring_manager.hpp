@@ -12,11 +12,11 @@
 
 namespace mechanism
 {
-    constexpr double LB_IDLE_ANGLE_DEG = -62;
-    constexpr double LB_LOAD_ANGLE_DEG = -54;
+    constexpr double LB_IDLE_ANGLE_DEG = -63;
+    constexpr double LB_LOAD_ANGLE_DEG = -52;
     constexpr double LB_SCORE_ANGLE_DEG = 40;
-    constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 34;
-    constexpr double LB_DESCORE_1_ANGLE_DEG = 40;
+    constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 20;
+    constexpr double LB_DESCORE_1_ANGLE_DEG = 25;
     constexpr double LB_DESCORE_2_ANGLE_DEG = 40;
 
     enum class RingManagerState
@@ -49,7 +49,7 @@ namespace mechanism
 
         std::shared_ptr<pros::Optical> optical_sensor;
 
-        std::shared_ptr<lib15442c::IPneumatic> lb_pistons;
+        std::shared_ptr<lib15442c::IPneumatic> lb_lift;
 
         RingManagerState current_state = RingManagerState::IDLE;
         bool lb_override = false;
@@ -66,7 +66,7 @@ namespace mechanism
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_pistons);
+        RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift);
 
         /**
          * @brief Start the task
