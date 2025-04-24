@@ -45,7 +45,7 @@ void mechanism::distance_reset(std::shared_ptr<lib15442c::TrackerOdom> odometry,
 
     if (!(left_passed || right_passed))
     {
-        WARN_TEXT("No horrizontal sensor in range for reset!");
+        WARN_TEXT("No horrizontal sensor availible for reset!");
     }
     
     if (!front_passed)
