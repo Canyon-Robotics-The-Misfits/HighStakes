@@ -155,12 +155,11 @@ void opcontrol()
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
 	std::shared_ptr<lib15442c::Pneumatic> lb_lift_push = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PUSH, false, false);
 	std::shared_ptr<lib15442c::Pneumatic> lb_lift_pull = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PULL, false, false);
-    std::shared_ptr<lib15442c::PneumaticGroup> lb_lift = std::make_shared<lib15442c::PneumaticGroup>(std::vector({ lb_lift_push, lb_lift_pull }));
     lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::Arm> lb = config::make_arm();
-    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb, lb_lift);
+    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb, lb_lift_push, lb_lift_pull);
 
     std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
     // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(

@@ -108,7 +108,7 @@ namespace config
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::Arm> make_arm();
-    std::shared_ptr<mechanism::RingManager> make_ring_manager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift);
+    std::shared_ptr<mechanism::RingManager> make_ring_manager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull);
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
     std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);

@@ -3,8 +3,8 @@
 
 #define LOGGER "ring_manager.cpp"
 
-mechanism::RingManager::RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift)
-    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_lift(lb_lift)
+mechanism::RingManager::RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull)
+    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_lift_push(lb_lift_push), lb_lift_pull(lb_lift_pull)
 {
     if (!intake_motors->is_installed())
     {
@@ -74,6 +74,8 @@ void mechanism::RingManager::update_devices()
     
     static lib15442c::Angle lb_descore_1 = lib15442c::Angle::from_deg(LB_DESCORE_1_ANGLE_DEG);
     static lib15442c::Angle lb_descore_2 = lib15442c::Angle::from_deg(LB_DESCORE_2_ANGLE_DEG);
+    
+    static lib15442c::Angle lb_climb_prep = lib15442c::Angle::from_deg(LB_CLIMB_PREP_ANGLE_DEG);
 
     mutex.lock();
 
@@ -168,8 +170,15 @@ void mechanism::RingManager::update_devices()
         intake_motors->move(0);
     } break;
 
+    case RingManagerState::PREP_CLIMB: {
+        lb_lift_pull->retract();
+        lb_lift_push->extend();
+        lb->set_target(lb_climb_prep);
+        intake_motors->move(0);
+    }
+
     case RingManagerState::CLIMBING: {
-        // TODO
+        // nothing, managed in climb_macro()
     } break;
 
     }
@@ -213,6 +222,14 @@ void mechanism::RingManager::run_color_sort()
     {
         intake_motors->move(127);
     }
+}
+
+mechanism::RingManagerState mechanism::RingManager::get_state()
+{
+    mutex.lock();
+    auto temp = current_state;
+    mutex.unlock();
+    return temp;
 }
 
 void mechanism::RingManager::set_state(RingManagerState state)
@@ -270,6 +287,19 @@ void mechanism::RingManager::score_skills()
 void mechanism::RingManager::idle()
 {
     set_state(RingManagerState::IDLE);
+}
+
+void mechanism::RingManager::prep_climb()
+{
+    set_state(RingManagerState::PREP_CLIMB);
+}
+
+void mechanism::RingManager::climb()
+{
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        set_state(RingManagerState::CLIMBING);
+    }
 }
 
 void mechanism::RingManager::set_lb_override(bool lb_override)

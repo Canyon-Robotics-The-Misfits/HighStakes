@@ -18,6 +18,7 @@ namespace mechanism
     constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 20;
     constexpr double LB_DESCORE_1_ANGLE_DEG = 25;
     constexpr double LB_DESCORE_2_ANGLE_DEG = 40;
+    constexpr double LB_CLIMB_PREP_ANGLE_DEG = -30;
 
     enum class RingManagerState
     {
@@ -31,6 +32,7 @@ namespace mechanism
         SCORE_SKILLS,
         DESCORE_1,
         DESCORE_2,
+        PREP_CLIMB,
         CLIMBING
     };
 
@@ -49,7 +51,8 @@ namespace mechanism
 
         std::shared_ptr<pros::Optical> optical_sensor;
 
-        std::shared_ptr<lib15442c::IPneumatic> lb_lift;
+        std::shared_ptr<lib15442c::IPneumatic> lb_lift_push;
+        std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull;
 
         RingManagerState current_state = RingManagerState::IDLE;
         bool lb_override = false;
@@ -60,13 +63,14 @@ namespace mechanism
         void update_devices();
         void run_color_sort();
         void set_state(RingManagerState state);
+        mechanism::RingManagerState get_state();
         
         pros::Mutex mutex;
         bool task_on_flag = false;
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift);
+        RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull);
 
         /**
          * @brief Start the task
@@ -92,6 +96,9 @@ namespace mechanism
         void score();
         void score_skills();
         void idle();
+
+        void prep_climb();
+        void climb();
 
         void set_lb_override(bool lb_overrided);
 
