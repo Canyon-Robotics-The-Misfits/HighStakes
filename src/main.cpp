@@ -52,6 +52,8 @@ void initialize() {
 }
 
 void disabled() {
+	log_end_time();
+	
 	INFO_TEXT("Disabled");
 }
 

@@ -39,6 +39,8 @@
 #define RUN_AUTO_PARAM(auto_route, param) auto_route(drive_controller, drivetrain, odometry, rm, lb, clamp, doinker, lb_lift_push, intake_lift, descore, alliance, param)
 #define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(20); }
 
+void log_end_time();
+
 namespace auto_routes
 {
     AUTO_ROUTE_PARAM(positive_red, bool elims);
