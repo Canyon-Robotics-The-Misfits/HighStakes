@@ -43,14 +43,14 @@ void mechanism::distance_reset(std::shared_ptr<lib15442c::TrackerOdom> odometry,
 
     lib15442c::Angle heading = odometry->get_rotation();
 
-    if (!(left_passed || right_passed))
+    if (!((left_passed || disable_left) && (right_passed || disable_right)))
     {
         WARN_TEXT("No horrizontal sensor availible for reset!");
     }
     
-    if (!front_passed)
+    if (!front_passed && !disable_front)
     {
-        WARN_TEXT("Front sensor out of range for reset!");
+        WARN_TEXT("Front sensor unavailibe for reset!");
     }
 
     if (abs(heading.deg()) < RESET_THRESHOLD_DEG)
