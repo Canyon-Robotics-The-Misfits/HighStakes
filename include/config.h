@@ -73,12 +73,13 @@ namespace config
     };
     constexpr int PORT_OPTICAL = 5;
 
-    constexpr char PORT_CLAMP = 'C';
-    constexpr char PORT_DESCORE = 'H';
-    constexpr char PORT_DOINKER = 'B';
-    constexpr char PORT_INTAKE_LIFT = 'H';
-    constexpr char PORT_LB_PISTON_PUSH = 'G';
-    constexpr char PORT_LB_PISTON_PULL = 'F';
+    constexpr char PORT_CLAMP = 'F';
+    constexpr char PORT_DESCORE = 'E';
+    constexpr char PORT_DOINKER = 'C';
+    constexpr char PORT_PTO = 'D';
+    constexpr char PORT_INTAKE_LIFT = 'B';
+    constexpr char PORT_LB_PISTON_PUSH = 'H';
+    constexpr char PORT_LB_PISTON_PULL = 'G';
 
     constexpr int PORT_IMU = 9;
     constexpr double IMU_SCALE = 1.00524963699;

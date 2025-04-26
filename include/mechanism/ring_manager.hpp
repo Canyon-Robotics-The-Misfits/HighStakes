@@ -12,8 +12,8 @@
 
 namespace mechanism
 {
-    constexpr double LB_IDLE_ANGLE_DEG = -63;
-    constexpr double LB_LOAD_ANGLE_DEG = -52;
+    constexpr double LB_IDLE_ANGLE_DEG = -65;
+    constexpr double LB_LOAD_ANGLE_DEG = -51;
     constexpr double LB_SCORE_ANGLE_DEG = 40;
     constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 20;
     constexpr double LB_DESCORE_1_ANGLE_DEG = 25;
