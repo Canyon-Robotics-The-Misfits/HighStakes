@@ -6,19 +6,20 @@
 #include "gui/gui.h"
 
 #include "lib15442c/device/pneumatic.hpp"
+#include "lib15442c/chasis/tank_drive.hpp"
 #include "pros/optical.hpp"
 
 #include "lib15442c/math/angle.hpp"
 
 namespace mechanism
 {
-    constexpr double LB_IDLE_ANGLE_DEG = -65;
-    constexpr double LB_LOAD_ANGLE_DEG = -51;
-    constexpr double LB_SCORE_ANGLE_DEG = 40;
-    constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 20;
-    constexpr double LB_DESCORE_1_ANGLE_DEG = 25;
-    constexpr double LB_DESCORE_2_ANGLE_DEG = 40;
-    constexpr double LB_CLIMB_PREP_ANGLE_DEG = -30;
+    constexpr double LB_IDLE_ANGLE_DEG = -108;
+    constexpr double LB_LOAD_ANGLE_DEG = -85;
+    constexpr double LB_SCORE_ANGLE_DEG = 67;
+    constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 33;
+    constexpr double LB_DESCORE_1_ANGLE_DEG = 42;
+    constexpr double LB_DESCORE_2_ANGLE_DEG = 45;
+    constexpr double LB_CLIMB_PREP_ANGLE_DEG = -50;
 
     enum class RingManagerState
     {
@@ -54,6 +55,9 @@ namespace mechanism
         std::shared_ptr<lib15442c::IPneumatic> lb_lift_push;
         std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull;
 
+        std::shared_ptr<lib15442c::IPneumatic> pto;
+        std::shared_ptr<lib15442c::TankDrive> drivetrain;
+
         RingManagerState current_state = RingManagerState::IDLE;
         bool lb_override = false;
         SortColor sort_color;
@@ -64,13 +68,20 @@ namespace mechanism
         void run_color_sort();
         void set_state(RingManagerState state);
         mechanism::RingManagerState get_state();
+
+        void climb_macro();
         
         pros::Mutex mutex;
         bool task_on_flag = false;
         pros::Task task = pros::Task([]() { return; });
 
     public:
-        RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull);
+        RingManager(
+            std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors,
+            std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push,
+            std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull, std::shared_ptr<lib15442c::IPneumatic> pto,
+            std::shared_ptr<lib15442c::TankDrive> drivetrain
+        );
 
         /**
          * @brief Start the task

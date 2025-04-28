@@ -48,12 +48,16 @@ std::shared_ptr<mechanism::Arm> config::make_arm()
 	);
 }
 
-std::shared_ptr<mechanism::RingManager> config::make_ring_manager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull)
+std::shared_ptr<mechanism::RingManager> config::make_ring_manager(
+		std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push,
+		std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull, std::shared_ptr<lib15442c::IPneumatic> pto,
+		std::shared_ptr<lib15442c::TankDrive> drivetrain
+	)
 {
 	auto intake_motors = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
 	auto optical = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
 
-	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, lb_lift_push, lb_lift_pull);
+	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, lb_lift_push, lb_lift_pull, pto, drivetrain);
 }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()

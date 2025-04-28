@@ -58,8 +58,8 @@ namespace config
         ratio : lib15442c::MOTOR_GREEN,
     };
     constexpr lib15442c::PIDParameters PARAMS_LB_PID = {
-        kP: 5,
-        kD: 12,
+        kP: 3,
+        kD: 6,
     };
     constexpr std::initializer_list<int> PORT_LB = {-19, 17};
     constexpr int PORT_LB_ROTATION = 18;
@@ -109,7 +109,11 @@ namespace config
 
     std::shared_ptr<lib15442c::TankDrive> make_drivetrain();
     std::shared_ptr<mechanism::Arm> make_arm();
-    std::shared_ptr<mechanism::RingManager> make_ring_manager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull);
+    std::shared_ptr<mechanism::RingManager> make_ring_manager(
+        std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push,
+        std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull, std::shared_ptr<lib15442c::IPneumatic> pto,
+        std::shared_ptr<lib15442c::TankDrive> drivetrain
+    );
 
     std::shared_ptr<lib15442c::TrackerOdom> make_tracker_odom();
     std::shared_ptr<lib15442c::DriveController> make_drive_controller(std::shared_ptr<lib15442c::IDrivetrain> drivetrain, std::shared_ptr<lib15442c::IOdometry> odometry);

@@ -3,8 +3,13 @@
 
 #define LOGGER "ring_manager.cpp"
 
-mechanism::RingManager::RingManager(std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors, std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull)
-    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_lift_push(lb_lift_push), lb_lift_pull(lb_lift_pull)
+mechanism::RingManager::RingManager(
+    std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors,
+    std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push,
+    std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull, std::shared_ptr<lib15442c::IPneumatic> pto,
+    std::shared_ptr<lib15442c::TankDrive> drivetrain
+)
+    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_lift_push(lb_lift_push), lb_lift_pull(lb_lift_pull), pto(pto), drivetrain(drivetrain)
 {
     if (!intake_motors->is_installed())
     {
@@ -239,6 +244,57 @@ void mechanism::RingManager::set_state(RingManagerState state)
     mutex.unlock();
 }
 
+#define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(10); }
+
+void mechanism::RingManager::climb_macro()
+{
+    using namespace lib15442c::literals;
+
+    intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
+    drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
+    pto->extend();
+    lb->move(-127);
+
+    WAIT_UNTIL(lb->get_current_angle().deg() < -50);
+    
+    drivetrain->move(127, 0);
+
+    WAIT_UNTIL(lb->get_current_angle().deg() < -67);
+
+    for (int i = 0; i < 3; i++)
+    {
+        pto->extend();
+        lb->move(-127);
+
+        lb_lift_push->retract();
+        lb_lift_pull->extend();
+
+        pros::delay(100);
+
+        drivetrain->move(127, 0);
+    
+        WAIT_UNTIL(lb->get_current_angle().deg() < -108);
+    
+        drivetrain->move(0, 0);
+        lb->move(0);
+    
+        pto->retract();
+        lb->set_target(2_deg);
+        
+        drivetrain->move(-127, 0);
+        pros::delay(100);
+        drivetrain->move(0, 0);
+    
+        WAIT_UNTIL(lb->get_current_angle().deg() > -17);
+    
+        lb_lift_push->extend();
+        lb_lift_pull->retract();
+    
+        pros::delay(300);
+    }
+}
+
 void mechanism::RingManager::intake()
 {
     set_state(RingManagerState::INTAKE);
@@ -296,10 +352,11 @@ void mechanism::RingManager::prep_climb()
 
 void mechanism::RingManager::climb()
 {
-    if (get_state() == RingManagerState::PREP_CLIMB)
-    {
+    // if (get_state() == RingManagerState::PREP_CLIMB)
+    // {
         set_state(RingManagerState::CLIMBING);
-    }
+        climb_macro();
+    // }
 }
 
 void mechanism::RingManager::set_lb_override(bool lb_override)

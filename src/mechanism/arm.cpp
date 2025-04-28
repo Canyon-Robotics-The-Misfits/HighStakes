@@ -38,6 +38,7 @@ void mechanism::Arm::start_task()
                       {
         auto initial_comp_status = pros::c::competition_get_status();
         
+        // int i = 0;
         while (initial_comp_status == pros::c::competition_get_status())
         {
             mutex.lock();
@@ -49,10 +50,16 @@ void mechanism::Arm::start_task()
             
             lib15442c::Angle current_angle = get_current_angle();
 
+            // i++;
+            // if (i % 10 == 0)
+            // {
+            //     std::cout << current_angle.deg_unwrapped() << std::endl;
+            // }
+
             double pwm;
             if (!target_angle.is_none())
             {
-                double error = current_angle.error_from(target_angle).deg();
+                double error = target_angle.deg_unwrapped() - current_angle.deg_unwrapped();
     
                 pwm = pid->calculate_error(error);
 
@@ -101,5 +108,5 @@ void mechanism::Arm::move(double voltage)
 
 lib15442c::Angle mechanism::Arm::get_current_angle()
 {
-    return lib15442c::Angle::from_deg((-rotation_sensor->get_position() / 100.0) / 5.0);
+    return lib15442c::Angle::from_deg((-rotation_sensor->get_position() / 100.0) / 3.0);
 }

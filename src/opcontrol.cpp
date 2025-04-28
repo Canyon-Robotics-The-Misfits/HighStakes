@@ -10,6 +10,56 @@
 
 #define LOGGER "opcontrol.cpp"
 
+// void descore_macro_test(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneumatic> lb_lift_push, std::shared_ptr<mechanism::RingManager> rm, std::shared_ptr<mechanism::Arm> lb)
+// {
+//     descore.extend();
+//     rm->intake_override();
+
+//     pros::delay(600);
+
+//     // rm->intake_override();
+//     // pros::delay(1000);
+//     rm->intake_reverse();
+
+//     pros::delay(500);
+
+//     rm->intake_override();
+//     pros::delay(200);
+//     rm->intake_reverse();
+
+//     pros::delay(1500);
+
+//     // rm->intake_override();
+//     // pros::delay(250);
+//     // rm->intake_reverse();
+
+//     // pros::delay(500);
+
+//     rm->stop_intake();
+//     descore.retract();
+
+//     // descore.extend();
+//     // rm->intake_reverse();
+//     // rm->set_lb_override(true);
+//     // lb->set_target(-107_deg);
+//     // pros::delay(500);
+//     // rm->stop_intake();
+//     // pros::delay(50);
+//     // rm->intake_reverse();
+//     // pros::delay(300);
+//     // lb_lift_push->extend();
+//     // pros::delay(100);
+//     // rm->stop_intake();
+//     // pros::delay(300);
+//     // descore.retract();
+//     // lb->move(127);
+//     // pros::delay(200);
+//     // lb_lift_push->retract();
+//     // pros::delay(100);
+//     // rm->set_lb_override(false);
+//     // rm->idle();
+// }
+
 double curve_joystick(double in)
 {
     constexpr double a = 0.423851;
@@ -87,7 +137,8 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         bool load = controller.get_digital(DIGITAL_R2);
 
         bool descore_1 = controller.get_digital(DIGITAL_X);
-        bool descore_2 = controller.get_digital(DIGITAL_UP);
+        // bool descore_2 = controller.get_digital(DIGITAL_UP);
+        bool descore_2 = false;
 
         if (intake || intake_reverse || score || load || descore_1 || descore_2)
         {
@@ -153,13 +204,14 @@ void opcontrol()
     lib15442c::Pneumatic clamp = lib15442c::Pneumatic(config::PORT_CLAMP);
     lib15442c::Pneumatic descore = lib15442c::Pneumatic(config::PORT_DESCORE);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
+    std::shared_ptr<lib15442c::Pneumatic> pto = std::make_shared<lib15442c::Pneumatic>(config::PORT_PTO);
 	std::shared_ptr<lib15442c::Pneumatic> lb_lift_push = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PUSH, false, false);
 	std::shared_ptr<lib15442c::Pneumatic> lb_lift_pull = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PULL, false, false);
     lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
     std::shared_ptr<mechanism::Arm> lb = config::make_arm();
-    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb, lb_lift_push, lb_lift_pull);
+    std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb, lb_lift_push, lb_lift_pull, pto, drivetrain);
 
     std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
     // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
@@ -217,24 +269,22 @@ void opcontrol()
     // x descore 1
     // y intake override
     
-    // up arrow descore 2
+    // up arrow climb
     // down arrow descore goal
+    // left arrow lb lift
+    // right arrow pto
 
     // int i = 0;
+    bool current_lb_lift_state = false;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
         control_ring_mech(controller, rm, lb);
         
-        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
-        // {
-        //     intake_lift.toggle();
-        // }
-        
-        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-        // {
-        //     doinker.toggle();
-        // }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+        {
+            doinker.toggle();
+        }
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
         {
@@ -248,12 +298,26 @@ void opcontrol()
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
         {
-            lb_lift_push->toggle();
+            current_lb_lift_state = !current_lb_lift_state;
+
+            lb_lift_push->set_value(current_lb_lift_state);
+            lb_lift_pull->set_value(!current_lb_lift_state);
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+        {
+            pto->toggle();
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
+        {
+            rm->climb();
+            // descore_macro_test(descore, lb_lift_push, rm, lb);
         }
 
         // i++;
         // if (i % 5 == 0) {
-        //     std::cout << tracker_odom->get_x() << ", " << tracker_odom->get_y() << ", " << tracker_odom->get_rotation().deg_unwrapped() << std::endl;
+        //     std::cout << lb->get_current_angle().deg() << std::endl;
         // }
 
         pros::delay(20);
