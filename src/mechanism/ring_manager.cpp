@@ -250,6 +250,8 @@ void mechanism::RingManager::climb_macro()
 {
     using namespace lib15442c::literals;
 
+    int start_time = pros::millis();
+
     intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
     drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
 
@@ -267,6 +269,8 @@ void mechanism::RingManager::climb_macro()
         pto->extend();
         lb->move(-127);
 
+        pros::delay(100);
+
         lb_lift_push->retract();
         lb_lift_pull->extend();
 
@@ -274,17 +278,23 @@ void mechanism::RingManager::climb_macro()
 
         drivetrain->move(127, 0);
     
-        WAIT_UNTIL(lb->get_current_angle().deg() < -108);
+        WAIT_UNTIL(lb->get_current_angle().deg() < -114);
     
         drivetrain->move(0, 0);
         lb->move(0);
     
-        pto->retract();
         lb->set_target(2_deg);
         
         drivetrain->move(-127, 0);
         pros::delay(100);
+        pto->retract();
+        pros::delay(250);
         drivetrain->move(0, 0);
+
+        if (i == 2)
+        {
+            break;
+        }
     
         WAIT_UNTIL(lb->get_current_angle().deg() > -17);
     
@@ -293,6 +303,17 @@ void mechanism::RingManager::climb_macro()
     
         pros::delay(300);
     }
+
+    intake_motors->move(127);
+    pros::delay(250);
+    intake_motors->move(0);
+
+    int end_time = pros::millis();
+
+    std::cout << "Climb time: " << end_time - start_time << "ms" << std::endl;
+
+    lb->move(-127);
+    pros::delay(200);
 }
 
 void mechanism::RingManager::intake()
