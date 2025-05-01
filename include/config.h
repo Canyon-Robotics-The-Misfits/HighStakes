@@ -58,8 +58,8 @@ namespace config
         ratio : lib15442c::MOTOR_GREEN,
     };
     constexpr lib15442c::PIDParameters PARAMS_LB_PID = {
-        kP: 3,
-        kD: 6,
+        kP: 2,
+        kD: 3,
     };
     constexpr std::initializer_list<int> PORT_LB = {-19, 17};
     constexpr int PORT_LB_ROTATION = 18;
