@@ -10,55 +10,31 @@
 
 #define LOGGER "opcontrol.cpp"
 
-// void descore_macro_test(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneumatic> lb_lift_push, std::shared_ptr<mechanism::RingManager> rm, std::shared_ptr<mechanism::Arm> lb)
-// {
-//     descore.extend();
-//     rm->intake_override();
+void descore_macro_test(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneumatic> lb_lift_push, std::shared_ptr<mechanism::RingManager> rm, std::shared_ptr<mechanism::Arm> lb)
+{
+    descore.extend();
+    rm->idle();
+    pros::delay(500);
 
-//     pros::delay(600);
+    rm->intake();
+    pros::delay(50);
+    rm->intake_reverse();
 
-//     // rm->intake_override();
-//     // pros::delay(1000);
-//     rm->intake_reverse();
+    pros::delay(150);
 
-//     pros::delay(500);
+    lb_lift_push->extend();
+    pros::delay(100);
+    rm->stop_intake();
+    pros::delay(100);
+    rm->set_lb_override(true);
+    lb->move(127);
+    pros::delay(300);
+    rm->set_lb_override(false);
+    lb_lift_push->retract();
 
-//     rm->intake_override();
-//     pros::delay(200);
-//     rm->intake_reverse();
-
-//     pros::delay(1500);
-
-//     // rm->intake_override();
-//     // pros::delay(250);
-//     // rm->intake_reverse();
-
-//     // pros::delay(500);
-
-//     rm->stop_intake();
-//     descore.retract();
-
-//     // descore.extend();
-//     // rm->intake_reverse();
-//     // rm->set_lb_override(true);
-//     // lb->set_target(-107_deg);
-//     // pros::delay(500);
-//     // rm->stop_intake();
-//     // pros::delay(50);
-//     // rm->intake_reverse();
-//     // pros::delay(300);
-//     // lb_lift_push->extend();
-//     // pros::delay(100);
-//     // rm->stop_intake();
-//     // pros::delay(300);
-//     // descore.retract();
-//     // lb->move(127);
-//     // pros::delay(200);
-//     // lb_lift_push->retract();
-//     // pros::delay(100);
-//     // rm->set_lb_override(false);
-//     // rm->idle();
-// }
+    descore.retract();
+    rm->idle();
+}
 
 double curve_joystick(double in)
 {
@@ -275,7 +251,7 @@ void opcontrol()
     // right arrow pto
 
     // int i = 0;
-    bool current_lb_lift_state = false;
+    bool current_lb_lift_state = true;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
