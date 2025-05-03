@@ -51,6 +51,11 @@ void gui::ScreenGUI::alliance_button_callback(lv_event_t * e)
     gui.update_content();
 }
 
+// void gui::ScreenGUI::calibrate_button_callback(lv_event_t * e)
+// {
+
+// }
+
 void gui::ScreenGUI::update_content()
 {
     auto route = registered_routes[selected_auto];
@@ -89,6 +94,12 @@ void gui::ScreenGUI::setup_ui()
     lv_obj_set_width(alliance_button, 100);
     lv_obj_set_height(alliance_button, 75);
     lv_obj_add_event_cb(alliance_button, alliance_button_callback, LV_EVENT_CLICKED, NULL);
+
+    // lv_obj_t * calibrate_button = lv_btn_create(lv_scr_act());
+    // lv_obj_align(calibrate_button, LV_ALIGN_TOP_RIGHT, -105, -5);
+    // lv_obj_set_width(calibrate_button, 100);
+    // lv_obj_set_height(calibrate_button, 75);
+    // lv_obj_add_event_cb(calibrate_button, calibrate_button_callback, LV_EVENT_CLICKED, NULL);
 
     alliance_button_label = lv_label_create(alliance_button);
     lv_obj_align(alliance_button_label, LV_ALIGN_CENTER, 0, 0);

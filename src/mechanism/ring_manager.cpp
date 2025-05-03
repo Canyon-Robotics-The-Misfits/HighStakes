@@ -45,6 +45,7 @@ void mechanism::RingManager::start_task()
             mutex.lock();
             if (task_on_flag == false)
             {
+                mutex.unlock();
                 break;
             }
             mutex.unlock();
@@ -264,7 +265,7 @@ void mechanism::RingManager::climb_macro()
 
     WAIT_UNTIL(lb->get_current_angle().deg() < -67);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         pto->extend();
         lb->move(-127);
@@ -293,6 +294,10 @@ void mechanism::RingManager::climb_macro()
 
         if (i == 2)
         {
+            intake_motors->move(127);
+            pros::delay(250);
+            intake_motors->move(0);
+
             break;
         }
     
@@ -303,10 +308,6 @@ void mechanism::RingManager::climb_macro()
     
         pros::delay(300);
     }
-
-    intake_motors->move(127);
-    pros::delay(250);
-    intake_motors->move(0);
 
     int end_time = pros::millis();
 

@@ -20,15 +20,16 @@ void descore_macro_test(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c:
     pros::delay(50);
     rm->intake_reverse();
 
-    pros::delay(150);
+    pros::delay(250);
 
-    lb_lift_push->extend();
-    pros::delay(100);
     rm->stop_intake();
-    pros::delay(100);
+    lb_lift_push->extend();
     rm->set_lb_override(true);
+    lb->move(-60);
+    pros::delay(300);
     lb->move(127);
     pros::delay(300);
+    lb->move(0);
     rm->set_lb_override(false);
     lb_lift_push->retract();
 
@@ -181,8 +182,8 @@ void opcontrol()
     lib15442c::Pneumatic descore = lib15442c::Pneumatic(config::PORT_DESCORE);
     lib15442c::Pneumatic doinker = lib15442c::Pneumatic(config::PORT_DOINKER);
     std::shared_ptr<lib15442c::Pneumatic> pto = std::make_shared<lib15442c::Pneumatic>(config::PORT_PTO);
-	std::shared_ptr<lib15442c::Pneumatic> lb_lift_push = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PUSH, false, false);
-	std::shared_ptr<lib15442c::Pneumatic> lb_lift_pull = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PULL, false, false);
+	std::shared_ptr<lib15442c::Pneumatic> lb_lift_push = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PUSH, false, true);
+	std::shared_ptr<lib15442c::Pneumatic> lb_lift_pull = std::make_shared<lib15442c::Pneumatic>(config::PORT_LB_PISTON_PULL, false, true);
     lib15442c::Pneumatic intake_lift = lib15442c::Pneumatic(config::PORT_INTAKE_LIFT);
 
     std::shared_ptr<lib15442c::TankDrive> drivetrain = config::make_drivetrain();
@@ -287,8 +288,8 @@ void opcontrol()
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-            rm->climb();
-            // descore_macro_test(descore, lb_lift_push, rm, lb);
+            // rm->climb();
+            descore_macro_test(descore, lb_lift_push, rm, lb);
         }
 
         // i++;
