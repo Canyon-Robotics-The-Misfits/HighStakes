@@ -27,6 +27,7 @@ namespace mechanism
         INTAKE,
         INTAKE_OVERRIDE,
         INTAKE_REVERSE,
+        INTAKE_HOLD,
         LOAD,
         HOLD,
         SCORE,
@@ -60,7 +61,7 @@ namespace mechanism
 
         RingManagerState current_state = RingManagerState::IDLE;
         bool lb_override = false;
-        SortColor sort_color;
+        SortColor sort_color = SortColor::NONE;
 
         double sort_countdown = 0;
 
@@ -97,6 +98,8 @@ namespace mechanism
         void intake_override();
         void intake_reverse();
         void stop_intake();
+        
+        void intake_hold();
         
         void load();
         void stop_load();

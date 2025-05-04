@@ -17,16 +17,18 @@ void descore_macro_test(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c:
     pros::delay(500);
 
     rm->intake();
-    pros::delay(50);
+    pros::delay(100);
     rm->intake_reverse();
 
-    pros::delay(250);
+    pros::delay(300);
 
-    rm->stop_intake();
+    // turn->await();
+
+    rm->intake_hold();
     lb_lift_push->extend();
     rm->set_lb_override(true);
     lb->move(-60);
-    pros::delay(300);
+    pros::delay(350);
     lb->move(127);
     pros::delay(300);
     lb->move(0);
@@ -288,8 +290,8 @@ void opcontrol()
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-            // rm->climb();
-            descore_macro_test(descore, lb_lift_push, rm, lb);
+            rm->climb();
+            // descore_macro_test(descore, lb_lift_push, rm, lb);
         }
 
         // i++;

@@ -89,6 +89,8 @@ void mechanism::RingManager::update_devices()
     {
 
     case RingManagerState::IDLE: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_idle);
@@ -97,6 +99,8 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::INTAKE: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+        
         if (!lb_override)
         {
             lb->set_target(lb_idle);
@@ -113,14 +117,26 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::INTAKE_OVERRIDE: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         intake_motors->move(127);
     } break;
 
     case RingManagerState::INTAKE_REVERSE: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         intake_motors->move(-127);
     } break;
 
+    case RingManagerState::INTAKE_HOLD: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
+        
+        intake_motors->move(0);
+    } break;
+
     case RingManagerState::LOAD: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_load);
@@ -137,6 +153,8 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::HOLD: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_load);
@@ -145,6 +163,8 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::SCORE: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_score);
@@ -153,6 +173,8 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::SCORE_SKILLS: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_score_skills);
@@ -161,6 +183,8 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::DESCORE_1: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_descore_1);
@@ -169,6 +193,8 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::DESCORE_2: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         if (!lb_override)
         {
             lb->set_target(lb_descore_2);
@@ -177,11 +203,13 @@ void mechanism::RingManager::update_devices()
     } break;
 
     case RingManagerState::PREP_CLIMB: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
+
         lb_lift_pull->retract();
         lb_lift_push->extend();
         lb->set_target(lb_climb_prep);
         intake_motors->move(0);
-    }
+    } break;
 
     case RingManagerState::CLIMBING: {
         // nothing, managed in climb_macro()
@@ -250,6 +278,8 @@ void mechanism::RingManager::set_state(RingManagerState state)
 void mechanism::RingManager::climb_macro()
 {
     using namespace lib15442c::literals;
+    
+    mutex.lock();
 
     int start_time = pros::millis();
 
@@ -259,13 +289,15 @@ void mechanism::RingManager::climb_macro()
     pto->extend();
     lb->move(-127);
 
-    WAIT_UNTIL(lb->get_current_angle().deg() < -50);
+    WAIT_UNTIL(lb->get_current_angle().deg() < -55);
+    
+    drivetrain->move(80, 0);
+
+    WAIT_UNTIL(lb->get_current_angle().deg() < -67);
     
     drivetrain->move(127, 0);
 
-    WAIT_UNTIL(lb->get_current_angle().deg() < -67);
-
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 3; i++)
     {
         pto->extend();
         lb->move(-127);
@@ -280,6 +312,22 @@ void mechanism::RingManager::climb_macro()
         drivetrain->move(127, 0);
     
         WAIT_UNTIL(lb->get_current_angle().deg() < -114);
+
+        pros::delay(100);
+
+        if (i == 2)
+        {
+            drivetrain->move(0, 0);
+            lb->move(0);
+
+            pros::delay(100); // meditation break
+
+            intake_motors->move(127);
+            pros::delay(400);
+            intake_motors->move(0);
+
+            break;
+        }
     
         drivetrain->move(0, 0);
         lb->move(0);
@@ -291,15 +339,6 @@ void mechanism::RingManager::climb_macro()
         pto->retract();
         pros::delay(250);
         drivetrain->move(0, 0);
-
-        if (i == 2)
-        {
-            intake_motors->move(127);
-            pros::delay(250);
-            intake_motors->move(0);
-
-            break;
-        }
     
         WAIT_UNTIL(lb->get_current_angle().deg() > -17);
     
@@ -313,8 +352,10 @@ void mechanism::RingManager::climb_macro()
 
     std::cout << "Climb time: " << end_time - start_time << "ms" << std::endl;
 
-    lb->move(-127);
-    pros::delay(200);
+    drivetrain->move(0, 0);
+    lb->move(0);
+    
+    mutex.unlock();
 }
 
 void mechanism::RingManager::intake()
@@ -332,6 +373,10 @@ void mechanism::RingManager::intake_reverse()
 void mechanism::RingManager::stop_intake()
 {
     set_state(RingManagerState::IDLE);
+}
+void mechanism::RingManager::intake_hold()
+{
+    set_state(RingManagerState::INTAKE_HOLD);
 }
 
 void mechanism::RingManager::load()

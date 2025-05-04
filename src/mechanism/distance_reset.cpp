@@ -127,13 +127,13 @@ void mechanism::distance_reset(std::shared_ptr<lib15442c::TrackerOdom> odometry,
     if (abs(initial_pos.x - end_pos.x) > 7)
     {
         WARN_TEXT("Distance reset >7 inches off on x from odom position, ignoring x reset!");
-        end_pos.x = initial_pos.x;
+        odometry->set_x(initial_pos.x);
     }
 
     if (abs(initial_pos.y - end_pos.y) > 7)
     {
         WARN_TEXT("Distance reset >7 inches off on y from odom position, ignoring y reset!");
-        end_pos.y = initial_pos.y;
+        odometry->set_x(initial_pos.y);
     }
 
     printf("(%f, %f) changed to (%f, %f)\n", initial_pos.x, initial_pos.y, end_pos.x, end_pos.y);
