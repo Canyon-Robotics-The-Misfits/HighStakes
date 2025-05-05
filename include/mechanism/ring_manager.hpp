@@ -66,6 +66,7 @@ namespace mechanism
         double sort_countdown = 0;
 
         void update_devices();
+        void run_dejam();
         void run_color_sort();
         void set_state(RingManagerState state);
 

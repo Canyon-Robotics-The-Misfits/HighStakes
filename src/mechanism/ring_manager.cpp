@@ -220,6 +220,18 @@ void mechanism::RingManager::update_devices()
     mutex.unlock();
 }
 
+void mechanism::RingManager::run_dejam()
+{
+    if (intake_motors->get_power() > 10)
+    {
+        intake_motors->move(-60);
+    }
+    else
+    {
+        intake_motors->move(127);
+    }
+}
+
 // int i = 0;
 void mechanism::RingManager::run_color_sort()
 {
@@ -245,7 +257,7 @@ void mechanism::RingManager::run_color_sort()
 
         if (sort_countdown > 300)
         {
-            intake_motors->move(127);
+            run_dejam();
         }
         else
         {
