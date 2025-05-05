@@ -13,7 +13,7 @@
 
 namespace mechanism
 {
-    constexpr double LB_IDLE_ANGLE_DEG = -108;
+    constexpr double LB_IDLE_ANGLE_DEG = -106;
     constexpr double LB_LOAD_ANGLE_DEG = -85;
     constexpr double LB_SCORE_ANGLE_DEG = 67;
     constexpr double LB_SCORE_SKILLS_ANGLE_DEG = 33;
@@ -68,9 +68,8 @@ namespace mechanism
         void update_devices();
         void run_color_sort();
         void set_state(RingManagerState state);
-        mechanism::RingManagerState get_state();
 
-        void climb_macro();
+        void climb_macro(int tier);
         
         pros::Mutex mutex;
         bool task_on_flag = false;
@@ -93,7 +92,6 @@ namespace mechanism
          */
         void stop_task();
 
-
         void intake();
         void intake_override();
         void intake_reverse();
@@ -112,10 +110,13 @@ namespace mechanism
         void idle();
 
         void prep_climb();
-        void climb();
+        void climb(int tier = 3);
 
         void set_lb_override(bool lb_overrided);
 
         void set_color_sort(SortColor color);
+        
+        mechanism::RingManagerState get_state();
+        bool ring_detected();
     };
 } // namespace mechanism

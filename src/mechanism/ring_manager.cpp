@@ -226,7 +226,7 @@ void mechanism::RingManager::run_color_sort()
     // std::cout << i << ", " << optical_sensor->get_proximity() << ", " << optical_sensor->get_hue() << std::endl;
     // i++;
 
-    if (optical_sensor->get_proximity() > 50 && sort_countdown <= 0)
+    if (ring_detected() && sort_countdown <= 0)
     {
         double hue = optical_sensor->get_hue(); 
     
@@ -275,7 +275,7 @@ void mechanism::RingManager::set_state(RingManagerState state)
 
 #define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(10); }
 
-void mechanism::RingManager::climb_macro()
+void mechanism::RingManager::climb_macro(int tier)
 {
     using namespace lib15442c::literals;
     
@@ -297,7 +297,7 @@ void mechanism::RingManager::climb_macro()
     
     drivetrain->move(127, 0);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < std::min(tier, 3); i++)
     {
         pto->extend();
         lb->move(-127);
@@ -311,20 +311,14 @@ void mechanism::RingManager::climb_macro()
 
         drivetrain->move(127, 0);
     
-        WAIT_UNTIL(lb->get_current_angle().deg() < -114);
+        WAIT_UNTIL(lb->get_current_angle().deg() < -113);
 
-        pros::delay(100);
+        pros::delay(150);
 
-        if (i == 2)
+        if (i == tier - 1 && i != 2)
         {
             drivetrain->move(0, 0);
             lb->move(0);
-
-            pros::delay(100); // meditation break
-
-            intake_motors->move(127);
-            pros::delay(400);
-            intake_motors->move(0);
 
             break;
         }
@@ -339,6 +333,19 @@ void mechanism::RingManager::climb_macro()
         pto->retract();
         pros::delay(250);
         drivetrain->move(0, 0);
+        
+        if (i == 2)
+        {
+            pros::delay(100); // meditation break
+
+            intake_motors->move(127);
+            pros::delay(700);
+            intake_motors->move(0);
+            
+            drivetrain->move(0, 0);
+
+            break;
+        }
     
         WAIT_UNTIL(lb->get_current_angle().deg() > -17);
     
@@ -360,55 +367,116 @@ void mechanism::RingManager::climb_macro()
 
 void mechanism::RingManager::intake()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+    
     set_state(RingManagerState::INTAKE);
 }
 void mechanism::RingManager::intake_override()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::INTAKE_OVERRIDE);
 }
 void mechanism::RingManager::intake_reverse()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::INTAKE_REVERSE);
 }
 void mechanism::RingManager::stop_intake()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::IDLE);
 }
 void mechanism::RingManager::intake_hold()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::INTAKE_HOLD);
 }
 
 void mechanism::RingManager::load()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::LOAD);
 }
 void mechanism::RingManager::stop_load()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::HOLD);
 }
 
 void mechanism::RingManager::descore_1()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::DESCORE_1);
 }
 void mechanism::RingManager::descore_2()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::DESCORE_2);
 }
 
 void mechanism::RingManager::score()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::SCORE);
 }
 
 void mechanism::RingManager::score_skills()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
     set_state(RingManagerState::SCORE_SKILLS);
 }
 
 void mechanism::RingManager::idle()
 {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        lb_lift_pull->retract();
+        lb_lift_push->retract();
+    }
+
     set_state(RingManagerState::IDLE);
 }
 
@@ -417,13 +485,13 @@ void mechanism::RingManager::prep_climb()
     set_state(RingManagerState::PREP_CLIMB);
 }
 
-void mechanism::RingManager::climb()
+void mechanism::RingManager::climb(int tier)
 {
-    // if (get_state() == RingManagerState::PREP_CLIMB)
-    // {
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
         set_state(RingManagerState::CLIMBING);
-        climb_macro();
-    // }
+        climb_macro(tier);
+    }
 }
 
 void mechanism::RingManager::set_lb_override(bool lb_override)
@@ -439,4 +507,10 @@ void mechanism::RingManager::set_color_sort(SortColor color)
     mutex.lock();
     sort_color = color;
     mutex.unlock();
+}
+
+
+bool mechanism::RingManager::ring_detected()
+{
+    return optical_sensor->get_proximity() > 50;
 }
