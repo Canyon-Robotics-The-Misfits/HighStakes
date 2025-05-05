@@ -4,7 +4,7 @@
 
 #define LOGGER "skills.cpp"
 
-void descore_macro(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneumatic> lb_lift_push, std::shared_ptr<mechanism::RingManager> rm, std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::Face> turn)
+void descore_macro(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneumatic> lb_lift_push, std::shared_ptr<mechanism::RingManager> rm, std::shared_ptr<mechanism::Arm> lb /*, std::shared_ptr<lib15442c::Face> turn*/)
 {
     descore.extend();
     rm->idle();
@@ -16,7 +16,7 @@ void descore_macro(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneu
 
     pros::delay(300);
 
-    turn->await();
+    // turn->await();
 
     rm->intake_hold();
     lb_lift_push->extend();
@@ -36,47 +36,53 @@ void descore_macro(lib15442c::Pneumatic descore, std::shared_ptr<lib15442c::Pneu
 AUTO_ROUTE(auto_routes::skills)
 {
     odometry->initialize(80, 11, 224.5_deg);
-    rm->set_color_sort(mechanism::SortColor::BLUE);
+    rm->set_color_sort(mechanism::SortColor::NONE);
 
     lb_lift_push->extend();
     rm->set_lb_override(true);
     // lb->set_target(lib15442c::Angle::from_deg(mechanism::LB_SCORE_SKILLS_ANGLE_DEG));
-    lb->set_target(90_deg);
-    pros::delay(500);
+    lb->set_target(105_deg);
+    pros::delay(600);
     drive_controller->drive(-23, { max_speed: 80, min_speed: 70, chained: true });
     clamp.extend();
     rm->set_lb_override(false);
     lb_lift_push->retract();
 
-    pros::delay(100);
+    rm->intake_reverse();
+    pros::delay(50);
+    rm->stop_intake();
+    pros::delay(50);
     rm->load();
     drive_controller->boomerang(pose(144 - 48, 48 -3, 15_deg), { threshold: 5, min_speed: 40 });
 
     auto drive_to_wall_stake = drive_controller->boomerang(pose(144 -4 - 10 +2, 72 - 3 -1, 80_deg), { lead: 0.5, threshold: 3, max_speed: 80, min_speed: 40, async: true });
-    pros::delay(825);
+    pros::delay(900);
     rm->set_lb_override(true);
     rm->stop_intake();
-    lb->set_target(-55_deg);
+    lb->set_target(-50_deg);
     pros::delay(150);
     rm->intake_override();
     drive_to_wall_stake->await();
 
     drive_controller->face_angle(90_deg, { threshold: 5_deg, chained: true });
-    rm->intake_hold();
     drivetrain->move(80, 0);
-    // pros::delay(50);
-    // rm->stop_intake();
-    pros::delay(400);
+    pros::delay(25);
+    // rm->intake_hold();
+    pros::delay(225);
+    drivetrain->move(100, 0);
+    pros::delay(200);
     lb->set_target(lib15442c::Angle::from_deg(mechanism::LB_SCORE_SKILLS_ANGLE_DEG));
     pros::delay(350);
     drivetrain->move(0, 0);
-    rm->stop_intake();
 
     // corner rings, drop goal
+    rm->stop_intake();
     drive_controller->drive(-5, { min_speed: 60, chained: true });
     lb->set_target(-35_deg);
     drive_controller->face_angle(180_deg, { threshold: 10_deg, min_speed: 60, chained: true });
-    auto drive_after_wall_stake_one = drive_controller->boomerang(pose(144 - 24 +1.5, 24 +2, 180_deg), { threshold: 2, angle_priority_threshold: 10,  max_speed: 80, min_speed: 30, async: true });
+    rm->intake();
+    auto drive_after_wall_stake_one = drive_controller->boomerang(pose(144 - 24 +1.5, 24 +2, 180_deg), { lead: 0.5, threshold: 2, angle_priority_threshold: 10,  max_speed: 80, min_speed: 30, async: true });
+    rm->intake_reverse();
     pros::delay(100);
     rm->intake();
     drive_after_wall_stake_one->await();
@@ -88,7 +94,7 @@ AUTO_ROUTE(auto_routes::skills)
     // rm->stop_intake();
     // turn_before_corner_one->await();
     // rm->intake();
-    drive_controller->boomerang(pos(144 - 12, 24), { threshold: 5, min_speed: 40 });
+    drive_controller->boomerang(pos(144 - 12, 24), { threshold: 4, min_speed: 40 });
     drive_controller->face_angle(-10_deg, { min_speed: 60, chained: true });
     drive_controller->drive(-6, { timeout: 1000, min_speed: 50, chained: true });
     lb->set_target(lib15442c::Angle::from_deg(mechanism::LB_IDLE_ANGLE_DEG));
@@ -110,18 +116,21 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(50);
     mechanism::distance_reset(odometry, true, false, true);
     drive_controller->face_point(lib15442c::Vec(144 - 48, 144 - 12), 180_deg -20_deg, { min_speed: 60, chained: true });
-    auto descore_goal_pickup_one = drive_controller->boomerang(pose(144 - 48, 144 - 12 +1, -30_deg + 180_deg), { backwards: true, threshold: 10, angle_priority_threshold: 15, max_speed: 80, min_speed: 40 });
-    WAIT_UNTIL(odometry->get_position().distance_to(lib15442c::Vec(144 - 48, 144 - 12)) < 25);
+    auto descore_goal_pickup_one = drive_controller->boomerang(pose(144 - 48, 144 - 12 +1, -30_deg + 180_deg), { backwards: true, threshold: 11, angle_priority_threshold: 15, max_speed: 60, min_speed: 40 });
+    WAIT_UNTIL(odometry->get_position().distance_to(lib15442c::Vec(144 - 48, 144 - 12)) < 30 || !descore_goal_pickup_one->is_running());
     rm->intake_reverse();
+    WAIT_UNTIL(odometry->get_position().distance_to(lib15442c::Vec(144 - 48, 144 - 12)) < 15 || !descore_goal_pickup_one->is_running());
+    rm->stop_intake();
     descore_goal_pickup_one->await();
     pros::delay(100);
     clamp.extend();
 
     // descore
-    pros::delay(50);
-    auto descore_turn_one = drive_controller->face_angle(180_deg, { min_speed: 40, chained: true, async: true });
-    // drive_controller->drive(2, { max_speed: 40, min_speed: 30, chained: true });
-    descore_macro(descore, lb_lift_push, rm, lb, descore_turn_one);
+    // pros::delay(100);
+    pros::delay(250);
+    drive_controller->drive(1, { min_speed: 30, chained: true});
+    // auto descore_turn_one = drive_controller->face_angle(180_deg, { min_speed: 40, chained: true, async: true });
+    descore_macro(descore, lb_lift_push, rm, lb /*, descore_turn_one*/);
 
     // ring time
     drive_controller->drive(6, { min_speed: 80, chained: true });
@@ -151,7 +160,7 @@ AUTO_ROUTE(auto_routes::skills)
     rm->load();
     drive_controller->boomerang(pos(144 - 48, 144 - 48), { threshold: 2 });
     // drive_controller->boomerang(pose(72, 144 - 24, -30_deg + 180_deg), { backwards: true, threshold: 1, max_speed: 60, min_speed: 30 });
-    drive_controller->drive_to(pose(72 +4 -0.5, 144 - 24 -4 -0.5, -30_deg), { r: 6, backwards: true, threshold: 1, max_speed: 60, min_speed: 40 });
+    drive_controller->drive_to(pose(72 +4 -0.5, 144 - 24 -4 -0.5 +1, -30_deg), { r: 6, backwards: true, threshold: 1, max_speed: 60, min_speed: 40 });
     drive_controller->drive(-2, { max_speed: 40, min_speed: 40, chained: true });
     clamp.extend();
     pros::delay(50);
@@ -165,18 +174,30 @@ AUTO_ROUTE(auto_routes::skills)
     drive_controller->drive_time(40, 600);
     if (abs(odometry->get_rotation().deg()) < 12)
     {
-        odometry->set_x(72 - 8.5 * sin(odometry->get_rotation().rad()));
-        odometry->set_y(144 - 1 - 8.5 * cos(odometry->get_rotation().rad()));
+        auto new_pos = lib15442c::Vec(
+            72 - 8.5 * sin(odometry->get_rotation().rad()),
+            144 - 1 - 8.5 * cos(odometry->get_rotation().rad())
+        );
+
+        if (odometry->get_position().distance_to(new_pos) < 6)
+        {
+            odometry->set_position(new_pos);
+        }
+        else
+        {
+            WARN_TEXT("Trig reset >7 inches away from odom positon!");
+        }
     }
     else
     {
         WARN_TEXT("Heading out of range for trig reset!");
     }
-    drive_controller->drive(-2, { threshold: 0, min_speed: 20, chained: true });
+    drive_controller->drive(-1.5, { threshold: 0, min_speed: 25, chained: true });
+    pros::delay(100);
     lb_lift_push->extend();
-    // lb->move(127);
-    lb->set_target(93_deg);
-    pros::delay(400);
+    pros::delay(25);
+    lb->set_target(110_deg);
+    pros::delay(500);
     drive_controller->drive(-4, { min_speed: 80, chained: true });
 
     // run to corner
@@ -242,10 +263,9 @@ AUTO_ROUTE(auto_routes::skills)
     // get next ring and drop goal
     rm->intake_override();
     drive_controller->drive(-6, { min_speed: 60, chained: true });
+    drive_controller->face_angle(0_deg, { threshold: 10_deg, min_speed: 80, chained: true });
     lb->set_target(lib15442c::Angle::from_deg(mechanism::LB_IDLE_ANGLE_DEG));
     rm->set_lb_override(false);
-    // rm->intake_reverse();
-    drive_controller->face_angle(0_deg, { threshold: 10_deg, min_speed: 80, chained: true });
     rm->intake();
 
     drive_controller->boomerang(pos(24 +1, 144 - 48 -4), { threshold: 5 });
@@ -263,10 +283,10 @@ AUTO_ROUTE(auto_routes::skills)
     clamp.extend();
 
     // descore 2 electric boogaloo
-    pros::delay(100);
-    // drive_controller->drive(2, { max_speed: 40, min_speed: 30, chained: true });
-    auto descore_turn_two = drive_controller->face_angle(200_deg, { threshold: 5_deg, min_speed: 40, chained: true, async: true });
-    descore_macro(descore, lb_lift_push, rm, lb, descore_turn_two);
+    // pros::delay(100);
+    pros::delay(250);
+    // auto descore_turn_two = drive_controller->face_angle(200_deg, { threshold: 5_deg, min_speed: 40, chained: true, async: true });
+    descore_macro(descore, lb_lift_push, rm, lb /*, descore_turn_two*/);
     rm->intake_reverse();
 
     // ring time 2 even more electric boogaloo
@@ -294,8 +314,12 @@ AUTO_ROUTE(auto_routes::skills)
 
     // climb more like 
     rm->intake();
-    drive_controller->boomerang(pos(72 -2, 72));
+    auto grab_high_stake = drive_controller->boomerang(pos(72 -2, 72), { async: true });
+    WAIT_UNTIL(rm->ring_detected() || !grab_high_stake->is_running());
+    rm->intake_reverse();
+    pros::delay(50);
     rm->stop_intake();
+    grab_high_stake->await();
     rm->prep_climb();
     drive_controller->face_angle(-90_deg);
     drive_controller->drive(-8, { min_speed: 50, chained: true});
