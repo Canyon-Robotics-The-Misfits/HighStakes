@@ -56,10 +56,12 @@ namespace gui
         lv_obj_t * description_label;
 
         lv_obj_t * alliance_button_label;
+        lv_obj_t * calibrate_button_label;
 
         static void left_button_callback(lv_event_t * e);
         static void right_button_callback(lv_event_t * e);
         static void alliance_button_callback(lv_event_t * e);
+        static void calibrate_button_callback(lv_event_t * e);
 
         void update_content();
 
