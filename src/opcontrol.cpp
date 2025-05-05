@@ -110,12 +110,11 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
     {
         bool intake = controller.get_digital(DIGITAL_L2);
         bool intake_reverse = controller.get_digital(DIGITAL_A);
-        bool intake_override = controller.get_digital(DIGITAL_Y);
 
         bool score = controller.get_digital(DIGITAL_R1);
         bool load = controller.get_digital(DIGITAL_R2);
 
-        bool descore_1 = controller.get_digital(DIGITAL_X);
+        bool descore_1 = controller.get_digital(DIGITAL_B);
         // bool descore_2 = controller.get_digital(DIGITAL_UP);
         bool descore_2 = false;
 
@@ -127,10 +126,6 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         if (intake)
         {
             rm->intake();
-        }
-        else if (intake_override)
-        {
-            rm->intake_override();
         }
         else if (intake_reverse)
         {
@@ -154,7 +149,7 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         }
         else
         {
-            if (!(intake || intake_reverse || intake_override) && intake != intake_last)
+            if (!(intake || intake_reverse) && intake != intake_last)
             {
                 rm->stop_intake();
             }
@@ -168,7 +163,7 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
             }
         }
         
-        intake_last = intake || intake_reverse || intake_override;
+        intake_last = intake || intake_reverse;
         load_last = load;
         score_last = score;
     }
@@ -192,50 +187,17 @@ void opcontrol()
     std::shared_ptr<mechanism::Arm> lb = config::make_arm();
     std::shared_ptr<mechanism::RingManager> rm = config::make_ring_manager(lb, lb_lift_push, lb_lift_pull, pto, drivetrain);
 
-    std::shared_ptr<lib15442c::TrackerOdom> tracker_odom = config::make_tracker_odom();
-    // lib15442c::MCLOdom mcl_odom = lib15442c::MCLOdom(
-    //     {
-    //         particle_count: 2000,
-    //         uniform_random_percent: 0.1,
-    //         tracker_odom_sd: 0.05
-    //     },
-    //     tracker_odom,
-    //     {
-    //         { // front
-    //             port: 1,
-    //             x_offset: -5.5,
-    //             y_offset: 7,
-    //             theta_offset: 0,
-    //         },
-    //         { // back
-    //             port: 1,
-    //             x_offset: -5.5,
-    //             y_offset: -5.5,
-    //             theta_offset: M_PI,
-    //         },
-    //         { // left
-    //             port: 1,
-    //             x_offset: -5.25,
-    //             y_offset: -3,
-    //             theta_offset: M_PI / 2.0,
-    //         },
-    //         { // right
-    //             port: 1,
-    //             x_offset: 7,
-    //             y_offset: -5,
-    //             theta_offset: -M_PI / 2.0,
-    //         }
-    //     }
-    // );
+	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
+	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
     clamp.retract();
     descore.retract();
     intake_lift.retract();
 
-    rm->set_color_sort(mechanism::SortColor::BLUE);
+    // rm->set_color_sort(mechanism::SortColor::BLUE);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
-    tracker_odom->initialize(0, 0, 0_deg);
+    odometry->initialize(0, 0, 0_deg);
 
 
     // r1 score
@@ -254,15 +216,33 @@ void opcontrol()
     // right arrow pto
 
     // int i = 0;
-    bool current_lb_lift_state = true;
+    bool current_lb_lift_state = false;
     while (true)
     {
         control_drivetrain(controller, drivetrain);
         control_ring_mech(controller, rm, lb);
         
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
         {
-            doinker.toggle();
+            if (rm->get_state() != mechanism::RingManagerState::PREP_CLIMB)
+            {
+                rm->prep_climb();
+            }
+            else
+            {
+                rm->idle();
+            }
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
+        {
+            // descore_macro_test(descore, lb_lift_push, rm, lb);
+            // doinker.toggle();
+            // intake_lift.toggle();
+            
+            // drive_controller->drive(1, { min_speed: 30, chained: true});
+            // auto descore_turn_one = drive_controller->face_angle(180_deg, { min_speed: 40, chained: true, async: true });
+            descore_macro_test(descore, lb_lift_push, rm, lb);
         }
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
@@ -279,8 +259,16 @@ void opcontrol()
         {
             current_lb_lift_state = !current_lb_lift_state;
 
-            lb_lift_push->set_value(current_lb_lift_state);
-            lb_lift_pull->set_value(!current_lb_lift_state);
+            if (current_lb_lift_state == true)
+            {
+                lb_lift_push->extend();
+                lb_lift_pull->retract();
+            }
+            else
+            {
+                lb_lift_push->retract();
+                lb_lift_pull->extend();
+            }
         }
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
@@ -291,7 +279,6 @@ void opcontrol()
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
             rm->climb();
-            // descore_macro_test(descore, lb_lift_push, rm, lb);
         }
 
         // i++;
