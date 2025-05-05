@@ -77,7 +77,7 @@ namespace config
     constexpr char PORT_DESCORE = 'E';
     constexpr char PORT_DOINKER = 'C';
     constexpr char PORT_PTO = 'D';
-    constexpr char PORT_INTAKE_LIFT = 'B';
+    constexpr char PORT_INTAKE_LIFT = 'A';
     constexpr char PORT_LB_PISTON_PUSH = 'H';
     constexpr char PORT_LB_PISTON_PULL = 'G';
 

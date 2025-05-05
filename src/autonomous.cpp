@@ -4,6 +4,7 @@
 
 #define LOGGER "autonomous.cpp"
 
+// #define AUTO_OVERRIDE RUN_AUTO_PARAM(auto_routes::negative_blue, false)
 #define AUTO_OVERRIDE RUN_AUTO(auto_routes::skills)
 
 double start_time = -1;
