@@ -72,6 +72,7 @@ namespace config
         ratio : lib15442c::MOTOR_GREEN,
     };
     constexpr int PORT_OPTICAL = 5;
+    constexpr int PORT_INTAKE_DISTANCE = 7;
 
     constexpr char PORT_CLAMP = 'F';
     constexpr char PORT_DESCORE = 'E';

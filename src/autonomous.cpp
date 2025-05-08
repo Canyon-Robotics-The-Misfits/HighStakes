@@ -4,8 +4,8 @@
 
 #define LOGGER "autonomous.cpp"
 
-// #define AUTO_OVERRIDE RUN_AUTO_PARAM(auto_routes::negative_blue, false)
-#define AUTO_OVERRIDE RUN_AUTO(auto_routes::skills)
+#define AUTO_OVERRIDE RUN_AUTO_PARAM(auto_routes::negative_blue, false)
+// #define AUTO_OVERRIDE RUN_AUTO(auto_routes::skills)
 
 double start_time = -1;
 void log_end_time()
@@ -46,6 +46,17 @@ void autonomous() {
 	gui::ScreenGUI &gui = gui::ScreenGUI::access();
 
 	gui::AllianceColor alliance = gui.get_alliance();
+
+	// #ifndef AUTO_OVERRIDE
+	// if (alliance == gui::AllianceColor::RED || gui.get_selected_auto() == gui::ROUTE::SKILLS)
+	// {
+	// 	rm->set_color_sort(mechanism::SortColor::BLUE);
+	// }
+	// else
+	// {
+	// 	rm->set_color_sort(mechanism::SortColor::RED);
+	// }
+	// #endif AUTO_OVERRIDE
 
 	switch (gui.get_selected_auto())
 	{

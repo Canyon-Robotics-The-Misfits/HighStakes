@@ -5,11 +5,11 @@
 
 mechanism::RingManager::RingManager(
     std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors,
-    std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push,
-    std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull, std::shared_ptr<lib15442c::IPneumatic> pto,
-    std::shared_ptr<lib15442c::TankDrive> drivetrain
+    std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<pros::Distance> distance_sensor,
+    std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull,
+    std::shared_ptr<lib15442c::IPneumatic> pto, std::shared_ptr<lib15442c::TankDrive> drivetrain
 )
-    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), lb_lift_push(lb_lift_push), lb_lift_pull(lb_lift_pull), pto(pto), drivetrain(drivetrain)
+    : lb(lb), intake_motors(intake_motors), optical_sensor(optical_sensor), distance_sensor(distance_sensor), lb_lift_push(lb_lift_push), lb_lift_pull(lb_lift_pull), pto(pto), drivetrain(drivetrain)
 {
     if (!intake_motors->is_installed())
     {
@@ -128,6 +128,24 @@ void mechanism::RingManager::update_devices()
         intake_motors->move(-127);
     } break;
 
+    case RingManagerState::INTAKE_HIGH_STAKE: {
+        intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
+        
+        if (distance_sensor->get_distance() > 30 && !high_stake_detected)
+        {
+            intake_motors->move(127);
+        }
+        else if (ring_detected())
+        {
+            intake_motors->move(-15);
+        }
+        else
+        {
+            high_stake_detected = true;
+            intake_motors->move(0);
+        }
+    } break;
+
     case RingManagerState::INTAKE_HOLD: {
         intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
         
@@ -222,14 +240,14 @@ void mechanism::RingManager::update_devices()
 
 void mechanism::RingManager::run_dejam()
 {
-    if (intake_motors->get_power() > 10)
-    {
-        intake_motors->move(-60);
-    }
-    else
-    {
+    // if (intake_motors->get_power() > 12)
+    // {
+    //     intake_motors->move(-60);
+    // }
+    // else
+    // {
         intake_motors->move(127);
-    }
+    // }
 }
 
 // int i = 0;
@@ -247,7 +265,7 @@ void mechanism::RingManager::run_color_sort()
 
         if ((is_red && sort_color == SortColor::RED) || (is_blue && sort_color == SortColor::BLUE))
         {
-            sort_countdown = 400;
+            sort_countdown = 280;
         }
     }
 
@@ -255,18 +273,18 @@ void mechanism::RingManager::run_color_sort()
     {
         sort_countdown -= 20;
 
-        if (sort_countdown > 300)
+        if (sort_countdown > 200)
         {
             run_dejam();
         }
         else
         {
-            intake_motors->move(-127);
+            intake_motors->move(-60);
         }
     }
     else
     {
-        intake_motors->move(127);
+        run_dejam();
     }
 }
 
@@ -287,7 +305,7 @@ void mechanism::RingManager::set_state(RingManagerState state)
 
 #define WAIT_UNTIL(condition) while (!(condition)) { pros::delay(10); }
 
-void mechanism::RingManager::climb_macro(int tier)
+void mechanism::RingManager::climb_macro(int tier)  
 {
     using namespace lib15442c::literals;
     
@@ -312,6 +330,15 @@ void mechanism::RingManager::climb_macro(int tier)
     for (int i = 0; i < std::min(tier, 3); i++)
     {
         pto->extend();
+        
+        if (i == tier - 1 + 1 && i != 2)
+        {
+            drivetrain->move(0, 0);
+            lb->move(0);
+
+            break;
+        }
+
         lb->move(-127);
 
         pros::delay(100);
@@ -321,19 +348,15 @@ void mechanism::RingManager::climb_macro(int tier)
 
         pros::delay(100);
 
+        drivetrain->move(80, 0);
+        
+        pros::delay(100);
+
         drivetrain->move(127, 0);
     
-        WAIT_UNTIL(lb->get_current_angle().deg() < -113);
+        WAIT_UNTIL(lb->get_current_angle().deg() < -112.5);
 
-        pros::delay(150);
-
-        if (i == tier - 1 && i != 2)
-        {
-            drivetrain->move(0, 0);
-            lb->move(0);
-
-            break;
-        }
+        pros::delay(300);
     
         drivetrain->move(0, 0);
         lb->move(0);
@@ -344,14 +367,16 @@ void mechanism::RingManager::climb_macro(int tier)
         pros::delay(100);
         pto->retract();
         pros::delay(250);
-        drivetrain->move(0, 0);
         
         if (i == 2)
         {
+            drivetrain->move(0, 0);
+
             pros::delay(100); // meditation break
 
+            intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::COAST);
             intake_motors->move(127);
-            pros::delay(700);
+            pros::delay(1000);
             intake_motors->move(0);
             
             drivetrain->move(0, 0);
@@ -360,11 +385,13 @@ void mechanism::RingManager::climb_macro(int tier)
         }
     
         WAIT_UNTIL(lb->get_current_angle().deg() > -17);
+        
+        drivetrain->move(0, 0);
     
         lb_lift_push->extend();
         lb_lift_pull->retract();
     
-        pros::delay(300);
+        pros::delay(350);
     }
 
     int end_time = pros::millis();
@@ -403,6 +430,17 @@ void mechanism::RingManager::intake_reverse()
     }
 
     set_state(RingManagerState::INTAKE_REVERSE);
+}
+void mechanism::RingManager::intake_high_stake()
+{
+    if (get_state() == RingManagerState::PREP_CLIMB)
+    {
+        return;
+    }
+
+    high_stake_detected = false;
+
+    set_state(RingManagerState::INTAKE_HIGH_STAKE);
 }
 void mechanism::RingManager::stop_intake()
 {

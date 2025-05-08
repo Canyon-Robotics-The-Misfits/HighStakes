@@ -56,8 +56,9 @@ std::shared_ptr<mechanism::RingManager> config::make_ring_manager(
 {
 	auto intake_motors = std::make_shared<lib15442c::Motor>(config::PARAMS_INTAKE);
 	auto optical = std::make_shared<pros::Optical>(config::PORT_OPTICAL);
+	auto distance = std::make_shared<pros::Distance>(config::PORT_INTAKE_DISTANCE);
 
-	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, lb_lift_push, lb_lift_pull, pto, drivetrain);
+	return std::make_shared<mechanism::RingManager>(lb, intake_motors, optical, distance, lb_lift_push, lb_lift_pull, pto, drivetrain);
 }
 
 std::shared_ptr<lib15442c::TrackerOdom> config::make_tracker_odom()

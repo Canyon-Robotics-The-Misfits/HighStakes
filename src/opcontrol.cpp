@@ -1,5 +1,6 @@
 #include "main.h"
 #include "config.h"
+#include "autonomous.h"
 
 #include "mechanism/arm.hpp"
 #include "mechanism/ring_manager.hpp"
@@ -110,15 +111,19 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
     {
         bool intake = controller.get_digital(DIGITAL_L2);
         bool intake_reverse = controller.get_digital(DIGITAL_A);
+        bool intake_high_stake = controller.get_digital(DIGITAL_B);
+
+        bool any_intake = intake || intake_reverse || intake_high_stake;
 
         bool score = controller.get_digital(DIGITAL_R1);
         bool load = controller.get_digital(DIGITAL_R2);
 
-        bool descore_1 = controller.get_digital(DIGITAL_B);
+        // bool descore_1 = controller.get_digital(DIGITAL_B);
+        bool descore_1 = false;
         // bool descore_2 = controller.get_digital(DIGITAL_UP);
         bool descore_2 = false;
 
-        if (intake || intake_reverse || score || load || descore_1 || descore_2)
+        if (intake || intake_reverse || intake_high_stake || score || load || descore_1 || descore_2)
         {
             rm->set_lb_override(false);
         }
@@ -131,9 +136,16 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         {
             rm->intake_reverse();
         }
+        else if (intake_high_stake)
+        {
+            if (any_intake != intake_last)
+            {
+                rm->intake_high_stake();
+            }
+        }
         else if (score)
         {
-            rm->score();
+            rm->score_skills();
         }
         else if (load)
         {
@@ -149,7 +161,7 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
         }
         else
         {
-            if (!(intake || intake_reverse) && intake != intake_last)
+            if (!any_intake && any_intake != intake_last)
             {
                 rm->stop_intake();
             }
@@ -163,7 +175,7 @@ void control_ring_mech(pros::Controller controller, std::shared_ptr<mechanism::R
             }
         }
         
-        intake_last = intake || intake_reverse;
+        intake_last = any_intake;
         load_last = load;
         score_last = score;
     }
@@ -190,14 +202,24 @@ void opcontrol()
 	std::shared_ptr<lib15442c::TrackerOdom> odometry = config::make_tracker_odom();
 	std::shared_ptr<lib15442c::DriveController> drive_controller = config::make_drive_controller(drivetrain, odometry);
 
+	gui::ScreenGUI &gui = gui::ScreenGUI::access();
+    gui::AllianceColor alliance = gui.get_alliance();
+    if (gui.get_selected_auto() == gui::Route::SKILLS)
+    {
+        drivetrain->set_brake_mode(lib15442c::MotorBrakeMode::BRAKE);
+
+        RUN_AUTO(auto_routes::skills);
+    }
+
     clamp.retract();
     descore.retract();
     intake_lift.retract();
+    doinker.retract();
 
-    // rm->set_color_sort(mechanism::SortColor::BLUE);
+    rm->set_color_sort(mechanism::SortColor::NONE);
 
     // tracker_odom->initialize(144 - 53 - 4, 13 + 1, 224_deg);
-    odometry->initialize(0, 0, 0_deg);
+    // odometry->initialize(0, 0, 0_deg);
 
 
     // r1 score
@@ -236,13 +258,13 @@ void opcontrol()
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
         {
-            // descore_macro_test(descore, lb_lift_push, rm, lb);
+            descore_macro_test(descore, lb_lift_push, rm, lb);
             // doinker.toggle();
             // intake_lift.toggle();
             
             // drive_controller->drive(1, { min_speed: 30, chained: true});
             // auto descore_turn_one = drive_controller->face_angle(180_deg, { min_speed: 40, chained: true, async: true });
-            descore_macro_test(descore, lb_lift_push, rm, lb);
+            // descore_macro_test(descore, lb_lift_push, rm, lb);
         }
 
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
@@ -252,7 +274,7 @@ void opcontrol()
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
         {
-            descore.toggle();
+            rm->climb();
         }
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
@@ -278,7 +300,7 @@ void opcontrol()
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-            rm->climb();
+            rm->climb(1);
         }
 
         // i++;

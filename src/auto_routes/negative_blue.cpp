@@ -4,39 +4,45 @@
 AUTO_ROUTE_PARAM(auto_routes::negative_blue, bool elims)
 {
     odometry->initialize(144 - 42, 19, 16_deg);
+    rm->set_color_sort(mechanism::SortColor::RED);
 
     // rush
-    doinker.extend();
-    auto ring_rush = drive_controller->drive(42, { min_speed: 40, chained: true, async: true });
-    rm->intake_reverse();
+    lb_lift_push->retract();
+    auto ring_rush = drive_controller->drive(44, { angle: 17_deg, min_speed: 40, chained: true, async: true });
     pros::delay(200);
+    rm->intake_reverse();
+    pros::delay(150);
     rm->intake();
-    pros::delay(300);
+    doinker.extend();
     ring_rush->await();
-    pros::delay(50);
 
     // goal grab
-    rm->intake_hold();
     drive_controller->drive(-1, { min_speed: 40, chained: true });
-    drive_controller->boomerang(pos(144 - 48, 48 +1), { backwards: true, threshold: 3, min_speed: 35 });
+    rm->intake_hold();
+    drive_controller->boomerang(pos(144 - 48, 48 +0.5), { backwards: true, threshold: 3, min_speed: 50 });
+    drive_controller->drive(-1, { min_speed: 60, chained: true });
     clamp.extend();
     rm->intake();
     pros::delay(50);
 
     // next rings
-    drive_controller->face_angle(50_deg, { min_speed: 40, chained: true });
+    // drive_controller->face_angle(50_deg, { min_speed: 40, chained: true });
     doinker.retract();
-    pros::delay(250);
-    drive_controller->boomerang(pos(144 - 24, 48 -1), { threshold: 3, max_speed: 70, min_speed: 40 });
+    pros::delay(100);
+    drive_controller->boomerang(pose(144 - 24 +1, 48 -1, 80_deg), { threshold: 3, max_speed: 60, min_speed: 40 });
+    pros::delay(100);
+    drive_controller->drive(-2, { min_speed: 40, chained: true });
 
     // corner
-    drive_controller->boomerang(pose(144 - 10, 10, 135_deg), { lead: 0.4, threshold: 4, min_speed: 40 });
-    drive_controller->drive_time(60, 300);
-    pros::delay(200);
+    drive_controller->boomerang(pos(144 - 11, 11), { threshold: 1, min_speed: 25 });
+    drive_controller->drive_time(30, 150);
+    pros::delay(300);
+    drive_controller->drive(-2.5, { min_speed: 30, chained: true });
     intake_lift.extend();
-    drive_controller->drive(-2.5, { min_speed: 50, chained: true });
-    pros::delay(50);
-    drive_controller->drive(4, { timeout: 500, min_speed: 60, chained: true });
+    drive_controller->drive(-1, { max_speed: 30, min_speed: 25, chained: true });
+    intake_lift.extend();
+    pros::delay(150);
+    drive_controller->drive(5, { timeout: 500, min_speed: 60, chained: true });
     pros::delay(100);
     intake_lift.retract();
     drive_controller->drive(-10, { min_speed: 80, chained: true });
@@ -48,19 +54,22 @@ AUTO_ROUTE_PARAM(auto_routes::negative_blue, bool elims)
     pickup_preload->await();
     pros::delay(200);
     intake_lift.extend();
-    pros::delay(100);
+    pros::delay(250);
     rm->set_lb_override(true);
     lb->set_target(-20_deg);
-    drive_controller->boomerang(pose(72, 24 -1, -50_deg), { lead: 0.3, threshold: 4, max_speed: 60 });
-    pros::delay(300);
+    drive_controller->boomerang(pos(72, 24 +2), { threshold: 2, max_speed: 60 });
+    pros::delay(200);
     intake_lift.retract();
 
     // alliance stake
-    drivetrain->move(0, 80);
-    pros::delay(700);
+    doinker.extend();
+    pros::delay(50);
+    drive_controller->face_angle(140_deg, { min_speed: 60, chained: true });
+    doinker.retract();
+    pros::delay(50);
     drive_controller->face_angle(180_deg, { max_speed: 80, min_speed: 40, chained: true });
     rm->stop_intake();
-    drive_controller->boomerang(pos(72, 4), { threshold: 10 });
+    drive_controller->boomerang(pos(72, 4), { threshold: 10, timeout: 1000 });
     drive_controller->drive_time(40, 100);
     lb_lift_push->extend();
     drive_controller->drive(-1.5, { threshold: 0, min_speed: 20, chained: true });
@@ -72,5 +81,6 @@ AUTO_ROUTE_PARAM(auto_routes::negative_blue, bool elims)
     rm->set_lb_override(false);
     drive_controller->face_point(lib15442c::Vec(72, 48), 0_deg, { min_speed: 60, chained: true });
     lb_lift_push->retract();
-    drive_controller->drive(11, { timeout: 750, min_speed: 50, chained: true });
+    drive_controller->drive(9, { timeout: 750, min_speed: 50, chained: true });
+    drive_controller->drive(3, { max_speed: 50, min_speed: 40, chained: true });
 }

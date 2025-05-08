@@ -8,6 +8,7 @@
 #include "lib15442c/device/pneumatic.hpp"
 #include "lib15442c/chasis/tank_drive.hpp"
 #include "pros/optical.hpp"
+#include "pros/distance.hpp"
 
 #include "lib15442c/math/angle.hpp"
 
@@ -28,6 +29,7 @@ namespace mechanism
         INTAKE_OVERRIDE,
         INTAKE_REVERSE,
         INTAKE_HOLD,
+        INTAKE_HIGH_STAKE,
         LOAD,
         HOLD,
         SCORE,
@@ -52,6 +54,7 @@ namespace mechanism
         std::shared_ptr<lib15442c::IMotor> intake_motors;
 
         std::shared_ptr<pros::Optical> optical_sensor;
+        std::shared_ptr<pros::Distance> distance_sensor;
 
         std::shared_ptr<lib15442c::IPneumatic> lb_lift_push;
         std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull;
@@ -61,6 +64,7 @@ namespace mechanism
 
         RingManagerState current_state = RingManagerState::IDLE;
         bool lb_override = false;
+        bool high_stake_detected = false;
         SortColor sort_color = SortColor::NONE;
 
         double sort_countdown = 0;
@@ -79,9 +83,9 @@ namespace mechanism
     public:
         RingManager(
             std::shared_ptr<mechanism::Arm> lb, std::shared_ptr<lib15442c::IMotor> intake_motors,
-            std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<lib15442c::IPneumatic> lb_lift_push,
-            std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull, std::shared_ptr<lib15442c::IPneumatic> pto,
-            std::shared_ptr<lib15442c::TankDrive> drivetrain
+            std::shared_ptr<pros::Optical> optical_sensor, std::shared_ptr<pros::Distance> distance_sensor,
+            std::shared_ptr<lib15442c::IPneumatic> lb_lift_push, std::shared_ptr<lib15442c::IPneumatic> lb_lift_pull,
+            std::shared_ptr<lib15442c::IPneumatic> pto, std::shared_ptr<lib15442c::TankDrive> drivetrain
         );
 
         /**
@@ -96,6 +100,7 @@ namespace mechanism
         void intake();
         void intake_override();
         void intake_reverse();
+        void intake_high_stake();
         void stop_intake();
         
         void intake_hold();
