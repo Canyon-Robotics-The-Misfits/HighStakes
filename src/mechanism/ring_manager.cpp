@@ -131,13 +131,13 @@ void mechanism::RingManager::update_devices()
     case RingManagerState::INTAKE_HIGH_STAKE: {
         intake_motors->set_brake_mode(lib15442c::MotorBrakeMode::HOLD);
         
-        if (distance_sensor->get_distance() > 30 && !high_stake_detected)
-        {
-            intake_motors->move(127);
-        }
-        else if (ring_detected())
+        if (ring_detected())
         {
             intake_motors->move(-15);
+        }
+        else if (distance_sensor->get_distance() > 30 && !high_stake_detected)
+        {
+            intake_motors->move(127);
         }
         else
         {

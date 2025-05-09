@@ -314,7 +314,7 @@ AUTO_ROUTE(auto_routes::skills)
 
     // climb more like 
     rm->intake_high_stake();
-    auto grab_high_stake = drive_controller->boomerang(pos(72 -4, 72 -2), { async: true });
+    auto grab_high_stake = drive_controller->boomerang(pos(72 -5, 72 -2), { async: true });
     // WAIT_UNTIL(rm->ring_detected() || !grab_high_stake->is_running());
     // rm->intake_reverse();
     // pros::delay(50);
@@ -325,7 +325,7 @@ AUTO_ROUTE(auto_routes::skills)
     pros::delay(100);
     rm->intake_hold();
     face_climb->await();
-    drive_controller->drive(-10, { min_speed: 50, chained: true});
+    drive_controller->drive(-11, { min_speed: 50, chained: true});
 
     rm->climb();
 }

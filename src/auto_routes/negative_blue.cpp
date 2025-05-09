@@ -20,9 +20,9 @@ AUTO_ROUTE_PARAM(auto_routes::negative_blue, bool elims)
     drive_controller->drive(-1, { min_speed: 40, chained: true });
     rm->intake_hold();
     drive_controller->boomerang(pos(144 - 48, 48 +0.5), { backwards: true, threshold: 3, min_speed: 50 });
+    rm->intake();
     drive_controller->drive(-1, { min_speed: 60, chained: true });
     clamp.extend();
-    rm->intake();
     pros::delay(50);
 
     // next rings
@@ -34,21 +34,21 @@ AUTO_ROUTE_PARAM(auto_routes::negative_blue, bool elims)
     drive_controller->drive(-2, { min_speed: 40, chained: true });
 
     // corner
-    drive_controller->boomerang(pos(144 - 11, 11), { threshold: 1, min_speed: 25 });
-    drive_controller->drive_time(30, 150);
-    pros::delay(300);
-    drive_controller->drive(-2.5, { min_speed: 30, chained: true });
-    intake_lift.extend();
-    drive_controller->drive(-1, { max_speed: 30, min_speed: 25, chained: true });
-    intake_lift.extend();
-    pros::delay(150);
-    drive_controller->drive(5, { timeout: 500, min_speed: 60, chained: true });
+    drive_controller->boomerang(pos(144 - 10.5, 11), { threshold: 2, min_speed: 25 });
+    drive_controller->drive_time(40, 200);
+    // pros::delay(300);
+    drive_controller->drive(-2.5, { min_speed: 60, chained: true });
     pros::delay(100);
-    intake_lift.retract();
+    // intake_lift.extend();
+    // drive_controller->drive(-1, { max_speed: 50, min_speed: 40, chained: true });
+    pros::delay(150);
+    // drive_controller->drive(5, { timeout: 500, min_speed: 60, chained: true });
+    // pros::delay(100);
+    // intake_lift.retract();
     drive_controller->drive(-10, { min_speed: 80, chained: true });
 
     // next rings 2
-    auto pickup_preload = drive_controller->boomerang(pos(144 - 55, 24 - 5), { min_speed: 30, async: true });
+    auto pickup_preload = drive_controller->boomerang(pos(144 - 55, 24 - 4), { min_speed: 30, async: true });
     pros::delay(700);
     rm->load();
     pickup_preload->await();
@@ -57,19 +57,25 @@ AUTO_ROUTE_PARAM(auto_routes::negative_blue, bool elims)
     pros::delay(250);
     rm->set_lb_override(true);
     lb->set_target(-20_deg);
+    rm->intake();
     drive_controller->boomerang(pos(72, 24 +2), { threshold: 2, max_speed: 60 });
     pros::delay(200);
     intake_lift.retract();
 
     // alliance stake
-    doinker.extend();
+    // doinker.extend();
     pros::delay(50);
-    drive_controller->face_angle(140_deg, { min_speed: 60, chained: true });
-    doinker.retract();
-    pros::delay(50);
+    auto doinker_sweep = drive_controller->face_angle(125_deg, { min_speed: 100, chained: true, async: true });
+    pros::delay(450);
+    // doinker.retract();
+    rm->intake_reverse();
+    doinker_sweep->await();
+    rm->intake();
     drive_controller->face_angle(180_deg, { max_speed: 80, min_speed: 40, chained: true });
+    auto approach_alliance_stake = drive_controller->boomerang(pos(72, 4), { threshold: 10, timeout: 1000, async: true });
+    pros::delay(150);
     rm->stop_intake();
-    drive_controller->boomerang(pos(72, 4), { threshold: 10, timeout: 1000 });
+    approach_alliance_stake->await();
     drive_controller->drive_time(40, 100);
     lb_lift_push->extend();
     drive_controller->drive(-1.5, { threshold: 0, min_speed: 20, chained: true });
